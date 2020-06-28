@@ -1,0 +1,9 @@
+version: '3'
+services:
+    main:
+        build: .
+        ports:
+            - "18000:8000"
+            - "18080:8080"
+volumes:
+    db:
