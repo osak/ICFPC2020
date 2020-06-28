@@ -44,6 +44,7 @@ async fn default_route(req: HttpRequest) -> Result<HttpResponse, std::io::Error>
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
+    let port: u32 = std::env::var("PORT").unwrap().parse().unwrap();
     let batch_client = BatchClient::new(Region::ApNortheast1);
 
     HttpServer::new(move || {
@@ -53,7 +54,7 @@ async fn main() -> std::io::Result<()> {
                 .service(list_jobs))
             .default_service(web::resource("").route(web::get().to(default_route)))
     })
-    .bind(format!("0.0.0.0:{}", 8000))?
+    .bind(format!("0.0.0.0:{}", port))?
     .run()
     .await
 }
