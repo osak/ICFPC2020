@@ -1687,8 +1687,7 @@ dependencies = [
 [[package]]
 name = "rusoto_batch"
 version = "0.44.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "781fa2d0a57e3f8eb803cd1ae41b80b7a64e578d88a43254110d8cd7fb99863b"
+source = "git+https://github.com/osak/rusoto?branch=fix-incorrect-batch-job-detail#5d0d0602a1933585c8603f738b2de99f9be9daa1"
 dependencies = [
  "async-trait",
  "bytes",
@@ -1702,8 +1701,7 @@ dependencies = [
 [[package]]
 name = "rusoto_core"
 version = "0.44.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "841ca8f73e7498ba39146ab43acea906bbbb807d92ec0b7ea4b6293d2621f80d"
+source = "git+https://github.com/osak/rusoto?branch=fix-incorrect-batch-job-detail#5d0d0602a1933585c8603f738b2de99f9be9daa1"
 dependencies = [
  "async-trait",
  "base64 0.12.3",
@@ -1731,8 +1729,7 @@ dependencies = [
 [[package]]
 name = "rusoto_credential"
 version = "0.44.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "60669ddc1bdbb83ce225593649d36b4c5f6bf9db47cc1ab3e81281abffc853f4"
+source = "git+https://github.com/osak/rusoto?branch=fix-incorrect-batch-job-detail#5d0d0602a1933585c8603f738b2de99f9be9daa1"
 dependencies = [
  "async-trait",
  "chrono",
@@ -1751,8 +1748,7 @@ dependencies = [
 [[package]]
 name = "rusoto_signature"
 version = "0.44.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9eddff187ac18c5a91d9ccda9353f30cf531620dce437c4db661dfe2e23b2029"
+source = "git+https://github.com/osak/rusoto?branch=fix-incorrect-batch-job-detail#5d0d0602a1933585c8603f738b2de99f9be9daa1"
 dependencies = [
  "base64 0.12.3",
  "bytes",
