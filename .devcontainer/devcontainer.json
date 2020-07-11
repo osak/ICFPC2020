@@ -26,7 +26,10 @@
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
-		"rust-lang.rust"
+		"rust-lang.rust",
+		"matklad.rust-analyzer",
+		"bungcip.better-toml",
+		"ms-ossdata.vscode-postgresql"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
