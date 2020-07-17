@@ -15,7 +15,7 @@ if (process.env.NODE_ENV == "production") {
 }
 
 module.exports = {
-  entry: "./web/index.tsx",
+  entry: "./manarimo/web/index.tsx",
   devtool: "source-map",
   devServer: {
     host: "0.0.0.0",
@@ -45,12 +45,12 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./web/index.html",
+      template: "./manarimo/web/index.html",
       hash: true,
     }),
     new webpack.DefinePlugin(constants),
     new CopyPlugin({
-      patterns: [{ from: "./web/style.css", to: "style.css" }],
+      patterns: [{ from: "./manarimo/web/style.css", to: "style.css" }],
     }),
     new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
   ],
