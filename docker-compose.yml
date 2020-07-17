@@ -4,8 +4,19 @@ services:
         build: .
         environment:
             PORT: 8000
+            DATABASE_URL: "postgres://manarimo:manarimo@db:5432/db"
         ports:
             - "18000:8000"
             - "18080:8080"
+    db:
+        image: "postgres:12-alpine"
+        ports:
+            - "15432:5432"
+        environment:
+            POSTGRES_USER: "manarimo"
+            POSTGRES_PASSWORD: "manarimo"
+            POSTGRES_DB: "db"
+        volumes:
+            - "db:/var/lib/postgresql/data"
 volumes:
     db:
