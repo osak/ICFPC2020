@@ -7,7 +7,7 @@ def main
     puts "ServerUrl: %s; PlayerKey: %s" % [serverurl, playerkey]
 
     uri = URI(serverurl)
-    res = Net::HTTP.post(uri, playerkey)
+    res = Net::HTTP.post(uri, "42")
     if res.code == "200"
       puts "Server response: %s" % res.body
     else
