@@ -34,210 +34,6 @@ struct Value {
    }
 };
 
-class Evaluator {
-public:
-   map<string, Value> env;
-   Value reduce(Value v) {
-      if (v.type == 0) {
-         Value x = env[v.variable];
-         for (auto e : v.args) {
-            x.args.push_back(e);
-         }
-         return reduce(x);
-      } else if (v.type == 1) {
-         assert(v.args.size() == 0);
-         return v;
-      } else if (v.type == 2) {
-         if ("add" == v.ident) {
-            if (v.args.size() < 2) {
-               return v;
-            }
-            Value a = reduce(v.args[0]);
-            Value b = reduce(v.args[1]);
-            assert(a.type == 1 && b.type == 1);
-
-            return Value::new_value(a.value + b.value);
-         } else if ("b" == v.ident) {
-            if (v.args.size() < 3) {
-               return v;
-            }
-            // b x y z -> x (y z)
-            Value r = v.args[0];
-            Value y = v.args[1];
-            y.args.push_back(v.args[2]);
-            r.args.push_back(y);
-            return reduce(r);
-         } else if ("c" == v.ident) {
-            // c x y z -> x z y
-            if (v.args.size() < 3) {
-               return v;
-            }
-            Value r = v.args[0];
-            r.args.push_back(v.args[2]);
-            r.args.push_back(v.args[1]);
-            return reduce(r);
-         } else if ("car" == v.ident) {
-            if (v.args.size() < 1) {
-               return v;
-            }
-            Value x0 = reduce(v.args[0]);
-            assert (x0.type == 2 && x0.ident == "cons");
-            assert (x0.args.size() == 2);
-            return reduce(x0.args[0]);
-         } else if ("cdr" == v.ident) {
-            if (v.args.size() < 1) {
-               return v;
-            }
-            Value x0 = reduce(v.args[0]);
-            assert (x0.type == 2 && x0.ident == "cons");
-            assert (x0.args.size() == 2);
-            return reduce(x0.args[1]);
-         } else if ("cons" == v.ident) {
-            return v;
-         } else if ("div" == v.ident) {
-            if (v.args.size() < 2) {
-               return v;
-            }
-            Value a = reduce(v.args[0]);
-            Value b = reduce(v.args[1]);
-            assert(a.type == 1 && b.type == 1);
-
-            return Value::new_value(a.value / b.value);
-         } else if ("eq" == v.ident) {
-            if (v.args.size() < 2) {
-               return v;
-            }
-            Value a = reduce(v.args[0]);
-            Value b = reduce(v.args[1]);
-            assert(a.type == 1 && b.type == 1);
-            if (a.value == b.value) {
-               return Value::new_ident("t");
-            } else {
-               return Value::new_ident("f");
-            }
-         } else if ("t" == v.ident) {
-            // t x y -> x
-            if (v.args.size() < 2) {
-               return v;
-            }
-            return reduce(v.args[0]);
-         } else if ("f" == v.ident) {
-            // f x y -> y
-            if (v.args.size() < 2) {
-               return v;
-            }
-            return reduce(v.args[1]);
-         } else if ("i" == v.ident) {
-            if (v.args.size() < 1) {
-               return v;
-            }
-            return reduce(v.args[0]);
-         } else if ("isnil" == v.ident) {
-            if (v.args.size() < 1) {
-               return v;
-            }
-            if (v.args[0].type == 2 && v.args[0].ident == "nil") {
-               return Value::new_ident("t");
-            } else {
-               return Value::new_ident("f");
-            }
-         } else if ("nil" == v.ident) {
-            if (v.args.size() < 1) {
-               return v;
-            }
-            return Value::new_ident("t");
-         } else if ("lt" == v.ident) {
-            if (v.args.size() < 2) {
-               return v;
-            }
-            Value a = reduce(v.args[0]);
-            Value b = reduce(v.args[1]);
-            assert(a.type == 1 && b.type == 1);
-            if (a.value < b.value) {
-               return Value::new_ident("t");
-            } else {
-               return Value::new_ident("f");
-            }
-         } else if ("mul" == v.ident) {
-            if (v.args.size() < 2) {
-               return v;
-            }
-            Value a = reduce(v.args[0]);
-            Value b = reduce(v.args[1]);
-            assert(a.type == 1 && b.type == 1);
-
-            return Value::new_value(a.value * b.value);
-         } else if ("neg" == v.ident) {
-            if (v.args.size() < 1) {
-               return v;
-            }
-            Value a = reduce(v.args[0]);
-            assert(a.type == 1);
-
-            return Value::new_value(-a.value);
-         } else if ("s" == v.ident) {
-            // s x y z = x z (y z)
-            if (v.args.size() < 3) {
-               return v;
-            }
-            Value yz = v.args[1];
-            yz.args.push_back(v.args[2]);
-            Value r = v.args[0];
-            r.args.push_back(v.args[2]);
-            r.args.push_back(yz);
-            return reduce(r);
-         } else {
-            return v;
-         }
-      }
-   }
-};
-
-map<string, Value> parse_records(vector<string> vs) {
-    map<string, Value> result;
-
-    set<string> kws;
-    for (auto &s : vs) {
-        stringstream ss(s);
-        string name, _;
-
-        if (!(ss >> name >> _)) {
-            break;
-        }
-        assert(_ == "=");
-
-        vector<string> def;
-        string t;
-        while (ss >> t) {
-            def.push_back(t);
-        }
-
-        stack<Value> st;
-        for (auto e : vector<string>(def.rbegin(), def.rend())) {
-            char c = e[0];
-            if (e == "ap") {
-                auto a = st.top(); st.pop();
-                auto b = st.top(); st.pop();
-                a.args.push_back(b);
-
-                st.push(a);
-            } else if (c == ':') {
-                st.push(Value::new_variable(e));
-            } else if (isalpha(c)) {
-                st.push(Value::new_ident(e));
-            } else {
-                st.push(Value::new_value(stoll(e)));
-            }
-        }
-
-        assert(st.size() == 1);
-
-        result[name] = st.top();
-    }
-
-    return result;
-};
-
 void print_keywords(vector<string> vs) {
     set<string> kws;
     for (auto &s : vs) {
@@ -297,6 +93,253 @@ void print_value(const Value &v) {
    print_value_sub(v);
    cout << endl;
 }
+
+class Evaluator {
+   int get_argc(string ident) {
+      if (ident == "car" || ident == "cdr" || ident == "i" || ident == "isnil" || ident == "nil" || ident == "neg") {
+         return 1;
+      } else if (ident == "add" || ident == "div" || ident == "eq" || ident == "t" || ident == "f" || ident == "lt" || ident == "mul") {
+         return 2;
+      } else if (ident == "b" || ident == "c" || ident == "cons" || ident == "s") {
+         return 3;
+      }
+      assert(false);
+   }
+
+public:
+   map<string, Value> env;
+   Value reduce2(Value v) {
+      if ("add" == v.ident) {
+         if (v.args.size() < 2) {
+            return v;
+         }
+         Value a = reduce(v.args[0]);
+         Value b = reduce(v.args[1]);
+         assert(a.type == 1 && b.type == 1);
+
+         return Value::new_value(a.value + b.value);
+      } else if ("b" == v.ident) {
+         if (v.args.size() < 3) {
+            return v;
+         }
+         // b x y z -> x (y z)
+         Value r = v.args[0];
+         Value y = v.args[1];
+         y.args.push_back(v.args[2]);
+         r.args.push_back(y);
+         return reduce(r);
+      } else if ("c" == v.ident) {
+         // c x y z -> x z y
+         if (v.args.size() < 3) {
+            return v;
+         }
+         Value r = v.args[0];
+         r.args.push_back(v.args[2]);
+         r.args.push_back(v.args[1]);
+         return reduce(r);
+      } else if ("car" == v.ident) {
+         if (v.args.size() < 1) {
+            return v;
+         }
+         Value x0 = reduce(v.args[0]);
+         assert (x0.type == 2 && x0.ident == "cons");
+         assert (x0.args.size() == 2);
+         return reduce(x0.args[0]);
+      } else if ("cdr" == v.ident) {
+         if (v.args.size() < 1) {
+            return v;
+         }
+         Value x0 = reduce(v.args[0]);
+         assert (x0.type == 2 && x0.ident == "cons");
+         assert (x0.args.size() == 2);
+         return reduce(x0.args[1]);
+      } else if ("cons" == v.ident) {
+         if (v.args.size() < 3) {
+            return v;
+         }
+         Value x0 = v.args[0];
+         Value x1 = v.args[1];
+         Value x2 = v.args[2];
+         x2.args.push_back(x0);
+         x2.args.push_back(x1);
+         return reduce(x2);
+      } else if ("div" == v.ident) {
+         if (v.args.size() < 2) {
+            return v;
+         }
+         Value a = reduce(v.args[0]);
+         Value b = reduce(v.args[1]);
+         assert(a.type == 1 && b.type == 1);
+
+         return Value::new_value(a.value / b.value);
+      } else if ("eq" == v.ident) {
+         if (v.args.size() < 2) {
+            return v;
+         }
+         Value a = reduce(v.args[0]);
+         Value b = reduce(v.args[1]);
+         assert(a.type == 1 && b.type == 1);
+         if (a.value == b.value) {
+            return Value::new_ident("t");
+         } else {
+            return Value::new_ident("f");
+         }
+      } else if ("t" == v.ident) {
+         // t x y -> x
+         if (v.args.size() < 2) {
+            return v;
+         }
+         return reduce(v.args[0]);
+      } else if ("f" == v.ident) {
+         // f x y -> y
+         if (v.args.size() < 2) {
+            return v;
+         }
+         return reduce(v.args[1]);
+      } else if ("i" == v.ident) {
+         if (v.args.size() < 1) {
+            return v;
+         }
+         return reduce(v.args[0]);
+      } else if ("isnil" == v.ident) {
+         if (v.args.size() < 1) {
+            return v;
+         }
+         if (v.args[0].type == 2 && v.args[0].ident == "nil") {
+            return Value::new_ident("t");
+         } else {
+            return Value::new_ident("f");
+         }
+      } else if ("nil" == v.ident) {
+         if (v.args.size() < 1) {
+            return v;
+         }
+         return Value::new_ident("t");
+      } else if ("lt" == v.ident) {
+         if (v.args.size() < 2) {
+            return v;
+         }
+         Value a = reduce(v.args[0]);
+         Value b = reduce(v.args[1]);
+         assert(a.type == 1 && b.type == 1);
+         if (a.value < b.value) {
+            return Value::new_ident("t");
+         } else {
+            return Value::new_ident("f");
+         }
+      } else if ("mul" == v.ident) {
+         if (v.args.size() < 2) {
+            return v;
+         }
+         Value a = reduce(v.args[0]);
+         Value b = reduce(v.args[1]);
+         assert(a.type == 1 && b.type == 1);
+
+         return Value::new_value(a.value * b.value);
+      } else if ("neg" == v.ident) {
+         if (v.args.size() < 1) {
+            return v;
+         }
+         Value a = reduce(v.args[0]);
+         assert(a.type == 1);
+
+         return Value::new_value(-a.value);
+      } else if ("s" == v.ident) {
+         // s x y z = x z (y z)
+         if (v.args.size() < 3) {
+            return v;
+         }
+         Value yz = v.args[1];
+         yz.args.push_back(v.args[2]);
+         Value r = v.args[0];
+         r.args.push_back(v.args[2]);
+         r.args.push_back(yz);
+         return reduce(r);
+      } else {
+         return v;
+      }
+   }
+
+   Value reduce(Value v) {
+      // print_value(v);
+      // cout << endl;
+      if (v.type == 0) {
+         Value x = env[v.variable];
+         for (auto e : v.args) {
+            x.args.push_back(e);
+         }
+         return reduce(x);
+      } else if (v.type == 1) {
+         assert(v.args.size() == 0);
+         return v;
+      } else if (v.type == 2) {
+         int argc = get_argc(v.ident);
+         if (v.args.size() < argc) {
+            /*
+            if (v.ident == "cons" && v.args.size() == 2) {
+               if (car) {
+                  v.args[0] = reduce(v.args[0]);
+               }
+               if (cdr) {
+                  v.args[1] = reduce(v.args[1]);
+               }
+            }
+            */
+            return v;
+         }
+         Value r = reduce2(v);
+         for (int i = argc; i < v.args.size(); i++) {
+            r.args.push_back(v.args[i]);
+         }
+         return reduce(r);
+      }
+   }
+};
+
+map<string, Value> parse_records(vector<string> vs) {
+    map<string, Value> result;
+
+    set<string> kws;
+    for (auto &s : vs) {
+        stringstream ss(s);
+        string name, _;
+
+        if (!(ss >> name >> _)) {
+            break;
+        }
+        assert(_ == "=");
+
+        vector<string> def;
+        string t;
+        while (ss >> t) {
+            def.push_back(t);
+        }
+
+        stack<Value> st;
+        for (auto e : vector<string>(def.rbegin(), def.rend())) {
+            char c = e[0];
+            if (e == "ap") {
+                auto a = st.top(); st.pop();
+                auto b = st.top(); st.pop();
+                a.args.push_back(b);
+
+                st.push(a);
+            } else if (c == ':') {
+                st.push(Value::new_variable(e));
+            } else if (isalpha(c)) {
+                st.push(Value::new_ident(e));
+            } else {
+                st.push(Value::new_value(stoll(e)));
+            }
+        }
+
+        assert(st.size() == 1);
+
+        result[name] = st.top();
+    }
+
+    return result;
+};
 
 int main(int argc, char *argv[]) {
     string line;
