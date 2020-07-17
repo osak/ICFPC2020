@@ -256,27 +256,46 @@ void print_keywords(vector<string> vs) {
     }
 }
 
-void print_value(const Value &v, int indent) {
-    string ind = string(indent, ' ');
-    cout << ind << "type: " << v.type << endl;
-    cout << ind << "value: ";
+void print_value_sub(const Value&);
+
+void print_function(const Value &v) {
+   if (v.ident == "cons" && v.args.size() == 2) {
+      cout << "(";
+      print_value_sub(v.args[0]);
+      cout << ", ";
+      print_value_sub(v.args[1]);
+      cout << ")";
+   } else if (v.ident == "nil" && v.args.size() == 0) {
+      cout << "nil";
+   } else {
+      cout << "(" << v.ident;
+      for (auto a: v.args) {
+         cout << " ";
+         print_value_sub(a);
+      }
+      cout << ")";
+   }
+}
+
+void print_value_sub(const Value &v) {
     switch (v.type) {
         case 0:
-            cout << v.variable << endl;
+            cout << v.variable;
             break;
         case 1:
-            cout << v.value << endl;
+            cout << v.value;
             break;
         case 2:
-            cout << v.ident << endl;
+            print_function(v);
             break;
         default:
             assert(false);
     }
-    cout << ind << "args:" << endl;
-    for (auto &a : v.args) {
-        print_value(a, indent + 2);
-    }
+}
+
+void print_value(const Value &v) {
+   print_value_sub(v);
+   cout << endl;
 }
 
 int main(int argc, char *argv[]) {
@@ -291,7 +310,7 @@ int main(int argc, char *argv[]) {
 
         Evaluator ev;
         ev.env = result;
-        print_value(ev.reduce(Value::new_variable(":galaxy")), 0);
+        print_value(ev.reduce(Value::new_variable(":galaxy")));
 
         file.close();
     }
