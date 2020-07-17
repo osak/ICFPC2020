@@ -1,3 +1,3 @@
 #!/bin/sh
 
-python app/main.py "$@"
+ruby app/main.rb "$@"
