@@ -1,6 +1,6 @@
 import requests
-import src.mod
-import src.dem
+import src.mod as mod
+import src.dem as dem
 
 
 API_BASE = "https://icfpc2020-api.testkontur.ru"

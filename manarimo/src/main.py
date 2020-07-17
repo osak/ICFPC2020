@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 import psycopg2
 import os
-import src.send
+import src.send as send
 from datetime import datetime, timezone
 import psycopg2.extras
 
