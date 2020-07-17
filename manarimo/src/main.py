@@ -1,15 +1,15 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, request, jsonify
 import psycopg2
 import os
 import src.send as send
 from datetime import datetime, timezone
 import psycopg2.extras
-
+from pathlib import Path
 
 DATABASE_URL = os.environ["DATABASE_URL"]
 
-
-app = Flask(__name__, static_url_path="/web-dist")
+root_dir = Path(__file__).parent.parent
+app = Flask(__name__, static_folder=str(root_dir/"web-dist"), static_url_path="/web-dist")
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 
 
@@ -52,8 +52,7 @@ def get_send_history():
 
 @app.route("/")
 def hello():
-    # todo: distribute webpack file via static
-    return render_template('index.html')
+    return app.send_static_file('index.html')
 
 
 if __name__ == "__main__":
