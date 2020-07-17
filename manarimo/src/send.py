@@ -1,6 +1,6 @@
 import requests
-import mod
-import dem
+import manarimo.src.mod
+import manarimo.src.dem
 
 
 API_BASE = "https://icfpc2020-api.testkontur.ru"
