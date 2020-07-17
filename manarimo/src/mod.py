@@ -9,7 +9,7 @@ def modulate_num(s):
         d = d * 10 + int(s[p])
         p += 1
     if d == 0:
-        return "010", s[3:]
+        return "010", s[p:]
 
     bin_d = bin(d)[2:]
     l = (len(bin_d) + 3) // 4
