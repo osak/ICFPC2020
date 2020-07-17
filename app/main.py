@@ -3,12 +3,12 @@ import sys
 import urllib.request
 
 def post(url: str, body: str):
+    print(f"Request: {body}", file=sys.stderr)
     req = urllib.request.Request(url, body.encode(), {'Content-Type': 'text/plain'})
     with urllib.request.urlopen(req) as res:
-        response_body = res.read()
-        print(f"Request: {body}")
-        print(f"Response: {response_body}")
-        return res.read().decode("utf-8")
+        response_body = res.read().decode("utf-8")
+        print(f"Response: {response_body}", file=sys.stderr)
+        return response_body
 
 
 def main():
@@ -23,7 +23,6 @@ def main():
             print(f'{response}', file=proc.stdin, flush=True)
             output = proc.stdout.readline().strip()
             response = post(server_url, output)
-            print(response)
 
 
 
