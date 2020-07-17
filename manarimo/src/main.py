@@ -55,5 +55,10 @@ def hello():
     return app.send_static_file('index.html')
 
 
+@app.route("/bundle.js")
+def hello():
+    return app.send_static_file('bundle.js')
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
