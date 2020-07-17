@@ -1,28 +1,31 @@
-import requests
+import subprocess
 import sys
+import urllib.request
+
+def post(url: str, body: str):
+    req = urllib.request.Request(url, body.encode(), {'Content-Type': 'text/plain'})
+    with urllib.request.urlopen(req) as res:
+        response_body = res.read()
+        print(f"Request: {body}")
+        print(f"Response: {response_body}")
+        return res.read()
 
 
 def main():
     server_url = sys.argv[1]
     player_key = sys.argv[2]
-    print('ServerUrl: %s; PlayerKey: %s' % (server_url, player_key))
+    post(server_url, player_key)
 
-    res = requests.post(server_url, data=player_key)
-    if res.status_code != 200:
-        print('Unexpected server response:')
-        print('HTTP code:', res.status_code)
-        print('Response body:', res.text)
-        exit(2)
-    print('Server response:', res.text)
+    with subprocess.Popen(["./main"], encoding='UTF-8', stdin=subprocess.PIPE, stdout=subprocess.PIPE) as proc:
+        output = proc.stdout.readline().strip()
+        response = response = post(server_url, output)
+        for _ in range(3):
+            print(f'{response}', file=proc.stdin, flush=True)
+            output = proc.stdout.readline().strip()
+            response = post(server_url, output)
+            print(response)
 
-    res = requests.post(server_url, data="1101000")
-    if res.status_code != 200:
-        print('Unexpected server response:')
-        print('HTTP code:', res.status_code)
-        print('Response body:', res.text)
-        exit(2)
-    print('Server response:', res.text)
 
 
 if __name__ == '__main__':
-    main()
+    main() 
