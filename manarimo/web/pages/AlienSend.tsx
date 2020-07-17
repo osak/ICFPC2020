@@ -20,16 +20,19 @@ const InnerAlienSend = (props: InnerProps) => {
   return (
     <Container>
       <Row>
-        <Input value={text} onChange={(e) => setText(e.target.value)} />
-      </Row>
-      <Row className="my-2">
-        <Button
-          disabled={text.length === 0 || sending}
+        <Input
+          value={text}
+          onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               props.submit(text);
             }
           }}
+        />
+      </Row>
+      <Row className="my-2">
+        <Button
+          disabled={text.length === 0 || sending}
           onClick={() => {
             props.submit(text);
           }}
