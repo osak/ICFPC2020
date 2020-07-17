@@ -9,6 +9,8 @@ def dem_num(s):
     while s[i] == "1":
         i += 1
     offset = i + 1
+    if i == 0:
+        return 0, s[1:]
     rem_start = offset + 4 * i
     bin_number = s[offset: rem_start]
     return int(bin_number, 2), s[rem_start:]
