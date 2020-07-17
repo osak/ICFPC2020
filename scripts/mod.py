@@ -25,6 +25,13 @@ def modulate_top(s):
     if s[0] == "n":
         # nil
         return "00", s[3:]
+    elif s[0] == '[':
+        rem = s
+        result = ""
+        while rem[0] != ']':
+            item, rem = modulate_top(rem[1:])
+            result += "11" + item
+        return result + "00", rem[1:]
     elif s[0] == '(':
         # tup
         first, rem = modulate_top(s[1:])
