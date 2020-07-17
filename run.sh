@@ -1,3 +1,3 @@
 #!/bin/sh
 
-ruby app/main.rb "$@"
+python app/main.py "$@" || echo "run error code: $?"
