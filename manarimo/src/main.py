@@ -56,7 +56,7 @@ def hello():
 
 
 @app.route("/bundle.js")
-def hello():
+def bundle():
     return app.send_static_file('bundle.js')
 
 
