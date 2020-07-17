@@ -6,8 +6,8 @@ def main
     playerkey = ARGV[1]
     puts "ServerUrl: %s; PlayerKey: %s" % [serverurl, playerkey]
 
-    uri = URI(serverurl)
-    res = Net::HTTP.post(uri, playerkey)
+    uri = URI(serverurl + "/aliens/send")
+    res = Net::HTTP.post(uri, "1101100001110110000100")
     if res.code == "200"
       puts "Server response: %s" % res.body
     else
