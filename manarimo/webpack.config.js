@@ -10,7 +10,7 @@ if (process.env.NODE_ENV == "production") {
   };
 } else {
   constants = {
-    API_BASE: JSON.stringify("http://localhost:8000/api"),
+    API_BASE: JSON.stringify("http://localhost:3000/api"),
   };
 }
 

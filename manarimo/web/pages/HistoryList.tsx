@@ -1,23 +1,48 @@
 import React from "react";
-import { Button, Container, Input, Row, Table } from "reactstrap";
+import { connect, PromiseState } from "react-refetch";
+import { Container, Row, Table } from "reactstrap";
+import { SendHistory } from "../types";
 
-export const HistoryList = () => {
+declare var API_BASE: string;
+const HISTORY_API = `${API_BASE}/send_history`;
+
+interface InnerProps {
+  historyResponse: PromiseState<SendHistory>;
+}
+
+const InnerHistoryList = (props: InnerProps) => {
+  const history = props.historyResponse.fulfilled
+    ? props.historyResponse.value.items
+    : [];
+
+  history.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
   return (
     <Container>
       <Row>
         <Table>
           <thead>
             <tr>
-              <th>a</th>
+              <th>#</th>
+              <th>Request</th>
+              <th>Response</th>
+              <th>Time</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>b</th>
-            </tr>
+            {history.map((entry) => (
+              <tr key={entry.id}>
+                <th>{entry.id}</th>
+                <td>{entry.request}</td>
+                <td>{entry.response}</td>
+                <td>{entry.timestamp}</td>
+              </tr>
+            ))}
           </tbody>
         </Table>
       </Row>
     </Container>
   );
 };
+export const HistoryList = connect<{}, InnerProps>(() => ({
+  historyResponse: HISTORY_API,
+}))(InnerHistoryList);

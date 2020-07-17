@@ -1,3 +1,4 @@
+import { Redirect } from "@reach/router";
 import React, { useState } from "react";
 import {
   Collapse,
@@ -7,14 +8,9 @@ import {
   Nav,
   NavItem,
   NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  NavbarText,
   Container,
 } from "reactstrap";
-import { HashRouter, Switch, Route } from "react-router-dom";
+import { HashRouter, Switch, Route, Link } from "react-router-dom";
 import { AlienSend } from "./pages/AlienSend";
 import { HistoryList } from "./pages/HistoryList";
 
@@ -26,38 +22,34 @@ export const App = () => {
     <HashRouter>
       <div>
         <Navbar color="light" light expand="md">
-          <NavbarBrand href="/">reactstrap</NavbarBrand>
+          <NavbarBrand tag={Link} to="/">
+            Atelier Manarimo
+          </NavbarBrand>
           <NavbarToggler onClick={toggle} />
           <Collapse isOpen={isOpen} navbar>
             <Nav className="mr-auto" navbar>
               <NavItem>
-                <NavLink href="/components/">Components</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="https://github.com/reactstrap/reactstrap">
-                  GitHub
+                <NavLink tag={Link} to="/submit">
+                  Submit
                 </NavLink>
               </NavItem>
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
-                  Options
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem>Option 1</DropdownItem>
-                  <DropdownItem>Option 2</DropdownItem>
-                  <DropdownItem divider />
-                  <DropdownItem>Reset</DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
             </Nav>
-            <NavbarText>Simple Text</NavbarText>
+            <Nav className="ml-auto" navbar>
+              <NavLink
+                href="https://icfpcontest2020.github.io/#/scoreboard"
+                target="_blank"
+              >
+                Scoreboard
+              </NavLink>
+            </Nav>
           </Collapse>
         </Navbar>
       </div>
       <Container fluid className="my-5">
         <Switch>
-          <Route exact path="/history" component={HistoryList} />
+          <Route exact path="/" component={HistoryList} />
           <Route exact path="/submit" component={AlienSend} />
+          <Redirect path="/" to="/" />
         </Switch>
       </Container>
     </HashRouter>

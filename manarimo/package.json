@@ -33,6 +33,7 @@
     "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-refetch": "^4.0.1-0",
     "react-router-dom": "^5.2.0",
     "reactstrap": "^8.5.1"
   }
