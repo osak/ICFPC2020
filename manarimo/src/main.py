@@ -47,7 +47,7 @@ def get_send_history():
                 dict_row["timestamp"] = dict_row["send_at"].isoformat()
                 results.append(dict_row)
 
-    return jsonify(results)
+    return jsonify({"items": results})
 
 
 @app.route("/")
