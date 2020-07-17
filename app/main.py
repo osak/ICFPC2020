@@ -8,7 +8,7 @@ def post(url: str, body: str):
         response_body = res.read()
         print(f"Request: {body}")
         print(f"Response: {response_body}")
-        return res.read()
+        return res.read().decode("utf-8")
 
 
 def main():
