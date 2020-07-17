@@ -56,3 +56,10 @@ RUN mkdir -p /home/$USERNAME/.vscode-server/extensions \
     && chown -R $USERNAME \
         /home/$USERNAME/.vscode-server \
         /home/$USERNAME/.vscode-server-insiders
+
+# Install psql client
+RUN apt-get update \
+  && apt-get install -y postgresql-client \
+  && apt-get autoremove -y \
+  && apt-get clean -y \
+  && rm -rf /var/lib/apt/lists/
