@@ -46,8 +46,12 @@ def modulate(s):
     return modulate_top(s)
 
 
+def run(s):
+    return modulate(s)[0]
+
+
 def main():
-    print(modulate(input())[0])
+    print(run(input()))
 
 
 if __name__ == '__main__':
