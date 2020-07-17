@@ -13,7 +13,7 @@ if (process.env.NODE_ENV == 'production') {
         API_BASE: JSON.stringify('http://localhost:8000/api'),
     }
 }
- 
+
 module.exports = {
     entry: './web/index.tsx',
     devtool: 'source-map',
@@ -28,6 +28,10 @@ module.exports = {
                 test: /\.tsx?/,
                 use: 'ts-loader',
                 exclude: /node_modules/,
+            },
+            {
+                test: /\.css$/i,
+                use: ['css-loader'],
             },
         ],
     },
