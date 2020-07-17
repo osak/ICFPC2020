@@ -9,7 +9,7 @@ import psycopg2.extras
 DATABASE_URL = os.environ["DATABASE_URL"]
 
 
-app = Flask(__name__, static_url_path="/static")
+app = Flask(__name__, static_url_path="/web-dist")
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 
 
