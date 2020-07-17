@@ -1,4 +1,6 @@
 export interface SubmitResponse {
+  raw_request: string;
+  raw_response: string;
   request: string;
   response: string;
   timestamp: string;
