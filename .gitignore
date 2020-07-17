@@ -2,3 +2,5 @@
 **/node_modules
 **/web-dist
 .vscode
+.idea
+**/__pycache__
