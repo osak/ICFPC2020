@@ -1,4 +1,4 @@
 #!/bin/sh
 
 cd ./app
-python ./main.py "$@"
+python3 ./main.py "$@"
