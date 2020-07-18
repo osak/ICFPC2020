@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, Input, Row } from "reactstrap";
+import {
+  Container,
+  Input,
+  Pagination,
+  PaginationItem,
+  PaginationLink,
+  Row,
+} from "reactstrap";
 import { parseImageString } from "../../util/ImageParser";
 import { CanvasBoard } from "./CanvasBoard";
 import { useHistory } from "react-router-dom";
@@ -39,7 +46,7 @@ export const Visualizer = () => {
     if (images.length > 0) {
       setText(images[0]);
     }
-  }, [images]);
+  }, [json]);
 
   return (
     <Container>
@@ -66,6 +73,17 @@ export const Visualizer = () => {
           }}
         />
       </Row>
+      {images.length && (
+        <Pagination>
+          {images.map((image, i) => (
+            <PaginationItem key={i}>
+              <PaginationLink onClick={() => setText(images[i])}>
+                {i + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+        </Pagination>
+      )}
       <Row>
         <Input
           type="textarea"
