@@ -7,7 +7,7 @@ import src.compile as compile
 
 
 galaxy_cache = None
-REPO_ROOT = Path(__file__).parent.parent.parent / "blob"
+REPO_ROOT = Path(__file__).parent.parent.parent
 
 
 def get_galaxy():
@@ -27,33 +27,42 @@ def get_tmpdir():
         return "/tmp"
 
 
+def get_interp_path():
+    if os.name == "nt":
+        # windows
+        return REPO_ROOT / "a.exe"
+    else:
+        return REPO_ROOT / "a.out"
+
+'{"state": "nil", "data": "(0,0)"}'
 def run(state, data):
-    interp_path = REPO_ROOT / "a.out"
+    interp_path = get_interp_path()
     galaxy = get_galaxy()
 
     galaxy_def = ":galaxy = ap ap :1338 ap ap {} {}".format(compile.run(state), compile.run(data))
 
-    with tempfile.NamedTemporaryFile(dir=get_tmpdir()) as tf:
-        tf.write(galaxy)
-        if not galaxy.endswith("\n"):
-            tf.write("\n")
-        tf.write(galaxy_def)
+    fd, tf_path = tempfile.mkstemp(dir=get_tmpdir())
 
-        response = subprocess.check_output([interp_path, "--interact", tf.name]).decode()  # type: str
-        lines = response.splitlines()
-        # raw = lines[0]
+    with open(tf_path, "w") as tf:
+        print(galaxy.strip(), file=tf)
+        print(galaxy_def, file=tf)
 
-        result = {
-            "data": []
-        }
-        for l in lines[1:]:
-            key, value = [s.strip() for s in l.split("=")]
-            if key == "state":
-                result["state"] = value
-            elif key == "data":
-                result["data"].append(value)
-            else:
-                raise ValueError("Unknown key `{}`".format(key))
+    response = subprocess.check_output([str(interp_path), "--interact", tf_path]).decode()  # type: str
+    lines = response.splitlines()
+    # raw = lines[0]
+
+    result = {
+        "data": []
+    }
+    for l in lines[1:]:
+        key, value = [s.strip() for s in l.split("=")]
+        if key == "state":
+            result["state"] = value
+        elif key == "data":
+            result["data"].append(value)
+        else:
+            raise ValueError("Unknown key `{}`".format(key))
+
     return result
 
 
