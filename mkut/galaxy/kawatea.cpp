@@ -279,13 +279,13 @@ pair<Value*, int> parse(const string& line, int pos) {
 }
 
 Value* car(Value *node) {
-    Value* car = Value::create_function("car");
-    return Value::create_apply(car, node);
+    assert(node->is_cons());
+    return node->left->right;
 }
 
 Value* cdr(Value *node) {
-    Value* cdr = Value::create_function("cdr");
-    return Value::create_apply(cdr, node);
+    assert(node->is_cons());
+    return node->right;
 }
 
 void print_cons_list(Value *top) {
@@ -316,13 +316,13 @@ void print_cons_list(Value *top) {
     }
 }
 
-void interactive_output(Value *top, Reducer &reducer) {
+void interactive_output(Value *top) {
     cout << "full = ";
-    print_cons_list(reducer.full_reduce(top));
+    print_cons_list(top);
     cout << endl;
 
-    Value *state = reducer.full_reduce(car(cdr(top)), false);
-    Value *data = reducer.full_reduce(car(cdr(cdr(top))), false);
+    Value *state = car(cdr(top));
+    Value *data = car(cdr(cdr(top)));
 
     cout << "state = ";
     print_cons_list(state);
@@ -330,12 +330,12 @@ void interactive_output(Value *top, Reducer &reducer) {
 
     Value *cur = data;
     while (cur->is_cons()) {
-        Value *img = reducer.full_reduce(car(cur));
+        Value *img = car(cur);
         cout << "data = ";
         print_cons_list(img);
         cout << endl;
 
-        cur = reducer.full_reduce(cdr(cur));
+        cur = cdr(cur);
     }
 }
 
@@ -381,7 +381,7 @@ int main(int argc, char* argv[]) {
         cout << endl;
         cerr << "end reducing" << endl;
         if (interactive_mode) {
-            interactive_output(top, reducer);
+            interactive_output(reducer.full_reduce(top, false));
         } else {
             Value* car = Value::create_function("car");
             Value* cdr = Value::create_function("cdr");
