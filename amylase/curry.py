@@ -4,7 +4,7 @@ import sys
 
 sys.setrecursionlimit(10000)
 lib_file = Path(__file__).parent / "curry_lib.scm"
-galaxy_file = Path(__file__).parent.parent / "blob" / "sun.txt"
+galaxy_file = Path(__file__).parent.parent / "blob" / "galaxy.txt"
 
 output_file = Path(__file__).parent / "output.scm"
 
