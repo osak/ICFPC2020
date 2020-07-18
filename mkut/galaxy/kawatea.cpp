@@ -305,6 +305,10 @@ void print_cons_list(Value *top, Reducer &reducer) {
 }
 
 void interactive_output(Value *top, Reducer &reducer) {
+    cout << "full = ";
+    print_cons_list(reducer.full_reduce(top), reducer);
+    cout << endl;
+
     Value *state = reducer.full_reduce(car(cdr(top)), false);
     Value *data = reducer.full_reduce(car(cdr(cdr(top))), false);
 
