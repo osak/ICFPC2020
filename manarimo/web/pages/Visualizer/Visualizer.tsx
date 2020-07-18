@@ -48,6 +48,9 @@ export const Visualizer = () => {
       setText(images[0]);
     }
   }, [json]);
+  useEffect(() => {
+    setState(state);
+  }, [json]);
 
   return (
     <Container>
