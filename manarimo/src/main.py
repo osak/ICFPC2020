@@ -5,6 +5,8 @@ import src.send as send
 from datetime import datetime, timezone
 import psycopg2.extras
 from pathlib import Path
+import src.interact as interact
+
 
 DATABASE_URL = os.environ["DATABASE_URL"]
 
@@ -48,6 +50,18 @@ def get_send_history():
                 results.append(dict_row)
 
     return jsonify({"items": results})
+
+
+@app.route("/api/interact", methods=["POST"])
+def post_interact():
+    state = request.json["state"]
+    data = request.json["data"]
+    response = interact.run(state, data)
+
+    return jsonify({
+        "state": response["state"],
+        "data": response["data"]
+    })
 
 
 @app.route("/")
