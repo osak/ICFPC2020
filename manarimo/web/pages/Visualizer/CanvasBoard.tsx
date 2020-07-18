@@ -2,6 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 
 const TOOLTIP_W = 100;
 const TOOLTIP_H = 50;
+const COLOR_PALLETE = [
+  "navy",
+  "red",
+  "lime",
+  "olive",
+  "black",
+  "purple",
+  "maroon",
+  "green",
+];
 
 const renderTooltip = (
   ctx: CanvasRenderingContext2D,
@@ -68,9 +78,13 @@ export const CanvasBoard = (props: Props) => {
     if (canvas) {
       const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
       ctx.clearRect(0, 0, width, height);
-      normalizedLayers.flat().forEach(([x, y]) => {
-        ctx.fillStyle = "black";
-        ctx.fillRect(x * blockWidth, y * blockWidth, blockWidth, blockWidth);
+      normalizedLayers.forEach((layer, layerId) => {
+        layer.forEach(([x, y]) => {
+          ctx.globalAlpha = 0.7;
+          ctx.fillStyle = COLOR_PALLETE[layerId % COLOR_PALLETE.length];
+          ctx.fillRect(x * blockWidth, y * blockWidth, blockWidth, blockWidth);
+          ctx.globalAlpha = 1.0;
+        });
       });
 
       if (mousePosition) {
