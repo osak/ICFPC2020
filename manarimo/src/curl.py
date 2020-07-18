@@ -25,8 +25,8 @@ def post_interact(base):
     headers = {'Content-type': 'application/json'}
 
     data_obj = {
-        "state": "[1,2,3]",
-        "data": "(1,2)"
+        "state": "nil",
+        "data": "(0,0)"
     }
 
     post_result = requests.post(base + "/api/interact", data=json.dumps(data_obj), headers=headers)

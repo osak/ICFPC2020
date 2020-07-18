@@ -34,12 +34,12 @@ def get_interp_path():
     else:
         return REPO_ROOT / "a.out"
 
-
+'{"state":"nil","data":"(0,0)"}'
 def run(state, data):
     interp_path = get_interp_path()
     galaxy = get_galaxy()
 
-    galaxy_def = ":galaxy = ap ap :1338 ap ap {} {}".format(compile.run(state), compile.run(data))
+    galaxy_def = ":galaxy = ap ap :1338 {} {}".format(compile.run(state), compile.run(data))
 
     fd, tf_path = tempfile.mkstemp(dir=get_tmpdir())
 
@@ -47,7 +47,7 @@ def run(state, data):
         print(galaxy.strip(), file=tf)
         print(galaxy_def, file=tf)
 
-    response = subprocess.check_output([str(interp_path), "--interact", tf_path]).decode()  # type: str
+    response = subprocess.check_output([str(interp_path), "--interactive", tf_path]).decode()  # type: str
     os.close(fd)
     os.remove(tf_path)
     lines = response.splitlines()
