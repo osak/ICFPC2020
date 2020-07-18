@@ -34,6 +34,7 @@ export const Visualizer = () => {
   const images = interactiveState?.data ?? [];
   const [disableImages, setDisableImages] = useState<number[]>([]);
   const [state, setState] = useState(interactiveState?.state ?? "nil");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     setState(interactiveState?.state ?? "nil");
@@ -53,6 +54,7 @@ export const Visualizer = () => {
             disableImages.includes(i) ? [] : parseImageString(image)
           )}
           onClick={(pos) => {
+            setMessage("Synchronizing ...");
             fetch(INTERACT_API, {
               method: "POST",
               headers: {
@@ -69,29 +71,33 @@ export const Visualizer = () => {
                 const query = new URLSearchParams();
                 query.set("json", nextState);
                 history.push({ search: query.toString() });
-              });
+              })
+              .then(() => setMessage(""));
           }}
         />
       </Row>
-      {images.length && (
-        <ButtonGroup>
-          {images.map((image, i) => (
-            <Button
-              key={i}
-              onClick={() => {
-                if (disableImages.includes(i)) {
-                  setDisableImages(disableImages.filter((j) => i !== j));
-                } else {
-                  setDisableImages([...disableImages, i]);
-                }
-              }}
-              active={!disableImages.includes(i)}
-            >
-              {i + 1}
-            </Button>
-          ))}
-        </ButtonGroup>
-      )}
+      <Row className="my-2">
+        {images.length && (
+          <ButtonGroup>
+            {images.map((image, i) => (
+              <Button
+                key={i}
+                onClick={() => {
+                  if (disableImages.includes(i)) {
+                    setDisableImages(disableImages.filter((j) => i !== j));
+                  } else {
+                    setDisableImages([...disableImages, i]);
+                  }
+                }}
+                active={!disableImages.includes(i)}
+              >
+                {i + 1}
+              </Button>
+            ))}
+          </ButtonGroup>
+        )}
+        {message}
+      </Row>
       <Row className="my-2">
         <Label>Image</Label>
         <Input type="textarea" value={imageText} disabled />
