@@ -34,7 +34,7 @@ def get_interp_path():
     else:
         return REPO_ROOT / "a.out"
 
-'{"state": "nil", "data": "(0,0)"}'
+
 def run(state, data):
     interp_path = get_interp_path()
     galaxy = get_galaxy()
@@ -48,6 +48,8 @@ def run(state, data):
         print(galaxy_def, file=tf)
 
     response = subprocess.check_output([str(interp_path), "--interact", tf_path]).decode()  # type: str
+    os.close(fd)
+    os.remove(tf_path)
     lines = response.splitlines()
     # raw = lines[0]
 
@@ -62,7 +64,6 @@ def run(state, data):
             result["data"].append(value)
         else:
             raise ValueError("Unknown key `{}`".format(key))
-
     return result
 
 
