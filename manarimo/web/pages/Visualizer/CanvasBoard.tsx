@@ -41,6 +41,7 @@ interface Props {
   height: number;
   width: number;
   points: [number, number][];
+  onClick?: (pos: { x: number; y: number }) => void;
 }
 
 export const CanvasBoard = (props: Props) => {
@@ -82,7 +83,6 @@ export const CanvasBoard = (props: Props) => {
       });
 
       if (mousePosition) {
-        console.log(mousePosition);
         const { x, y } = mousePosition;
         renderTooltip(ctx, x, y, blockWidth, width, height);
       }
@@ -103,6 +103,20 @@ export const CanvasBoard = (props: Props) => {
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             setMousePosition({ x, y });
+          }
+        }}
+        onClick={(e) => {
+          const canvas = canvasRef.current;
+          if (canvas) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            if (props.onClick) {
+              props.onClick({
+                x: Math.floor(x / blockWidth),
+                y: Math.floor(y / blockWidth),
+              });
+            }
           }
         }}
       />
