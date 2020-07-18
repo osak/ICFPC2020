@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Container,
-  Input,
-  Label,
-  Pagination,
-  PaginationItem,
-  PaginationLink,
-  Row,
-} from "reactstrap";
+import { Button, ButtonGroup, Container, Input, Label, Row } from "reactstrap";
 import { parseImageString } from "../../util/ImageParser";
 import { CanvasBoard } from "./CanvasBoard";
 import { useHistory } from "react-router-dom";
@@ -40,6 +32,7 @@ export const Visualizer = () => {
   const json = new URLSearchParams(history.location.search).get("json");
   const interactiveState = json ? parseState(json) : undefined;
   const images = interactiveState?.data ?? [];
+  const [activeImages, setActiveImages] = useState<number[]>([0]);
   const [text, setText] = useState("");
   const [state, setState] = useState(interactiveState?.state ?? "nil");
 
@@ -49,6 +42,16 @@ export const Visualizer = () => {
     }
     setState(interactiveState?.state ?? "nil");
   }, [json]);
+
+  useEffect(() => {
+    let s = "";
+    images.forEach((image, i) => {
+      if (activeImages.includes(i)) {
+        s += image;
+      }
+    });
+    setText(s);
+  }, [activeImages]);
 
   return (
     <Container>
@@ -79,15 +82,23 @@ export const Visualizer = () => {
         />
       </Row>
       {images.length && (
-        <Pagination>
+        <ButtonGroup>
           {images.map((image, i) => (
-            <PaginationItem key={i}>
-              <PaginationLink onClick={() => setText(images[i])}>
-                {i + 1}
-              </PaginationLink>
-            </PaginationItem>
+            <Button
+              key={i}
+              onClick={() => {
+                if (activeImages.includes(i)) {
+                  setActiveImages(activeImages.filter((j) => i !== j));
+                } else {
+                  setActiveImages([...activeImages, i]);
+                }
+              }}
+              active={activeImages.includes(i)}
+            >
+              {i + 1}
+            </Button>
           ))}
-        </Pagination>
+        </ButtonGroup>
       )}
       <Row className="my-2">
         <Label>Image</Label>
