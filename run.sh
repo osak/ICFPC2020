@@ -1,3 +1,4 @@
 #!/bin/sh
 
-ruby app/main.rb "$@"
+cd ./app
+python3 ./main.py "$@"
