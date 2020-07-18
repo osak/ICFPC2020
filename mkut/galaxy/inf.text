@@ -4,5 +4,5 @@
 :4 = ap ap cons :3 :3
 :5 = ap ap add 1 1
 :10 = ap ap cons 1 :2
-:galaxy = :4
-:galaxy = :10
+:20 = ap ap ap cons 1 2 add
+:galaxy = :20
