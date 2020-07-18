@@ -18,7 +18,7 @@ export const Visualizer = () => {
   return (
     <Container>
       <Row>
-        <CanvasBoard height={700} width={700} points={points} />
+        <CanvasBoard height={700} width={1000} points={points} />
       </Row>
       <Row>
         <Input
