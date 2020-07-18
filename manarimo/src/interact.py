@@ -7,14 +7,14 @@ import src.compile as compile
 
 
 galaxy_cache = None
-REPO_ROOT = Path(__file__).parent.parent.parent
+SRC_DIR = Path(__file__).parent
 
 
 def get_galaxy():
     global galaxy_cache
     if galaxy_cache is not None:
         return galaxy_cache
-    with (REPO_ROOT / "manarimo" / "galaxy.txt").open() as f:
+    with (SRC_DIR.parent / "galaxy.txt").open() as f:
         galaxy_cache = f.read()
     return galaxy_cache
 
@@ -30,9 +30,9 @@ def get_tmpdir():
 def get_interp_path():
     if os.name == "nt":
         # windows
-        return REPO_ROOT / "a.exe"
+        return SRC_DIR.parent.parent / "a.exe"
     else:
-        return REPO_ROOT / "a.out"
+        return SRC_DIR.parent / "a.out"
 
 '{"state":"nil","data":"(0,0)"}'
 def run(state, data):
