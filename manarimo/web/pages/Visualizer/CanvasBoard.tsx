@@ -124,8 +124,12 @@ export const CanvasBoard = (props: Props) => {
             const y = e.clientY - rect.top;
             if (props.onClick) {
               props.onClick({
-                x: Math.floor(x / blockWidth),
-                y: Math.floor(y / blockWidth),
+                x:
+                  Math.floor(x / blockWidth) +
+                  Math.min(...points.map(([x]) => x)),
+                y:
+                  Math.floor(y / blockWidth) +
+                  Math.min(...points.map(([_, y]) => y)),
               });
             }
           }
