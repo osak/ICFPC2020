@@ -97,7 +97,7 @@ struct Reducer {
         return true;
     }
     
-    pair<bool, Value*> reduce(Value* value) {
+    pair<bool, Value*> reduce(Value* value, bool stop_on_cons = false) {
         if (value->type == INTEGER) {
             return make_pair(false, value);
         } else if (value->type == FUNCTION) {
@@ -118,6 +118,12 @@ struct Reducer {
                 return make_pair(true, values[0]);
             } else {
                 int size = arg_size[value->name];
+                if (value->name == "cons" && values.size() == 2 && !stop_on_cons) {
+                    Value* x0 = full_reduce(values[values.size() - 1]->right, false);
+                    Value* x1 = full_reduce(values[values.size() - 2]->right, false);
+                    values[values.size() - 1]->right = x0;
+                    values[values.size() - 2]->right = x1;
+                }
                 if (values.size() < size) return make_pair(false, values[0]);
                 Value* next;
                 if (value->name == "add" || value->name == "mul" || value->name == "div" || value->name == "lt") {
@@ -206,9 +212,9 @@ struct Reducer {
         }
     }
     
-    Value* full_reduce(Value* value) {
+    Value* full_reduce(Value* value, bool stop_on_cons = true) {
         while (true) {
-            pair<bool, Value*> p = reduce(value);
+            pair<bool, Value*> p = reduce(value, stop_on_cons);
             value = p.second;
             if (!p.first) return value;
         }
@@ -261,17 +267,6 @@ int main(int argc, char* argv[]) {
             Value* cdr = Value::create_function("cdr");
             top = Value::create_apply(car, Value::create_apply(car, Value::create_apply(cdr, Value::create_apply(cdr, top))));
             top = reducer.full_reduce(top);
-            while (true) {
-                if (top->name == "nil") break;
-                assert(top->is_cons());
-                Value* p = reducer.full_reduce(top->left->right);
-                assert(p->is_cons());
-                reducer.full_reduce(p->left->right)->print();
-                cout << ",";
-                reducer.full_reduce(p->right)->print();
-                cout << endl;
-                top = reducer.full_reduce(top->right);
-            }
         } else {
             cerr << "file cannot be opened" << endl;
         }
