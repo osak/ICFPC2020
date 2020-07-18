@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Container,
   Input,
+  Label,
   Pagination,
   PaginationItem,
   PaginationLink,
@@ -40,12 +41,15 @@ export const Visualizer = () => {
   const interactiveState = json ? parseState(json) : undefined;
   const images = interactiveState?.data ?? [];
   const [text, setText] = useState("");
-  const state = interactiveState?.state ?? "nil";
+  const [state, setState] = useState(interactiveState?.state ?? "nil");
 
   useEffect(() => {
     if (images.length > 0) {
       setText(images[0]);
     }
+  }, [json]);
+  useEffect(() => {
+    setState(state);
   }, [json]);
 
   return (
@@ -87,11 +91,20 @@ export const Visualizer = () => {
           ))}
         </Pagination>
       )}
-      <Row>
+      <Row className="my-2">
+        <Label>Image</Label>
         <Input
           type="textarea"
           value={text}
           onChange={(e) => setText(e.target.value)}
+        />
+      </Row>
+      <Row className="my-2">
+        <Label>State</Label>
+        <Input
+          type="textarea"
+          value={state}
+          onChange={(e) => setState(e.target.value)}
         />
       </Row>
     </Container>
