@@ -40,7 +40,7 @@ def run(state, data):
     galaxy = get_galaxy()
 
     if state.find('ap') == -1:
-        stats_str = compile.run(state)
+        state_str = compile.run(state)
     else:
         state_str = state.strip()
 
