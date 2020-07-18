@@ -5,20 +5,22 @@ const TOOLTIP_H = 50;
 
 const renderTooltip = (
   ctx: CanvasRenderingContext2D,
-  x: number,
-  y: number,
+  actualX: number,
+  actualY: number,
   blockWidth: number,
   width: number,
-  height: number
+  height: number,
+  offsetX: number,
+  offsetY: number
 ) => {
-  const blockX = Math.floor(x / blockWidth);
-  const blockY = Math.floor(y / blockWidth);
+  const blockX = Math.floor(actualX / blockWidth);
+  const blockY = Math.floor(actualY / blockWidth);
 
   const rectX =
-    x + (3 * TOOLTIP_W) / 2 < width
-      ? x + TOOLTIP_W / 2
-      : x - (3 * TOOLTIP_W) / 2;
-  const rectY = y + TOOLTIP_H < height ? y : y - TOOLTIP_H;
+    actualX + (3 * TOOLTIP_W) / 2 < width
+      ? actualX + TOOLTIP_W / 2
+      : actualX - (3 * TOOLTIP_W) / 2;
+  const rectY = actualY + TOOLTIP_H < height ? actualY : actualY - TOOLTIP_H;
 
   ctx.fillStyle = "white";
   ctx.fillRect(rectX, rectY, TOOLTIP_W, TOOLTIP_H);
@@ -28,8 +30,8 @@ const renderTooltip = (
 
   ctx.font = "20px sans";
   ctx.fillStyle = "black";
-  ctx.fillText(`x: ${blockX}`, rectX + 10, rectY + TOOLTIP_H - 30);
-  ctx.fillText(`y: ${blockY}`, rectX + 10, rectY + TOOLTIP_H - 10);
+  ctx.fillText(`x: ${blockX + offsetX}`, rectX + 10, rectY + TOOLTIP_H - 30);
+  ctx.fillText(`y: ${blockY + offsetY}`, rectX + 10, rectY + TOOLTIP_H - 10);
 };
 
 interface Position {
@@ -84,7 +86,16 @@ export const CanvasBoard = (props: Props) => {
 
       if (mousePosition) {
         const { x, y } = mousePosition;
-        renderTooltip(ctx, x, y, blockWidth, width, height);
+        renderTooltip(
+          ctx,
+          x,
+          y,
+          blockWidth,
+          width,
+          height,
+          Math.min(...points.map(([x]) => x)),
+          Math.min(...points.map(([_, y]) => y))
+        );
       }
     }
   }, [ctx, points, mousePosition]);
