@@ -34,6 +34,11 @@ export const App = () => {
                   Submit
                 </NavLink>
               </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/vis">
+                  Visualizer
+                </NavLink>
+              </NavItem>
             </Nav>
             <Nav className="ml-auto" navbar>
               <NavLink
