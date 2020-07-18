@@ -13,6 +13,7 @@ import {
 import { HashRouter, Switch, Route, Link } from "react-router-dom";
 import { AlienSend } from "./pages/AlienSend";
 import { HistoryList } from "./pages/HistoryList";
+import { Visualizer } from "./pages/Visualizer/Visualizer";
 
 export const App = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,6 +50,7 @@ export const App = () => {
         <Switch>
           <Route exact path="/" component={HistoryList} />
           <Route exact path="/submit" component={AlienSend} />
+          <Route exact path="/vis" component={Visualizer} />
           <Redirect path="/" to="/" />
         </Switch>
       </Container>
