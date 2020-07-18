@@ -1,6 +1,6 @@
 import React from "react";
 import { connect, PromiseState } from "react-refetch";
-import { Container, Row, Table } from "reactstrap";
+import { Container, Input, Row, Table } from "reactstrap";
 import { SendHistory } from "../types";
 
 declare var API_BASE: string;
@@ -32,8 +32,14 @@ const InnerHistoryList = (props: InnerProps) => {
             {history.map((entry) => (
               <tr key={entry.id}>
                 <th>{entry.id}</th>
-                <td>{entry.request}</td>
-                <td>{entry.response}</td>
+                <td>
+                  <p>{entry.request}</p>
+                  <Input value={entry.raw_request} />
+                </td>
+                <td>
+                  <p>{entry.response}</p>
+                  <Input value={entry.raw_response} />
+                </td>
                 <td>{entry.timestamp}</td>
               </tr>
             ))}
