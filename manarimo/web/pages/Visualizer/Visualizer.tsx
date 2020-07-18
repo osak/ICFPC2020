@@ -47,9 +47,7 @@ export const Visualizer = () => {
     if (images.length > 0) {
       setText(images[0]);
     }
-  }, [json]);
-  useEffect(() => {
-    setState(state);
+    setState(interactiveState?.state ?? "nil");
   }, [json]);
 
   return (
