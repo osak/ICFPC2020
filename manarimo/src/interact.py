@@ -39,7 +39,12 @@ def run(state, data):
     interp_path = get_interp_path()
     galaxy = get_galaxy()
 
-    galaxy_def = ":galaxy = ap ap :1338 {} {}".format(compile.run(state), compile.run(data))
+    if state.find('ap') == -1:
+        stats_str = compile.run(state)
+    else:
+        state_str = state.strip()
+
+    galaxy_def = ":galaxy = ap ap :1338 {} {}".format(state_str, compile.run(data))
 
     fd, tf_path = tempfile.mkstemp(dir=get_tmpdir())
 
