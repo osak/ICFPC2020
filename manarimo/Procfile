@@ -1,1 +1,1 @@
-web: ./test.sh
+web: gunicorn src.main:app
