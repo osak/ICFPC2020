@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 import psycopg2.extras
 from pathlib import Path
 import src.interact as interact
+import sys
 
 
 DATABASE_URL = os.environ["DATABASE_URL"]
@@ -13,7 +14,7 @@ DATABASE_URL = os.environ["DATABASE_URL"]
 root_dir = Path(__file__).parent.parent
 app = Flask(__name__, static_folder=str(root_dir/"web-dist"), static_url_path="/web-dist")
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
-
+sys.setrecursionlimit(100000)
 
 def get_connection():
     return psycopg2.connect(DATABASE_URL)
