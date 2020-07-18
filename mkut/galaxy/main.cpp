@@ -115,6 +115,10 @@ public:
          }
          Value a = reduce(v.args[0]);
          Value b = reduce(v.args[1]);
+         if (a.type != 1 || b.type != 1) {
+            print_value(a);
+            print_value(b);
+         }
          assert(a.type == 1 && b.type == 1);
 
          return Value::new_value(a.value + b.value);
@@ -293,6 +297,19 @@ public:
          }
          return reduce(r);
       }
+      assert(false);
+   }
+
+   Value car(Value v) {
+      Value tmp = Value::new_ident("car");
+      tmp.args.push_back(v);
+      return reduce(tmp);
+   }
+
+   Value cdr(Value v) {
+      Value tmp = Value::new_ident("cdr");
+      tmp.args.push_back(v);
+      return reduce(tmp);
    }
 };
 
@@ -353,7 +370,27 @@ int main(int argc, char *argv[]) {
 
         Evaluator ev;
         ev.env = result;
-        print_value(ev.reduce(Value::new_variable(":galaxy")));
+
+        Value root = Value::new_variable(":galaxy");
+        root = ev.reduce(root);
+        print_value(root);
+        Value multidraw_arg = ev.car(ev.cdr(ev.cdr(root)));
+        Value first_draw = ev.car(multidraw_arg);
+        Value first_point = ev.car(first_draw);
+        print_value(ev.car(first_point));
+        print_value(ev.cdr(first_point));
+        cout << " -- " << endl;
+
+        Value second_point = ev.car(ev.cdr(first_draw));
+        print_value(ev.car(second_point));
+        print_value(ev.cdr(second_point));
+
+/*
+         while(true) {
+            e = ev.expand_one(e);
+            print_value(e);
+         }
+         */
 
         file.close();
     }
