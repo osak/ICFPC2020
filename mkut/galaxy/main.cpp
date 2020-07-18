@@ -209,7 +209,8 @@ public:
          if (v.args.size() < 1) {
             return v;
          }
-         if (v.args[0].type == 2 && v.args[0].ident == "nil") {
+         const Value tmp = reduce(v.args[0]);
+         if (tmp.type == 2 && tmp.ident == "nil") {
             return Value::new_ident("t");
          } else {
             return Value::new_ident("f");
@@ -376,6 +377,17 @@ int main(int argc, char *argv[]) {
         print_value(root);
         Value multidraw_arg = ev.car(ev.cdr(ev.cdr(root)));
         Value first_draw = ev.car(multidraw_arg);
+
+        Value cur = first_draw;
+        while (cur.ident != "nil") {
+           Value p = ev.car(cur);
+           print_value(ev.car(p));
+           print_value(ev.cdr(p));
+           cout << "--" << endl;
+           cur = ev.cdr(cur);
+        }
+
+/*
         Value first_point = ev.car(first_draw);
         print_value(ev.car(first_point));
         print_value(ev.cdr(first_point));
@@ -384,6 +396,10 @@ int main(int argc, char *argv[]) {
         Value second_point = ev.car(ev.cdr(first_draw));
         print_value(ev.car(second_point));
         print_value(ev.cdr(second_point));
+
+        Value third_point = ev.car(ev.cdr(ev.cdr(first_draw)));
+        print_value(ev.car(third_point));
+        print_value(ev.cdr(third_point));
 
 /*
          while(true) {
