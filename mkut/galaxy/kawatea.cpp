@@ -7,6 +7,40 @@
 
 using namespace std;
 
+std::ostream &operator<<(std::ostream &dest, __int128_t value) {
+  std::ostream::sentry s(dest);
+  if (s) {
+    __uint128_t tmp = value < 0 ? -value : value;
+    char buffer[128];
+    char *d = std::end(buffer);
+    do {
+      --d;
+      *d = "0123456789"[tmp % 10];
+      tmp /= 10;
+    } while (tmp != 0);
+    if (value < 0) {
+      --d;
+      *d = '-';
+    }
+    int len = std::end(buffer) - d;
+    if (dest.rdbuf()->sputn(d, len) != len) {
+      dest.setstate(std::ios_base::badbit);
+    }
+  }
+  return dest;
+}
+
+__int128 parsei128(string &s) {
+  __int128 ret = 0;
+  bool minus = false;
+  for (int i = 0; i < s.length(); i++)
+    if (s[i] == '-')
+        minus = true;
+    else if ('0' <= s[i] && s[i] <= '9')
+      ret = 10 * ret + s[i] - '0';
+  return ret * (minus ? -1 : 1);
+}
+
 map<string, int> arg_size = {
     {"add", 2},
     {"mul", 2},
@@ -35,15 +69,15 @@ enum Type {
 
 struct Value {
     Type type;
-    long long num;
+    __int128 num;
     string name;
     Value* left;
     Value* right;
     
     Value() {}
-    Value(Type type, long long num, const string& name, Value* left, Value* right) : type(type), num(num), name(name), left(left), right(right) {}
+    Value(Type type, __int128 num, const string& name, Value* left, Value* right) : type(type), num(num), name(name), left(left), right(right) {}
     
-    static Value* create_integer(long long num) {
+    static Value* create_integer(__int128 num) {
         return new Value(INTEGER, num, "", nullptr, nullptr);
     }
     
@@ -69,11 +103,11 @@ struct Value {
         } else {
             assert(left != nullptr);
             assert(right != nullptr);
-            cout << "(";
+            cout << "ap ";
             left->print();
             cout << " ";
             right->print();
-            cout << ")";
+            //cout << ")";
         }
     }
 };
@@ -238,7 +272,7 @@ pair<Value*, int> parse(const string& line, int pos) {
         pair<Value*, int> p2 = parse(line, p1.second);
         return make_pair(Value::create_apply(p1.first, p2.first), p2.second);
     } else if (term[0] == '-' || (term[0] >= '0' && term[0] <= '9')) {
-        return make_pair(Value::create_integer(stoll(term)), next + 1);
+        return make_pair(Value::create_integer(parsei128(term)), next + 1);
     } else {
         return make_pair(Value::create_function(term), next + 1);
     }
@@ -307,7 +341,6 @@ int main(int argc, char* argv[]) {
     } else {
         filename = string(argv[1]);
     }
-
     ifstream file(filename);
     if (file.is_open()) {
         cerr << "start parsing" << endl;
@@ -328,7 +361,7 @@ int main(int argc, char* argv[]) {
             top = p.second;
             if (!p.first) break;
         }
-        top->print();
+        //top->print();
         cout << endl;
         cerr << "end reducing" << endl;
         if (interactive_mode) {
@@ -336,8 +369,20 @@ int main(int argc, char* argv[]) {
         } else {
             Value* car = Value::create_function("car");
             Value* cdr = Value::create_function("cdr");
-            top = Value::create_apply(car, Value::create_apply(car, Value::create_apply(cdr, Value::create_apply(cdr, top))));
-            top = reducer.full_reduce(top);
+            cout << "flag: ";
+            reducer.full_reduce(Value::create_apply(car, top))->print();
+            cout << endl << "state: ";
+            reducer.full_reduce(Value::create_apply(car, Value::create_apply(cdr, top)))->print();
+            Value* data = Value::create_apply(car, Value::create_apply(cdr, Value::create_apply(cdr, top)));
+            for (int i = 0; ; i++) {
+                if (data->type == FUNCTION && data->name == "nil") break;
+                    cout << endl << "data" << (i+1) << ": ";
+                    reducer.full_reduce(Value::create_apply(car, data))->print();
+                    cout << endl << endl;
+                    data = reducer.full_reduce(Value::create_apply(cdr, data));
+            }
+            cout << endl;
+            //top = reducer.full_reduce(top);
         }
     } else {
         cerr << "file cannot be opened" << endl;
