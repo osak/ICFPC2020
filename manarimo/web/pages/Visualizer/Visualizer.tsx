@@ -58,6 +58,9 @@ export const Visualizer = () => {
           onClick={(pos) => {
             fetch(INTERACT_API, {
               method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
               body: JSON.stringify({
                 state,
                 data: `(${pos.x},${pos.y})`,
