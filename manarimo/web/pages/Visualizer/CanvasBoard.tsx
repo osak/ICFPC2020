@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const TOOLTIP_W = 100;
 const TOOLTIP_H = 50;
@@ -42,63 +42,47 @@ interface Position {
 interface Props {
   height: number;
   width: number;
-  points: [number, number][];
+  layers: [number, number][][];
   onClick?: (pos: { x: number; y: number }) => void;
 }
 
 export const CanvasBoard = (props: Props) => {
-  const { height, width, points } = props;
-
-  let normalized = [] as [number, number][];
-  let blockWidth = 1;
-  if (points.length !== 0) {
-    const minX = Math.min(...points.map(([x]) => x));
-    const maxX = Math.max(...points.map(([x]) => x));
-    const minY = Math.min(...points.map(([_, y]) => y));
-    const maxY = Math.max(...points.map(([_, y]) => y));
-
-    normalized = points.map(([x, y]) => [x - minX, y - minY]);
-    const maxW = Math.max(maxX - minX + 1, maxY - minY + 1);
-    blockWidth = Math.min(height, width) / Math.max(maxW, 1);
-  }
-
+  const { height, width, layers } = props;
   const [mousePosition, setMousePosition] = useState<Position | undefined>(
     undefined
   );
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [ctx, setContext] = useState<CanvasRenderingContext2D | null>(null);
-  React.useEffect(() => {
-    if (canvasRef.current) {
-      const renderCtx = canvasRef.current.getContext("2d");
 
-      if (renderCtx) {
-        setContext(renderCtx);
-      }
-    }
+  const minX = Math.min(...layers.flatMap((layer) => layer).map(([x]) => x));
+  const maxX = Math.max(...layers.flatMap((layer) => layer).map(([x]) => x));
+  const minY = Math.min(...layers.flatMap((layer) => layer).map(([_, y]) => y));
+  const maxY = Math.max(...layers.flatMap((layer) => layer).map(([_, y]) => y));
+  const normalizedLayers = layers.map((l) =>
+    l.map(([x, y]) => [x - minX, y - minY])
+  );
+  const maxW = Math.max(maxX - minX + 1, maxY - minY + 1);
+  const blockWidth = Math.min(height, width) / maxW;
 
-    // Draw
-    if (ctx) {
+  useEffect(() => {
+    const canvas: any = canvasRef.current;
+    if (canvas) {
+      const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
       ctx.clearRect(0, 0, width, height);
-      normalized.forEach(([x, y]) => {
+      normalizedLayers.flat().forEach(([x, y]) => {
         ctx.fillStyle = "black";
         ctx.fillRect(x * blockWidth, y * blockWidth, blockWidth, blockWidth);
       });
 
       if (mousePosition) {
         const { x, y } = mousePosition;
-        renderTooltip(
-          ctx,
-          x,
-          y,
-          blockWidth,
-          width,
-          height,
-          Math.min(...points.map(([x]) => x)),
-          Math.min(...points.map(([_, y]) => y))
-        );
+        renderTooltip(ctx, x, y, blockWidth, width, height, minX, minY);
       }
     }
-  }, [ctx, points, mousePosition]);
+  });
+
+  if (Math.max(...layers.map((p) => p.length)) === 0) {
+    return <div />;
+  }
 
   return (
     <div>
@@ -124,12 +108,8 @@ export const CanvasBoard = (props: Props) => {
             const y = e.clientY - rect.top;
             if (props.onClick) {
               props.onClick({
-                x:
-                  Math.floor(x / blockWidth) +
-                  Math.min(...points.map(([x]) => x)),
-                y:
-                  Math.floor(y / blockWidth) +
-                  Math.min(...points.map(([_, y]) => y)),
+                x: Math.floor(x / blockWidth) + minX,
+                y: Math.floor(y / blockWidth) + minY,
               });
             }
           }

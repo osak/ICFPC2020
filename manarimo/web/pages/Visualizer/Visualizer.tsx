@@ -32,27 +32,16 @@ export const Visualizer = () => {
   const json = new URLSearchParams(history.location.search).get("json");
   const interactiveState = json ? parseState(json) : undefined;
   const images = interactiveState?.data ?? [];
-  const [activeImages, setActiveImages] = useState<number[]>([0]);
-  const [text, setText] = useState("");
+  const [disableImages, setDisableImages] = useState<number[]>([]);
   const [state, setState] = useState(interactiveState?.state ?? "nil");
 
   useEffect(() => {
-    if (images.length > 0) {
-      setText(images[0]);
-    }
     setState(interactiveState?.state ?? "nil");
-    setActiveImages([0]);
+    setDisableImages([]);
   }, [json]);
 
-  useEffect(() => {
-    let s = "";
-    images.forEach((image, i) => {
-      if (activeImages.includes(i)) {
-        s += image;
-      }
-    });
-    setText(s);
-  }, [activeImages]);
+  const imageText =
+    "" + images.filter((_, i) => !disableImages.includes(i)).join();
 
   return (
     <Container>
@@ -60,7 +49,9 @@ export const Visualizer = () => {
         <CanvasBoard
           height={700}
           width={1000}
-          points={parseImageString(text)}
+          layers={images.map((image, i) =>
+            disableImages.includes(i) ? [] : parseImageString(image)
+          )}
           onClick={(pos) => {
             fetch(INTERACT_API, {
               method: "POST",
@@ -88,13 +79,13 @@ export const Visualizer = () => {
             <Button
               key={i}
               onClick={() => {
-                if (activeImages.includes(i)) {
-                  setActiveImages(activeImages.filter((j) => i !== j));
+                if (disableImages.includes(i)) {
+                  setDisableImages(disableImages.filter((j) => i !== j));
                 } else {
-                  setActiveImages([...activeImages, i]);
+                  setDisableImages([...disableImages, i]);
                 }
               }}
-              active={activeImages.includes(i)}
+              active={!disableImages.includes(i)}
             >
               {i + 1}
             </Button>
@@ -103,11 +94,7 @@ export const Visualizer = () => {
       )}
       <Row className="my-2">
         <Label>Image</Label>
-        <Input
-          type="textarea"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
+        <Input type="textarea" value={imageText} disabled />
       </Row>
       <Row className="my-2">
         <Label>State</Label>
