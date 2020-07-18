@@ -244,41 +244,104 @@ pair<Value*, int> parse(const string& line, int pos) {
     }
 }
 
+Value* car(Value *node) {
+    Value* car = Value::create_function("car");
+    return Value::create_apply(car, node);
+}
+
+Value* cdr(Value *node) {
+    Value* cdr = Value::create_function("cdr");
+    return Value::create_apply(cdr, node);
+}
+
+void print_cons_list(Value *top, Reducer &reducer) {
+    if (!top->is_cons()) {
+        top->print();
+        return;
+    }
+
+    Value* car_top = reducer.full_reduce(car(top), false);
+    Value* cdr_top = reducer.full_reduce(cdr(top), false);
+
+    cout << "(";
+    print_cons_list(car_top, reducer);
+    cout << ",";
+    print_cons_list(cdr_top, reducer);
+    cout << ")";
+}
+
+void interactive_output(Value *top, Reducer &reducer) {
+    Value *state = reducer.full_reduce(car(cdr(top)), false);
+    Value *data = reducer.full_reduce(car(cdr(cdr(top))), false);
+
+    cout << "state = ";
+    print_cons_list(state, reducer);
+    cout << endl;
+
+    Value *cur = data;
+    while (cur->is_cons()) {
+        Value *img = reducer.full_reduce(car(cur));
+        cout << "data = ";
+        print_cons_list(img, reducer);
+        cout << endl;
+
+        cur = reducer.full_reduce(cdr(cur));
+    }
+}
+
 int main(int argc, char* argv[]) {
     if (argc <= 1) {
         cerr << "file is not specified" << endl;
+        return 1;
+    }
+
+    bool interactive_mode = false;
+    string filename = "";
+    if (string(argv[1]) == "--interactive") {
+        if (argc <= 2) {
+            cerr << "file is not specified" << endl;
+            return 2;
+        }
+        interactive_mode = true;
+        filename = string(argv[2]);
     } else {
-        ifstream file(argv[1]);
-        if (file.is_open()) {
-            cerr << "start parsing" << endl;
-            Reducer reducer;
-            string line;
-            while (getline(file, line)) {
-                int index = line.find('=');
-                string name = line.substr(0, index - 1);
-                Value* value = parse(line, index + 2).first;
-                reducer.add_variable(name, value);
-            }
-            file.close();
-            cerr << "end parsing" << endl;
-            cerr << "start reducing" << endl;
-            Value* top = Value::create_function(":galaxy");
-            while (true) {
-                pair<bool, Value*> p = reducer.reduce(top);
-                top = p.second;
-                if (!p.first) break;
-            }
-            top->print();
-            cout << endl;
-            cerr << "end reducing" << endl;
+        filename = string(argv[1]);
+    }
+
+    ifstream file(filename);
+    if (file.is_open()) {
+        cerr << "start parsing" << endl;
+        Reducer reducer;
+        string line;
+        while (getline(file, line)) {
+            int index = line.find('=');
+            string name = line.substr(0, index - 1);
+            Value* value = parse(line, index + 2).first;
+            reducer.add_variable(name, value);
+        }
+        file.close();
+        cerr << "end parsing" << endl;
+        cerr << "start reducing" << endl;
+        Value* top = Value::create_function(":galaxy");
+        while (true) {
+            pair<bool, Value*> p = reducer.reduce(top);
+            top = p.second;
+            if (!p.first) break;
+        }
+        top->print();
+        cout << endl;
+        cerr << "end reducing" << endl;
+        if (interactive_mode) {
+            interactive_output(top, reducer);
+        } else {
             Value* car = Value::create_function("car");
             Value* cdr = Value::create_function("cdr");
             top = Value::create_apply(car, Value::create_apply(car, Value::create_apply(cdr, Value::create_apply(cdr, top))));
             top = reducer.full_reduce(top);
-        } else {
-            cerr << "file cannot be opened" << endl;
         }
+    } else {
+        cerr << "file cannot be opened" << endl;
     }
-    
+
     return 0;
 }
