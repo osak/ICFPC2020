@@ -213,10 +213,18 @@ struct Reducer {
     }
     
     Value* full_reduce(Value* value, bool stop_on_cons = true) {
+        Value* original = value;
         while (true) {
             pair<bool, Value*> p = reduce(value, stop_on_cons);
             value = p.second;
-            if (!p.first) return value;
+            if (!p.first) {
+                original->type = value->type;
+                original->name = value->name;
+                original->num = value->num;
+                original->left = value->left;
+                original->right = value->right;
+                return value;
+            }
         }
     }
 };
