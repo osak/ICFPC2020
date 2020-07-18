@@ -4,10 +4,17 @@ import subprocess
 import tempfile
 import os
 import src.compile as compile
+import src.dem as dem
+import src.mod as mod
+import src.send as send
 
 
 galaxy_cache = None
 SRC_DIR = Path(__file__).parent
+
+
+def get_tree(s):
+    return dem.demodulate(mod.run(s))
 
 
 def get_galaxy():
@@ -34,8 +41,8 @@ def get_interp_path():
     else:
         return SRC_DIR.parent / "a.out"
 
-'{"state":"nil","data":"(0,0)"}'
-def run(state, data):
+'{"state":"(6,((0,(9,(270608505102339400,(2,(0,(2,(nil,(nil,(4,((8,((16,(128,nil)),((((1,(0,((-10,-27),((-4,6),((202,(30,(10,(1,nil)))),(20,(64,(1,nil)))))))),(((2,((-16,12),(30,(25,(4,nil))))),nil),nil)),(((0,(1,((-16,12),((0,-8),((0,(0,(0,(0,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),nil)),nil))),(nil,(((16,(128,nil)),(((0,((((1,(0,((16,-48),((0,0),((206,(30,(10,(1,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),(((0,(1,((-16,48),((0,0),((510,(0,(0,(1,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),nil)),nil)),((1,((((1,(0,((15,-48),((-1,0),((205,(30,(10,(1,nil)))),(0,(64,(1,nil)))))))),(((0,((1,1),nil)),nil),nil)),(((0,(1,((-16,47),((0,-1),((510,(0,(0,(1,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),nil)),nil)),((2,((((1,(0,((13,-48),((-2,0),((204,(30,(10,(1,nil)))),(0,(64,(1,nil)))))))),(((0,((1,1),nil)),nil),nil)),(((0,(1,((-16,45),((0,-2),((510,(0,(0,(1,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),nil)),nil)),((3,((((1,(0,((10,-47),((-3,1),((203,(30,(10,(1,nil)))),(0,(64,(1,nil)))))))),(((0,((1,0),nil)),nil),nil)),(((0,(1,((-16,42),((0,-3),((510,(0,(0,(1,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),nil)),nil)),((4,((((1,(0,((6,-45),((-4,2),((202,(30,(10,(1,nil)))),(0,(64,(1,nil)))))))),(((0,((1,0),nil)),nil),nil)),(((0,(1,((-16,38),((0,-4),((510,(0,(0,(1,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),nil)),nil)),((5,((((1,(0,((2,-42),((-4,3),((202,(30,(10,(1,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),(((0,(1,((-16,33),((0,-5),((510,(0,(0,(1,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),nil)),nil)),((6,((((1,(0,((-2,-38),((-4,4),((202,(30,(10,(1,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),(((0,(1,((-16,27),((0,-6),((510,(0,(0,(1,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),nil)),nil)),((7,((((1,(0,((-6,-33),((-4,5),((202,(30,(10,(1,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),(((0,(1,((-16,20),((0,-7),((510,(0,(0,(1,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),nil)),nil)),((8,((((1,(0,((-10,-27),((-4,6),((202,(30,(10,(1,nil)))),(20,(64,(1,nil)))))))),(((2,((-16,12),(30,(25,(4,nil))))),nil),nil)),(((0,(1,((-16,12),((0,-8),((0,(0,(0,(0,nil)))),(0,(64,(1,nil)))))))),(nil,nil)),nil)),nil)),nil))))))))),nil)),(nil,nil))))))))))))),(1,(nil,nil))))","data":"(0,0)"}'
+def apply(state, data):
     interp_path = get_interp_path()
     galaxy = get_galaxy()
 
@@ -56,20 +63,41 @@ def run(state, data):
     os.close(fd)
     os.remove(tf_path)
     lines = response.splitlines()
-    # raw = lines[0]
 
-    result = {
-        "data": []
-    }
-    for l in lines[1:]:
+    raw = None
+    state = None
+    data = []
+    for l in lines:
+        if not l.strip():
+            continue
         key, value = [s.strip() for s in l.split("=")]
-        if key == "state":
-            result["state"] = value
+        if key == "full":
+            raw = value
+        elif key == "state":
+            state = value
         elif key == "data":
-            result["data"].append(value)
+            data.append(value)
         else:
             raise ValueError("Unknown key `{}`".format(key))
-    return result
+    return raw, state, data
+
+
+def run(state, data):
+    while True:
+        raw, state, data = apply(state, data)
+        raw_tree = get_tree(raw)
+        num, tl = raw_tree
+        _, tl = tl
+        send_data, nil = tl
+        if num == 0:
+            break
+        else:
+            send_request = dem.serialize(send_data)
+            data = send.exchange(send_request)["response"]
+    return {
+        "state": state,
+        "data": data
+    }
 
 
 def main():
