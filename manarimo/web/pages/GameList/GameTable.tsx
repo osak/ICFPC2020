@@ -1,6 +1,6 @@
 import React from "react";
 import { connect, PromiseState } from "react-refetch";
-import { Container, Button, Row, Table } from "reactstrap";
+import { Container, Button, Row, Table, Spinner, Alert } from "reactstrap";
 import { GameDto, GamesResponse, PlayerDto } from "../../types";
 import { Link } from "react-router-dom";
 
@@ -13,7 +13,7 @@ interface GamesFetchBase {
 }
 
 interface GamesState {
-  games: Array<GameDto>;
+  games: GameDto[];
   lastBefore: string;
   hasNext: boolean;
 }
@@ -27,31 +27,38 @@ interface InnerProps extends Props {
   games: PromiseState<GamesState>;
 }
 
-function serializeTeamname(player: PlayerDto) {
-    if (player.submissionId !== undefined) {
-        return `${player.team.teamName} #${player.submissionId}`;
-    } else {
-        return player.team.teamName;
-    }
+function serializeTeamName(player: PlayerDto) {
+  if (player.submissionId !== undefined) {
+    return `${player.team.teamName} #${player.submissionId}`;
+  } else {
+    return player.team.teamName;
+  }
 }
 
 function renderLogLink(player: PlayerDto) {
-    if (player.debugLog !== undefined) {
-        const url = `${OFFICIAL_API_BASE}/logs?logKey=${encodeURIComponent(player.debugLog)}&apiKey=${OFFICIAL_API_KEY}`
-        return <a href={url}>Log</a>
-    } else {
-        return null;
-    }
+  if (player.debugLog !== undefined) {
+    const url = `${OFFICIAL_API_BASE}/logs?logKey=${encodeURIComponent(
+      player.debugLog
+    )}&apiKey=${OFFICIAL_API_KEY}`;
+    return (
+      <a href={url} target="_blank">
+        Log
+      </a>
+    );
+  } else {
+    return null;
+  }
 }
 
 const InnerGameTable = (props: InnerProps) => {
   if (props.games.pending) {
-    return <span>Loading...</span>;
+    return <Spinner />;
   }
 
   if (props.games.rejected) {
-    return <span>Failed to load</span>;
+    return <Alert color="danger">Failed to load</Alert>;
   }
+  const games = props.games.value;
 
   return (
     <Container>
@@ -59,33 +66,42 @@ const InnerGameTable = (props: InnerProps) => {
         <Table>
           <thead>
             <tr>
+              <th />
               <th>Attacker</th>
+              <th />
               <th>Defender</th>
               <th>Finished at</th>
               <th>Visualize</th>
             </tr>
           </thead>
           <tbody>
-            {props.games.value.games.map((game: GameDto) => (
-              <tr key={game.gameId}>
-                <td><span>{serializeTeamname(game.attacker)} </span>{renderLogLink(game.attacker)}</td>
-                <td><span>{serializeTeamname(game.defender)} </span>{renderLogLink(game.defender)}</td>
-                <td>{game.finishedAt}</td>
-                <td>
-                  <Link to={`/replay/${game.attacker.playerKey}`}>Go</Link>
-                </td>
-              </tr>
-            ))}
+            {props.games.value.games.map((game: GameDto) => {
+              return (
+                <tr key={game.gameId}>
+                  <td>{game.winner === "Attacker" && "🏆"}</td>
+                  <td>
+                    <span>{serializeTeamName(game.attacker)} </span>
+                    {renderLogLink(game.attacker)}
+                  </td>
+                  <td>{game.winner === "Defender" && "🏆"}</td>
+                  <td>
+                    <span>{serializeTeamName(game.defender)} </span>
+                    {renderLogLink(game.defender)}
+                  </td>
+                  <td>{game.finishedAt}</td>
+                  <td>
+                    <Link to={`/replay/${game.attacker.playerKey}`}>Go</Link>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </Table>
       </Row>
       <Row>
         <Button
           disabled={!props.games.value.hasNext}
-          onClick={() => {
-            // @ts-ignore
-            props.updateGames(props.games.value);
-          }}
+          onClick={() => props.updateGames(games)}
         >
           Load more...
         </Button>
