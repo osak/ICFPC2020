@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
         if (next_move.x != 0 && next_move.y != 0) {
             params.commands.push_back(new Move(unit_id, next_move));
         }
-		client->command(params);
+		response = GameResponse(as_galaxy(client->command(params)));
 	}
 
     return 0;
