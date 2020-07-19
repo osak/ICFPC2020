@@ -6,10 +6,7 @@
 #include <regex>
 #include <string>
 
-#include "ai/mkut/titan.h"
-#include "ai/yuusti/meteor.h"
 #include "ai/poyo/goat.h"
-#include "ai/mkut/alphinaud.h"
 
 using namespace std;
 
