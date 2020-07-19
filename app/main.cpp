@@ -47,9 +47,9 @@ int area(const Vector& loc) {
     }
 }
 
-int living_time(long long planet_size, long long space_size, const Vector& loc, const Vector& vel) {
+double living_time(long long planet_size, long long space_size, const Vector& loc, const Vector& vel) {
     Vector tmp_loc = loc, tmp_vel = vel;
-    int ret = 0;
+    double ret = 0;
     while (true) {
         if (abs(tmp_loc.x) <= planet_size || abs(tmp_loc.y) <= planet_size || abs(tmp_loc.x) > space_size || abs(tmp_loc.y) > space_size) {
             break;
@@ -57,7 +57,7 @@ int living_time(long long planet_size, long long space_size, const Vector& loc, 
         auto pair = next_location_and_velocity(tmp_loc, tmp_vel);
         tmp_loc = pair.first;
         tmp_vel = pair.second;
-        ret++;
+        ret += acos(loc * tmp_loc / loc.norm() / tmp_loc.norm());
         if (ret > 100) {
             return ret;
         }

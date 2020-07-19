@@ -12,6 +12,14 @@ struct Vector {
       mod.put_number(x);
       mod.put_number(y);
    }
+
+   double norm() const {
+      return sqrt(x * x + y * y);
+   }
+
+   double operator*(const Vector& other) const {
+      return x * other.x + y * other.y;
+   }
 };
 
 ostream& operator << (ostream &os, const Vector &v) {
