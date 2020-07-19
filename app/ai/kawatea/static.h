@@ -35,10 +35,8 @@ class StaticAI : public AI {
         fprintf(stderr, "x: %d, y: %d\n", x, y);
         fprintf(stderr, "dx: %d, dy: %d\n", dx, dy);
         fflush(stderr);
-        int ndx = 0;
-        int ndy = 0;
-        //int ndx = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][0];
-        //int ndy = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][1];
+        int ndx = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][0];
+        int ndy = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][1];
         fprintf(stderr, "ndx: %d, ndy: %d\n", ndx, ndy);
         fflush(stderr);
         CommandParams params;
