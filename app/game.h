@@ -229,8 +229,14 @@ ostream &operator<<(ostream &os, const GameState &gs) {
     os << "Game State{";
     os << "current_turn: " << gs.current_turn;
     os << ", field_info: " << gs.field_info;
-    os << ", defender_state: " << gs.defender_state;
-    os << ", attacker_state: " << gs.attacker_state << "}";
+    os << ", defender_states: ";
+    for (auto state: gs.defender_states) {
+        os << state << ",";
+    }
+    os << ", attacker_state: ";
+    for (auto state: gs.attacker_states) {
+        os << state << ",";
+    }
 
     return os;
 }
