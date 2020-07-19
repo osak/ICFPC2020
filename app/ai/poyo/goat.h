@@ -118,6 +118,20 @@ class GoatAI : public AI {
         return Vector(-best_move.x, -best_move.y);
     }
 
+    ShipState getMainShip(vector<ShipState>& ships) {
+        ShipState main_ship = ships[0];
+        int best_score = 0;
+        for (auto ship: ships) {
+            ShipParameter param = ship.ship_parameter;
+            int score = param.life * 2 + param.energy + param.attack * 4 + param.recharge_rate * 8;
+            if (best_score < score) {
+                best_score = score;
+                main_ship = ship;
+            }
+        }
+        return main_ship;
+    }
+
 public:
     void test_safe_move(int x, int y) {
         Vector loc(x, y), vel(0, 0);
@@ -184,7 +198,8 @@ public:
         vector<ShipState> enemies = !is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
         ShipState main_ship = ships[0];
         CommandParams params;
-        
+        ShipState target = getMainShip(enemies);
+
         for (auto ship: ships) {
             int unit_id = ship.id;
             if (unit_id == main_ship_id) {
@@ -233,12 +248,19 @@ public:
             
                 }
             } else {
-                if (ship.id == main_ship.id) {
+                if (unit_id == main_ship.id) {
                     continue;
                 }
-                auto next_pos = {ship.pos.first + ship.velocity.first, ship.pos.second + ship.velocity.second};
-                auto main_ship_next_pos = {main_ship.pos.first + main_ship.velocity.first, main_ship.pos.second + main_ship.velocity.second};
-                
+                pair<int, int> next_pos = {ship.pos.first + ship.velocity.first, ship.pos.second + ship.velocity.second};
+                pair<int, int> main_ship_next_pos = {main_ship.pos.first + main_ship.velocity.first, main_ship.pos.second + main_ship.velocity.second};
+                pair<int, int> target_next_pos = {target.pos.first + target.velocity.first, target.pos.second + target.velocity.second};
+                if (abs(next_pos.first - main_ship_next_pos.first) <= 4 && abs(next_pos.second - main_ship_next_pos.second) <= 4) {
+                    // avoid bombing our main ship
+                    continue;
+                }
+                if (abs(next_pos.first - target_next_pos.first) <= 3 && abs(next_pos.second - target_next_pos.second) <= 3) {
+                    params.commands.push_back(new Kamikaze(unit_id));
+                }
             }
         }
         return params;
