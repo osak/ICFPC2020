@@ -107,9 +107,13 @@ class AlphinaudAI : public AI {
         return Vector(-best_move.x, -best_move.y);
     }
 
-    int get_full_power(const ShipState& my_ship_state) {
-        int remaining_heat = my_ship_state.max_heat - my_ship_state.heat + my_ship_state.ship_parameter.recharge_rate;
+    int get_full_power(const ShipState& my_ship_state, bool move) {
+        int remaining_heat = max(0, my_ship_state.max_heat - my_ship_state.heat + my_ship_state.ship_parameter.recharge_rate - (move ? 8 : 0));
         return min(remaining_heat, my_ship_state.ship_parameter.attack);
+    }
+
+    int get_free_power(const ShipState& my_ship_state, bool move) {
+        return max(0, my_ship_state.ship_parameter.recharge_rate - my_ship_state.heat - (move ? 8 : 0));
     }
 
     bool critical_point(const Vector& a, const Vector& b) {
@@ -131,13 +135,26 @@ class AlphinaudAI : public AI {
                         if (dx != 0 && dy != 0) {
                             ret.push_back(new Move(unit_id, Vector(-dx, -dy)));
                         }
-                        ret.push_back(new Attack(unit_id, next_enemy_location, get_full_power(my_ship_state)));
-                        return ret;
+                        int power = get_full_power(my_ship_state, dx != 0 && dy != 0);
+                        ret.push_back(new Attack(unit_id, next_enemy_location, power));
+                        if (power < my_ship_state.ship_parameter.recharge_rate * 3) {
+                            return ret;
+                        }
                     }
                 }
             }
         }
         return vector<Command*>();
+    }
+
+    Command* free_shot(int unit_id, const ShipState& my_ship_state, const vector<ShipState>& enemy_ship_states, bool move) {
+        auto enemy_ship_state = enemy_ship_states[enemy_ship_states.size() - 1];
+        Vector next_enemy_location = simulate(Vector(enemy_ship_state.pos), Vector(enemy_ship_state.velocity)).first;
+        int power = get_free_power(my_ship_state, move);
+        if (power > 0) {
+            return new Attack(unit_id, next_enemy_location, power);
+        }
+        return NULL;
     }
 
     void test_safe_move() {
@@ -189,8 +206,8 @@ public:
     }
     StartParams start_params(const GameResponse& response) {
         int spec_point = response.game_info.ship_info.max_points;
-        int reactor = 10;
-        int armament = max(spec_point - 200, 0) / 4;
+        int reactor = 16;
+        int armament = max(spec_point - 180, 0) / 4;
         int engine = spec_point - 2 - reactor * 12 - armament * 4;
         int core = 1;
         return StartParams(engine, armament, reactor, core);
@@ -211,12 +228,30 @@ public:
             params.commands.push_back(command);
             move = true;
         };
+
         if (!move) {
             Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn);
             if (next_move.x != 0 || next_move.y != 0) {
                 params.commands.push_back(new Move(unit_id, next_move));
+                move = true;
             }
         }
+
+        // randomize
+        if (!move && my_ship_state.pos.first == -enemy_ship_states[0].pos.first && my_ship_state.pos.second == -enemy_ship_states[0].pos.second &&
+            my_ship_state.velocity.first == -enemy_ship_states[0].velocity.first && my_ship_state.velocity.second == -enemy_ship_states[0].velocity.second &&
+            !(my_ship_state.velocity.first == 0 && my_ship_state.velocity.second == 0)) {
+            params.commands.push_back(new Move(unit_id, Vector(my_ship_state.pos.first > 0 ? 1 : -1, 0)));
+            move = true;
+        }
+
+        {
+            Command* command = free_shot(unit_id, my_ship_state, enemy_ship_states, move);
+            if (command != NULL) {
+                params.commands.push_back(command);
+            }
+        }
+
         cout << "Next commands: " << endl;
         for (auto command : params.commands) {
             command->print();
