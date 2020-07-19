@@ -57,10 +57,10 @@ Vector safe_move(long long planet_size, const Vector& loc, const Vector& vel) {
         tmp_vel = pair.second;
         if (abs(tmp_loc.x) <= planet_size || abs(tmp_loc.y) <= planet_size) {
             switch (current_area) {
-                case 0: return Vector(-1, -1);
-                case 1: return Vector(1, -1);
-                case 2: return Vector(1, 1);
-                case 3: return Vector(-1, 1);
+                case 0: return tmp_vel.x > 0 ? Vector(0, -1) : Vector(-1, -1);
+                case 1: return tmp_vel.y > 0 ? Vector(1, 0) : Vector(1, -1);
+                case 2: return tmp_vel.x < 0 ? Vector(0, 1) : Vector(1, 1);
+                case 3: return tmp_vel.y < 0 ? Vector(-1, 0) : Vector(-1, 1);
             }
         }
     }
