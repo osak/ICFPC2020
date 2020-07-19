@@ -200,6 +200,8 @@ public:
         CommandParams params;
         ShipState target = getMainShip(enemies);
 
+        cout << "Target: " << target.pos.first + target.velocity.first << " " << target.pos.second + target.velocity.second << endl;
+
         for (auto ship: ships) {
             int unit_id = ship.id;
             if (unit_id == main_ship_id) {
@@ -251,6 +253,7 @@ public:
                 if (unit_id == main_ship.id) {
                     continue;
                 }
+                cout << "Unit" << unit_id << endl;
                 pair<int, int> next_pos = {ship.pos.first + ship.velocity.first, ship.pos.second + ship.velocity.second};
                 pair<int, int> main_ship_next_pos = {main_ship.pos.first + main_ship.velocity.first, main_ship.pos.second + main_ship.velocity.second};
                 pair<int, int> target_next_pos = {target.pos.first + target.velocity.first, target.pos.second + target.velocity.second};
