@@ -31,9 +31,9 @@ struct Move : Command {
    virtual void modulate(Modulator& mod) {
       mod.put_cell();
       mod.put_number(0);
-      mod.put_cell();
+      // mod.put_cell();
       acceleration.modulate(mod);
-      mod.put_nil();
+      // mod.put_nil();
    }
 };
 
