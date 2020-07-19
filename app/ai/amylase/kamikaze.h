@@ -98,8 +98,8 @@ class KamikazeAI : public AI {
                 double norm_distance = abs(new_op_height - new_my_height);
                 double arg_distance = calc_arg_distance(new_my_arg, new_op_arg) * new_my_height;
                 double int_height = max(abs(new_my_x.real()), abs(new_my_x.imag()));
-                double planet_penalty = 2000 / max(1., int_height - planet_size);
-                double outer_penalty = 2000 / max(1., space_size - int_height);
+                double planet_penalty = 4000 / max(1., int_height - planet_size);
+                double outer_penalty = 4000 / max(1., space_size - int_height);
                 double cost = pow(norm_distance, 3) + arg_distance + planet_penalty;
 
 //                double norm_chase_time = calc_chase_time(new_op_height - new_my_height, my_norm_sp - op_norm_sp, 1);
@@ -128,7 +128,7 @@ class KamikazeAI : public AI {
         const int next_op_y = enemy_loc.y + enemy_vel.y;
 
         const int distance = max(abs(next_my_x - next_op_x), abs(next_my_y - next_op_y));
-        return distance <= 1;
+        return distance <= 2;
     }
 
 public:

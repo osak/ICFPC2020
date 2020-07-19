@@ -39,8 +39,10 @@ int main(int argc, char **argv) {
 
     AI* ai;
     if (join_response.game_info.is_defender) {
+        cout << "Using Titan" << endl;
         ai = new TitanAI();
     } else {
+        cout << "Using Kamikaze" << endl;
         ai = new KamikazeAI();
     }
 
