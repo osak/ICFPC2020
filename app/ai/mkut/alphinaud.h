@@ -5,6 +5,7 @@
 #include "../../ai.h"
 
 class AlphinaudAI : public AI {
+public:
     pair<Vector, Vector> simulate(Vector loc, Vector vel) {
         if (abs(loc.x) >= abs(loc.y)) {
             if (loc.x < 0) ++vel.x;
@@ -140,8 +141,8 @@ public:
     StartParams start_params(const GameResponse& response) {
         int spec_point = response.game_info.ship_info.max_points;
         int reactor = 10;
-        int armament = max(spec_point - 250, 0) / 8;
-        int engine = spec_point - 2 - reactor * 12 - armament * 8;
+        int armament = max(spec_point - 250, 0) / 4;
+        int engine = spec_point - 2 - reactor * 12 - armament * 4;
         int core = 1;
         return StartParams(engine, armament, reactor, core);
     }

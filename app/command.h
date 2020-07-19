@@ -63,7 +63,7 @@ struct Kamikaze : Command {
 struct Attack : Command {
    Vector target_location;
    int power;
-   Attack(int unit_id, const Vector& targetLocation, int power) : Command(unit_id), target_location(target_location), power(power) {}
+   Attack(int unit_id, const Vector& target_location, int power) : Command(unit_id), target_location(target_location), power(power) {}
    virtual void modulate(Modulator& mod) {
       mod.put_cell();
       mod.put_number(2);
