@@ -50,6 +50,7 @@ int area(const Vector& loc) {
 double living_time(long long planet_size, long long space_size, const Vector& loc, const Vector& vel) {
     Vector tmp_loc = loc, tmp_vel = vel;
     double ret = 0;
+    int cnt = 0;
     while (true) {
         if ((abs(tmp_loc.x) <= planet_size && abs(tmp_loc.y) <= planet_size) || (abs(tmp_loc.x) > space_size && abs(tmp_loc.y) > space_size)) {
             break;
@@ -58,7 +59,8 @@ double living_time(long long planet_size, long long space_size, const Vector& lo
         tmp_loc = pair.first;
         tmp_vel = pair.second;
         ret += acos(loc * tmp_loc / loc.norm() / tmp_loc.norm());
-        if (ret > 100) {
+        cnt++;
+        if (cnt > 100) {
             return ret;
         }
     }
