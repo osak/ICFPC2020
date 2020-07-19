@@ -96,7 +96,7 @@ class MeteorAI : public AI {
             }
         }
 
-        return best_move;
+        return Vector(-best_move.x, -best_move.y);
     }
 
     void test_safe_move() {
