@@ -1,12 +1,12 @@
 #include "client.h"
-#include "modem.h"
 #include "game.h"
+#include "modem.h"
 
 #include <iostream>
 #include <regex>
 #include <string>
 
-#include "ai/mkut/alphinaud.h"
+#include "ai/kenkoooo/mu.h"
 
 using namespace std;
 
@@ -31,30 +31,37 @@ Client *init_client(char **argv) {
 
 int main(int argc, char **argv) {
     Client *client = init_client(argv);
-    AI* ai = new AlphinaudAI();
+    AI *ai = new ChokudAI();
 
     JoinParams join_params = ai->join_params();
-	GameResponse join_response = GameResponse(as_galaxy(client->join(join_params)));
+    GameResponse join_response =
+        GameResponse(as_galaxy(client->join(join_params)));
     StartParams start_params = ai->start_params(join_response);
-	GameResponse response(as_galaxy(client->start(start_params)));
+    GameResponse response(as_galaxy(client->start(start_params)));
     double accum_time = 0;
-	while (true) {
+    while (true) {
         clock_t start_time = clock();
         long long planet_radius = response.game_info.field_info.planet_radius;
-        auto pos = response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
-        auto vel = response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
-        Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
+        auto pos = response.game_info.is_defender
+                       ? response.game_state.defender_states[0].pos
+                       : response.game_state.attacker_states[0].pos;
+        auto vel = response.game_info.is_defender
+                       ? response.game_state.defender_states[0].velocity
+                       : response.game_state.attacker_states[0].velocity;
+        Vector my_location(pos.first, pos.second),
+            my_velocity(vel.first, vel.second);
         cout << "My location: " << my_location << endl;
         cout << "My velocity: " << my_velocity << endl;
         CommandParams command_params = ai->command_params(response);
         clock_t end_time = clock();
-        double time_used = static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC * 1000.0;
+        double time_used = static_cast<double>(end_time - start_time) /
+                           CLOCKS_PER_SEC * 1000.0;
         accum_time += time_used;
         cout << "time used: " << time_used << endl;
         cout << "accumulated time used: " << accum_time << endl;
 
-		response = GameResponse(as_galaxy(client->command(command_params)));
-	}
+        response = GameResponse(as_galaxy(client->command(command_params)));
+    }
 
     return 0;
 }
