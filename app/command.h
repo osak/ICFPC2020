@@ -33,6 +33,8 @@ struct Command {
    Command(int unit_id) : unit_id(unit_id) {}
    virtual void modulate(Modulator& mod) {
    }
+   virtual void print() {
+   }
 };
 
 struct StartParams {
@@ -78,6 +80,9 @@ struct Move : Command {
       acceleration.modulate(mod);
       mod.put_nil();
    }
+   virtual void print() {
+      cout << "Move(" << unit_id << ") " << acceleration << endl;
+   }
 };
 
 struct Kamikaze : Command {
@@ -88,6 +93,9 @@ struct Kamikaze : Command {
       mod.put_cell();
       mod.put_number(unit_id);
       mod.put_nil();
+   }
+   virtual void print() {
+      cout << "Kamikaze(" << unit_id << ") ";
    }
 };
 
@@ -105,6 +113,9 @@ struct Attack : Command {
       mod.put_cell();
       mod.put_number(power);
       mod.put_nil();
+   }
+   virtual void print() {
+      cout << "Attack(" << unit_id << ") " << target_location << " " << power;
    }
 };
 
@@ -127,6 +138,9 @@ struct Fission : Command {
 		mod.put_number(childParams.core);
 		mod.put_nil();
       mod.put_nil();
+   }
+   virtual void print() {
+      cout << "Fission(" << unit_id << ") " << childParams.engine << ", " << childParams.armament << ", " << childParams.reactor << ", " << childParams.core;
    }
 };
 
