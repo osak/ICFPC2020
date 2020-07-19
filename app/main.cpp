@@ -75,7 +75,8 @@ Vector safe_move(long long planet_size, long long space_size, const Vector& loc,
             Vector tmp_vel = vel;
             tmp_vel.x += dx;
             tmp_vel.y += dy;
-            int t = living_time(planet_size, space_size, loc, tmp_vel);
+            double t = living_time(planet_size, space_size, loc, tmp_vel);
+            cerr << dx << "," << dy << ":" << t << endl;
             if (t > max_t) {
                 max_t = t;
                 max_dx = dx;
@@ -87,7 +88,7 @@ Vector safe_move(long long planet_size, long long space_size, const Vector& loc,
 }
 
 void test_safe_move() {
-    Vector loc(27, 21), vel(0, 0);
+    Vector loc(-60, -60), vel(-6, 0);
     cout << safe_move(16, 128, loc, vel) << endl;
 }
 
