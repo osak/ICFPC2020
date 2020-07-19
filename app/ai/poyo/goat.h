@@ -176,51 +176,70 @@ public:
         int core = 10;
         return StartParams(engine, armament, reactor, core);
     }
+
     CommandParams command_params(const GameResponse& response) {
-        auto pos = response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
-        auto vel = response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
-        auto epos = !response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
-        auto evel = !response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
-
-        int life = response.game_info.is_defender ? response.game_state.defender_states[0].ship_parameter.life : response.game_state.attacker_states[0].ship_parameter.life;
-        int unit_id = response.game_info.is_defender ? response.game_state.defender_states[0].id : response.game_state.attacker_states[0].id;
-        int remaining_turn = response.game_info.max_turns - response.game_state.current_turn;
-        Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
-        Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn,
-                danger(pos, vel, epos, evel));
-        cout << "Next move: " << next_move << endl;
+        bool is_defender = response.game_info.is_defender;
+        int main_ship_id = is_defender ? 0 : 1;
+        vector<ShipState> ships = is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
+        vector<ShipState> enemies = !is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
+        ShipState main_ship = ships[0];
         CommandParams params;
-        if (next_move.x != 0 || next_move.y != 0) {
-            params.commands.push_back(new Move(unit_id, next_move));
-        } else if (!fissioned) {
-            if (life > 1 && remaining_turn > 5) {
-                int score = test(pos, vel, response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, remaining_turn);
+        
+        for (auto ship: ships) {
+            int unit_id = ship.id;
+            if (unit_id == main_ship_id) {
+                // main unit
+                auto pos = ship.pos;
+                auto vel = ship.velocity;
+                auto epos = enemies[0].pos;
+                auto evel = enemies[0].velocity;
 
-                if ((num_children < 2 && score > 100) || score >= remaining_turn) {
-                    cout << "Fission! It will live for " << score << "turns" << endl;
-                    num_children++;
-                    params.commands.push_back(new Fission(unit_id, StartParams(0, 0, 0, 1)));
-                    fissioned = true;
-                }
-            }
-        } else {
-            vector<Vector> vecs = {Vector(1, 1), Vector(1, -1), Vector(-1, 1), Vector(-1, -1)};
-            Vector best_move = Vector(0, 0);
-            int best = 20;
-            for (auto& vec: vecs) {
-                int score = test(pos, {-vec.x + vel.first, -vec.y + vel.second}, response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, remaining_turn);
-                if (score > best) {
-                    best = score;
-                    best_move = vec;
-                }
-            }
+                int life = ship.ship_parameter.life;
+                int remaining_turn = response.game_info.max_turns - response.game_state.current_turn;
+                Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
+                Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn,
+                        danger(pos, vel, epos, evel));
+                cout << "Next move: " << next_move << endl;
+                if (next_move.x != 0 || next_move.y != 0) {
+                    params.commands.push_back(new Move(unit_id, next_move));
+                } else if (!fissioned) {
+                    if (life > 1 && remaining_turn > 5) {
+                        int score = test(pos, vel, response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, remaining_turn);
 
-            if (best_move.x != 0 || best_move.y != 0) {
-                cout << "Decided move a bit: " << best_move << endl;
-                params.commands.push_back(new Move(unit_id, best_move));
-                fissioned = false;
-            }
+                        if ((num_children < 2 && score > 100) || score >= remaining_turn) {
+                            cout << "Fission! It will live for " << score << "turns" << endl;
+                            num_children++;
+                            params.commands.push_back(new Fission(unit_id, StartParams(0, 0, 0, 1)));
+                            fissioned = true;
+                        }
+                    }
+                } else {
+                    vector<Vector> vecs = {Vector(1, 1), Vector(1, -1), Vector(-1, 1), Vector(-1, -1)};
+                    Vector best_move = Vector(0, 0);
+                    int best = 20;
+                    for (auto& vec: vecs) {
+                        int score = test(pos, {-vec.x + vel.first, -vec.y + vel.second}, response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, remaining_turn);
+                        if (score > best) {
+                            best = score;
+                            best_move = vec;
+                        }
+                    }
+
+                    if (best_move.x != 0 || best_move.y != 0) {
+                        cout << "Decided move a bit: " << best_move << endl;
+                        params.commands.push_back(new Move(unit_id, best_move));
+                        fissioned = false;
+                    }
             
+                }
+            } else {
+                if (ship.id == main_ship.id) {
+                    continue;
+                }
+                auto next_pos = {ship.pos.first + ship.velocity.first, ship.pos.second + ship.velocity.second};
+                auto main_ship_next_pos = {main_ship.pos.first + main_ship.velocity.first, main_ship.pos.second + main_ship.velocity.second};
+                
+            }
         }
         return params;
     }
