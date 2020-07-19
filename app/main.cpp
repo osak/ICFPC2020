@@ -6,7 +6,7 @@
 #include <regex>
 #include <string>
 
-#include "ai/yuusti/alphinaud.h"
+#include "ai/mkut/alphinaud.h"
 
 using namespace std;
 
