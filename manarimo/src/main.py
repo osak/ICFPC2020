@@ -101,6 +101,24 @@ def battledome():
         "defender_key": str(defender_key)
     })
 
+@app.route("/api/local_runs", methods=["GET"])
+def get_local_runs():
+    from_id = request.args.get("from", 0)
+    with get_connection() as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+            cursor.execute(
+                "SELECT * FROM local_runs WHERE id >= %s",
+                (from_id, )
+                )
+            results = []
+            for row in cursor.fetchall():
+                dict_row = dict(row)
+                dict_row["timestamp"] = dict_row["send_at"].isoformat()
+                results.append(dict_row)
+
+    return jsonify({"items": results})
+
+
 @app.route("/")
 def hello():
     return app.send_static_file('index.html')
