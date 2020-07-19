@@ -176,7 +176,8 @@ struct GameResponse {
         success = static_cast<int>(list[0]->num);
         stage = static_cast<GameStage>(list[1]->num);
         game_info = GameInfo(list[2]);
-        game_state = GameState(list[3]);
+        // JOIN and START can return empty game state
+        game_state = list[3]->list.empty() ? GameState() : GameState(list[3]);
     }
 };
 
