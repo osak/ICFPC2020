@@ -69,3 +69,18 @@ export const parseCommand = (commands: unknown): CommandType[] => {
 
   return commands.map((command) => parseSingleCommand(command));
 };
+
+export const printCommand = (command: CommandType): string => {
+  if (command) {
+    switch (command.command) {
+      case "JET":
+        return `JET (${command.x}, ${command.y})`;
+      case "ATTACK":
+        return `ATK (${command.x}, ${command.y})`;
+      case "SUICIDE":
+        return "SUICIDE";
+    }
+  } else {
+    return "";
+  }
+};

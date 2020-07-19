@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Col, Container, Input, Row, Table } from "reactstrap";
 import { RelayData } from "../../types";
-import { parseCommand } from "../../util/CommandParser";
+import { parseCommand, printCommand } from "../../util/CommandParser";
 
 interface Location {
   x: number;
@@ -183,7 +183,9 @@ export const BattleViewer = (props: Props) => {
                               <p>{JSON.stringify(data.command)}</p>
                               {commands.map(
                                 (command, i) =>
-                                  command && <p key={i}>{command.command}</p>
+                                  command && (
+                                    <p key={i}>{printCommand(command)}</p>
+                                  )
                               )}
                             </td>
                           </tr>
