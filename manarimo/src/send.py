@@ -24,6 +24,15 @@ def exchange(request):
         "response": response
     }
 
+def raw(raw_request):
+    params = {
+        "apiKey": API_KEY
+    }
+    post_result = requests.post(API_BASE + "/aliens/send", data=raw_request, params=params)
+    if post_result.status_code != 200:
+        raise IOError("Failed to communicate with the server")
+    return post_result.text
+
 
 def main():
     import json

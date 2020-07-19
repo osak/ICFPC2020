@@ -4,9 +4,9 @@
 #include <complex>
 #include "../../command.h"
 #include "../../game.h"
+#include "../../ai.h"
 
-
-class KamikazeAI {
+class KamikazeAI : public AI {
 //public:
     typedef complex<double> Point;
 
@@ -132,11 +132,11 @@ class KamikazeAI {
     }
 
 public:
-    JoinParams join_params() {
+    JoinParams join_params() override {
         return JoinParams();
     }
 
-    StartParams start_params(const GameResponse &response) {
+    StartParams start_params(const GameResponse &response) override {
         int spec_point = response.game_info.ship_info.max_points;
         int reactor = max(spec_point - 160, 0) / 12;
         int armament = 0;
@@ -145,7 +145,7 @@ public:
         return StartParams(engine, armament, reactor, core);
     }
 
-    CommandParams command_params(const GameResponse &response) {
+    CommandParams command_params(const GameResponse &response) override {
         int unit_id = response.game_info.is_defender ? 0 : 1;
         auto pos = response.game_info.is_defender
                    ? response.game_state.defender_state.pos

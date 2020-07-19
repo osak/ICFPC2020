@@ -3,8 +3,9 @@
 #include <cmath>
 #include "../../command.h"
 #include "../../game.h"
+#include "../../ai.h"
 
-class TitanAI {
+class TitanAI : public AI {
    pair<Vector, Vector> next_location_and_velocity(const Vector& loc, const Vector& vel) {
       int acc_x = abs(loc.x) >= abs(loc.y) ? (loc.x > 0 ? -1 : 1) : 0;
       int acc_y = abs(loc.y) >= abs(loc.x) ? (loc.y > 0 ? -1 : 1) : 0;
@@ -56,10 +57,10 @@ class TitanAI {
    }
 
 public:
-   JoinParams join_params() {
+   JoinParams join_params() override {
       return JoinParams();
    }
-   StartParams start_params(const GameResponse& response) {
+   StartParams start_params(const GameResponse& response) override {
       int spec_point = response.game_info.ship_info.max_points;
       int reactor = max(spec_point - 160, 0) / 12;
       int armament = 0;
@@ -67,7 +68,7 @@ public:
       int core = 1;
       return StartParams(engine, armament, reactor, core);
    }
-   CommandParams command_params(const GameResponse& response) {
+   CommandParams command_params(const GameResponse& response) override {
       int unit_id = response.game_info.is_defender ? 0 : 1;
       auto pos = response.game_info.is_defender ? response.game_state.defender_state.pos : response.game_state.attacker_state.pos;
       auto vel = response.game_info.is_defender ? response.game_state.defender_state.velocity : response.game_state.attacker_state.velocity;

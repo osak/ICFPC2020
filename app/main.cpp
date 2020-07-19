@@ -32,11 +32,19 @@ Client *init_client(char **argv) {
 
 int main(int argc, char **argv) {
     Client *client = init_client(argv);
-    TitanAI defenceAI;
-    KamikazeAI attackAI;
 
-	GameResponse join_response = GameResponse(as_galaxy(client->join(JoinParams())));
-    StartParams start_params = defenceAI.start_params(join_response);
+	AI* join_ai = new TitanAI();
+    JoinParams join_params = join_ai->join_params();
+    GameResponse join_response = GameResponse(as_galaxy(client->join(join_params)));
+
+    AI* ai;
+    if (join_response.game_info.is_defender) {
+        ai = new TitanAI();
+    } else {
+        ai = new KamikazeAI();
+    }
+
+    StartParams start_params = ai->start_params(join_response);
 	GameResponse response(as_galaxy(client->start(start_params)));
     double accum_time = 0;
 	while (true) {
@@ -47,7 +55,7 @@ int main(int argc, char **argv) {
         Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
         cout << "My location: " << my_location << endl;
         cout << "My velocity: " << my_velocity << endl;
-        CommandParams command_params = response.game_info.is_defender ? defenceAI.command_params(response) : attackAI.command_params(response);
+        CommandParams command_params = ai->command_params(response);
         clock_t end_time = clock();
         double time_used = static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC * 1000.0;
         accum_time += time_used;

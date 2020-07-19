@@ -77,6 +77,47 @@ def post_replay():
         "data": gamestate.decode(response["response"])
     })
 
+@app.route("/aliens/send", methods=["POST"])
+def aliens_send():
+    return send.raw(request.get_data())
+
+@app.route("/api/battledome", methods=["POST"])
+def battledome():
+    response = send.exchange("[1, 0]")
+    data = eval(response['response'])
+    attacker_key = data[1][0][1]
+    defender_key = data[1][1][1]
+    attacker_name = request.json['attacker_name']
+    defender_name = request.json['defender_name']
+    timestamp = datetime.now(tz=timezone.utc)
+    with get_connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("INSERT INTO local_runs (attacker_name, attacker_key, defender_name, defender_key, send_at) VALUES (%s, %s, %s, %s, %s)",
+                           (attacker_name, attacker_key, defender_name, defender_key, timestamp.isoformat()))
+        conn.commit()
+
+    return jsonify({
+        "attacker_key": str(attacker_key),
+        "defender_key": str(defender_key)
+    })
+
+@app.route("/api/local_runs", methods=["GET"])
+def get_local_runs():
+    from_id = request.args.get("from", 0)
+    with get_connection() as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+            cursor.execute(
+                "SELECT * FROM local_runs WHERE id >= %s",
+                (from_id, )
+                )
+            results = []
+            for row in cursor.fetchall():
+                dict_row = dict(row)
+                dict_row["timestamp"] = dict_row["send_at"].isoformat()
+                results.append(dict_row)
+
+    return jsonify({"items": results})
+
 
 @app.route("/")
 def hello():
