@@ -87,9 +87,18 @@ def battledome():
     data = eval(response['response'])
     attacker_key = data[1][0][1]
     defender_key = data[1][1][1]
+    attacker_name = request.json['attacker_name']
+    defender_name = request.json['defender_name']
+    timestamp = datetime.now(tz=timezone.utc)
+    with get_connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute("INSERT INTO local_runs (attacker_name, attacker_key, defender_name, defender_key, send_at) VALUES (%s, %s, %s, %s, %s)",
+                           (attacker_name, attacker_key, defender_name, defender_key, timestamp.isoformat()))
+        conn.commit()
+
     return jsonify({
-        "attackerKey": str(attacker_key),
-        "defenderKey": str(defender_key)
+        "attacker_key": str(attacker_key),
+        "defender_key": str(defender_key)
     })
 
 @app.route("/")
