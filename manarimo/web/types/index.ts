@@ -22,7 +22,6 @@ export interface TurnReplay {
       velocity: { x: number; y: number };
       heat: number;
       location: { x: number; y: number };
-      is_attacker: boolean;
       max_heat: number;
       is_defender: boolean;
       parameters: {
@@ -72,7 +71,8 @@ export interface GameDto {
   gameId: string;
   attacker: PlayerDto;
   defender: PlayerDto;
-  finishedAt: string;
+  finishedAt?: string;
+  winner?: "Defender" | "Attacker" | "Nobody";
 }
 
 export interface GamesResponse {

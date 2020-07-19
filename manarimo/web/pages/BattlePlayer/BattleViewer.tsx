@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Col, Container, Input, Row, Table } from "reactstrap";
 import { RelayData } from "../../types";
-import { parseCommand } from "../../util/CommandParser";
+import { parseCommand, printCommand } from "../../util/CommandParser";
 
 interface Location {
   x: number;
@@ -83,35 +83,33 @@ export const BattleViewer = (props: Props) => {
         drawPlanet(ctx, planetSize, magnify, normalize);
 
         turnData.data.forEach((data) => {
-          const playerColor = data.state.is_attacker
-            ? "red"
-            : data.state.is_defender
-            ? "blue"
-            : "black";
+          const playerColor = data.state.is_defender ? "blue" : "red";
           drawPlayer(ctx, data.state.location, playerColor, normalize, magnify);
-          const command = parseCommand(data.command);
-          if (command) {
-            if (command.command === "ATTACK") {
-              drawAttack(
-                ctx,
-                data.state.location,
-                { x: command.x, y: command.y },
-                normalize
-              );
+          const commands = parseCommand(data.command);
+          commands.forEach((command) => {
+            if (command) {
+              if (command.command === "ATTACK") {
+                drawAttack(
+                  ctx,
+                  data.state.location,
+                  { x: command.x, y: command.y },
+                  normalize
+                );
+              }
             }
-          }
+          });
         });
       }
     }
   });
 
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <h2>Battle #{replayId}</h2>
       </Row>
       <Row>
-        <Col>
+        <Col xs="auto">
           <canvas
             style={{
               borderStyle: "solid",
@@ -134,17 +132,19 @@ export const BattleViewer = (props: Props) => {
               </tbody>
             </Table>
           </Row>
-          {[true, false].map((is_attacker, i) => {
-            const player = is_attacker ? "Attacker" : "Defender";
+          {[false, true].map((is_defender, is_defender_idx) => {
+            const player = is_defender ? "Defender" : "Attacker";
             return (
-              <React.Fragment key={i}>
+              <React.Fragment key={is_defender_idx}>
                 <Row>
                   <h4>{player}</h4>
                   <Table>
                     <thead>
                       <tr>
+                        <th>#</th>
                         <th>Position</th>
                         <th>Speed</th>
+                        <th>Heat</th>
                         <th>Fuel</th>
                         <th>Attack</th>
                         <th>Cooler</th>
@@ -153,30 +153,36 @@ export const BattleViewer = (props: Props) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {turnData.data
-                        .filter(
-                          (data) =>
-                            data.state.is_attacker === is_attacker &&
-                            data.state.is_defender !== is_attacker
-                        )
-                        .map((data, i) => {
-                          const command = parseCommand(data.command);
+                      {turnData.data.map((data, ship_id) => {
+                        if (data.state.is_defender !== is_defender) {
+                          return null;
+                        }
+                        const commands = parseCommand(data.command);
 
-                          return (
-                            <tr key={i}>
-                              <td>{`(${data.state.location.x}, ${data.state.location.y})`}</td>
-                              <td>{`(${data.state.velocity.x}, ${data.state.velocity.y})`}</td>
-                              <td>{data.state.parameters.fuel}</td>
-                              <td>{data.state.parameters.attack}</td>
-                              <td>{data.state.parameters.cool_speed}</td>
-                              <td>{data.state.parameters.health}</td>
-                              <td>
-                                <p>{JSON.stringify(data.command)}</p>
-                                <p>{command ? command.command : "null"}</p>
-                              </td>
-                            </tr>
-                          );
-                        })}
+                        return (
+                          <tr key={ship_id}>
+                            <th>{ship_id}</th>
+                            <td>{`(${data.state.location.x}, ${data.state.location.y})`}</td>
+                            <td>{`(${data.state.velocity.x}, ${data.state.velocity.y})`}</td>
+                            <td>
+                              {data.state.heat}/{data.state.max_heat}
+                            </td>
+                            <td>{data.state.parameters.fuel}</td>
+                            <td>{data.state.parameters.attack}</td>
+                            <td>{data.state.parameters.cool_speed}</td>
+                            <td>{data.state.parameters.health}</td>
+                            <td>
+                              <p>{JSON.stringify(data.command)}</p>
+                              {commands.map(
+                                (command, i) =>
+                                  command && (
+                                    <p key={i}>{printCommand(command)}</p>
+                                  )
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </Table>
                 </Row>

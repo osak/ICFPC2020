@@ -21,6 +21,14 @@ struct Vector {
    double operator*(const Vector& other) const {
       return x * other.x + y * other.y;
    }
+
+   Vector operator+(const Vector& other) const {
+      return Vector(x + other.x, y + other.y);
+   }
+
+   bool operator==(const Vector& other) const {
+      return x == other.x && y == other.y;
+   }
 };
 
 ostream& operator << (ostream &os, const Vector &v) {
@@ -32,6 +40,8 @@ struct Command {
    int unit_id;
    Command(int unit_id) : unit_id(unit_id) {}
    virtual void modulate(Modulator& mod) {
+   }
+   virtual void print() {
    }
 };
 
@@ -78,6 +88,9 @@ struct Move : Command {
       acceleration.modulate(mod);
       mod.put_nil();
    }
+   virtual void print() {
+      cout << "Move(" << unit_id << ") " << acceleration;
+   }
 };
 
 struct Kamikaze : Command {
@@ -88,6 +101,9 @@ struct Kamikaze : Command {
       mod.put_cell();
       mod.put_number(unit_id);
       mod.put_nil();
+   }
+   virtual void print() {
+      cout << "Kamikaze(" << unit_id << ") ";
    }
 };
 
@@ -105,6 +121,9 @@ struct Attack : Command {
       mod.put_cell();
       mod.put_number(power);
       mod.put_nil();
+   }
+   virtual void print() {
+      cout << "Attack(" << unit_id << ") " << target_location << " " << power;
    }
 };
 
@@ -128,11 +147,20 @@ struct Fission : Command {
 		mod.put_nil();
       mod.put_nil();
    }
+   virtual void print() {
+      cout << "Fission(" << unit_id << ") " << childParams.engine << ", " << childParams.armament << ", " << childParams.reactor << ", " << childParams.core;
+   }
 };
 
 struct JoinParams {
+   long long secret1 = 192496425430LL;
+   long long secret2 = 103652820LL;
    string modulate() const {
       Modulator mod;
+      mod.put_cell();
+      mod.put_number(secret1);
+      mod.put_cell();
+      mod.put_number(secret2);
 		mod.put_nil();
       return mod.to_string();
    }
