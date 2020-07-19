@@ -7,6 +7,7 @@ struct Vector {
    long long x, y;
    Vector() : x(0), y(0) {}
    Vector(long long x, long long y) : x(x), y(y) {}
+   Vector(pair<int, int> pair) : x(pair.first), y(pair.second) {}
    void modulate(Modulator& mod) {
       mod.put_cell();
       mod.put_number(x);
@@ -85,19 +86,24 @@ struct Kamikaze : Command {
       mod.put_cell();
       mod.put_number(1);
       mod.put_cell();
-      mod.put_number(0);
+      mod.put_number(unit_id);
       mod.put_nil();
    }
 };
 
 struct Attack : Command {
-   Vector targetLocation;
-   Attack(int unit_id, const Vector& targetLocation) : Command(unit_id), targetLocation(targetLocation) {}
+   Vector target_location;
+   int power;
+   Attack(int unit_id, const Vector& target_location, int power) : Command(unit_id), target_location(target_location), power(power) {}
    virtual void modulate(Modulator& mod) {
       mod.put_cell();
       mod.put_number(2);
       mod.put_cell();
-      targetLocation.modulate(mod);
+      mod.put_number(unit_id);
+      mod.put_cell();
+      target_location.modulate(mod);
+      mod.put_cell();
+      mod.put_number(power);
       mod.put_nil();
    }
 };
