@@ -4,7 +4,7 @@
 #include "../../game.h"
 #include "../../ai.h"
 
-class MeteorAI : public AI {
+class GoatAI : public AI {
     pair<Vector, Vector> simulate(Vector loc, Vector vel) {
         if (abs(loc.x) >= abs(loc.y)) {
             if (loc.x < 0) ++vel.x;
