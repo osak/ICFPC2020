@@ -34,10 +34,9 @@ int main(int argc, char **argv) {
     Client *client = init_client(argv);
     AI* ai;
 
-    JoinParams join_params = ai->join_params();
-	GameResponse join_response = GameResponse(as_galaxy(client->join(join_params)));
+	GameResponse join_response = GameResponse(as_galaxy(client->join(JoinParams())));
     if (join_response.game_info.is_defender) {
-        ai = new AlphinaudAI();
+        ai = new GoatAI();
     } else {
         ai = new AlphinaudAI();
     }
