@@ -28,10 +28,21 @@ interface InnerProps extends Props {
 }
 
 function serializeTeamName(player: PlayerDto) {
+  const teamName = player.team.teamName.startsWith("Atelier Manarimo") ? (
+    <b>{player.team.teamName}</b>
+  ) : (
+    player.team.teamName
+  );
+
   if (player.submissionId !== undefined) {
-    return `${player.team.teamName} #${player.submissionId}`;
+    return (
+      <>
+        {teamName}
+        {` #${player.submissionId}`}
+      </>
+    );
   } else {
-    return player.team.teamName;
+    return teamName;
   }
 }
 
