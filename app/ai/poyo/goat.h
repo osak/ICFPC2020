@@ -228,7 +228,7 @@ public:
                     if (life > 1 && ship.ship_parameter.energy > 5 && remaining_turn > 5) {
                         int score = test(pos, vel, response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, remaining_turn);
 
-                        if ((num_children < 2 && score > 100) || score >= remaining_turn) {
+                        if ((num_children < 1 && score > 30) || (num_children < 2 && score > 100) || score >= remaining_turn) {
                             cout << "Fission! It will live for " << score << "turns" << endl;
                             num_children++;
                             params.commands.push_back(new Fission(unit_id, StartParams(2, 0, 0, 1)));
