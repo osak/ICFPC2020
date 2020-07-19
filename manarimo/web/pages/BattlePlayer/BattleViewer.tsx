@@ -113,7 +113,7 @@ export const BattleViewer = (props: Props) => {
         <h2>Battle #{replayId}</h2>
       </Row>
       <Row>
-        <Col>
+        <Col xs="auto">
           <canvas
             style={{
               borderStyle: "solid",
