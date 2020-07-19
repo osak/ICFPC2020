@@ -31,10 +31,11 @@ Client *init_client(char **argv) {
 
 int main(int argc, char **argv) {
     Client *client = init_client(argv);
-    TitanAI ai;
+    AI* ai = new TitanAI();
 
-	GameResponse join_response = GameResponse(as_galaxy(client->join(JoinParams())));
-    StartParams start_params = ai.start_params(join_response);
+    JoinParams join_params = ai->join_params();
+	GameResponse join_response = GameResponse(as_galaxy(client->join(join_params)));
+    StartParams start_params = ai->start_params(join_response);
 	GameResponse response(as_galaxy(client->start(start_params)));
     double accum_time = 0;
 	while (true) {
@@ -45,7 +46,7 @@ int main(int argc, char **argv) {
         Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
         cout << "My location: " << my_location << endl;
         cout << "My velocity: " << my_velocity << endl;
-        CommandParams command_params = ai.command_params(response);
+        CommandParams command_params = ai->command_params(response);
         clock_t end_time = clock();
         double time_used = static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC * 1000.0;
         accum_time += time_used;
