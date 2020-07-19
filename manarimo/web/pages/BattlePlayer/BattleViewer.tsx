@@ -83,11 +83,7 @@ export const BattleViewer = (props: Props) => {
         drawPlanet(ctx, planetSize, magnify, normalize);
 
         turnData.data.forEach((data) => {
-          const playerColor = data.state.is_attacker
-            ? "red"
-            : data.state.is_defender
-            ? "blue"
-            : "black";
+          const playerColor = data.state.is_defender ? "blue" : "red";
           drawPlayer(ctx, data.state.location, playerColor, normalize, magnify);
           const commands = parseCommand(data.command);
           commands.forEach((command) => {
@@ -136,11 +132,10 @@ export const BattleViewer = (props: Props) => {
               </tbody>
             </Table>
           </Row>
-          {[true, false].map((is_attacker, is_attacker_index) => {
-            const player = is_attacker ? "Attacker" : "Defender";
-            const is_defender = !is_attacker;
+          {[false, true].map((is_defender, is_defender_idx) => {
+            const player = is_defender ? "Defender" : "Attacker";
             return (
-              <React.Fragment key={is_attacker_index}>
+              <React.Fragment key={is_defender_idx}>
                 <Row>
                   <h4>{player}</h4>
                   <Table>
@@ -159,10 +154,7 @@ export const BattleViewer = (props: Props) => {
                     </thead>
                     <tbody>
                       {turnData.data.map((data, ship_id) => {
-                        if (
-                          data.state.is_attacker !== is_attacker ||
-                          data.state.is_defender !== is_defender
-                        ) {
+                        if (data.state.is_defender === is_defender) {
                           return null;
                         }
                         const commands = parseCommand(data.command);
