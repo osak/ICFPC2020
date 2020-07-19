@@ -5,6 +5,8 @@
 #include <iostream>
 #include <cassert>
 
+#include "value.h"
+
 using namespace std;
 
 class Modulator {
@@ -48,6 +50,10 @@ class Modulator {
 			put_number(n);
 		}
 		put_nil();
+	}
+
+	void put_raw(const string& modulated) {
+		buffer_ += modulated;
 	}
 
 	string to_string() const {
@@ -142,3 +148,25 @@ class Demodulator {
 		return new Value(new ConsCell(car, cdr));
 	}
 };
+
+GalaxyValue* as_galaxy(Value *v) {
+	if (v->type == Value::NUMBER) {
+		return new GalaxyValue(v->value);
+	}
+	if (v->ptr == nullptr) {
+		return new GalaxyValue(vector<GalaxyValue*>());
+	}
+
+	vector<GalaxyValue*> result;
+	const Value *cur = v;
+	while (cur->type == Value::PTR && cur->ptr != nullptr) {
+		result.push_back(as_galaxy(cur->ptr->car));
+		cur = cur->ptr->cdr;
+	}
+
+	// treat cons lists like (1, (2, 3)) as [1, 2, 3]
+	if (cur->type == Value::NUMBER) {
+		result.push_back(new GalaxyValue(cur->value));
+	}
+	return new GalaxyValue(result);
+}

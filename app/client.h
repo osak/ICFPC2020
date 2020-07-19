@@ -3,6 +3,7 @@
 #include "modem.h"
 #include "value.h"
 #include "httplib.h"
+#include "command.h"
 
 #include <string>
 #include <vector>
@@ -14,27 +15,34 @@ class Client {
     Client(const string &server_name, const int port, const long long player_key)
         : client_(server_name, port), player_key_(player_key) {}
 
-    Value* join() {
-		return send(2, vector<long long>());
+    Value* join(const JoinParams& params) {
+		string modulated = params.modulate();
+		return send(2, modulated);
 	}
 
-	Value* start() {
-		return send(3, vector<long long>{10, 10, 10, 10});
+	Value* start(const StartParams& params) {
+		cout << "Engine=" << params.engine << endl;
+		cout << "Armament=" << params.armament << endl;
+		cout << "Reactor=" << params.reactor << endl;
+		cout << "CoreHull=" << params.reactor << endl;
+		string modulated = params.modulate();
+		return send(3, modulated);
 	}
 
-	Value* command() {
-		return send(4, vector<long long>());
+	Value* command(const CommandParams& params) {
+		string modulated = params.modulate();
+		return send(4, modulated);
 	}
 
   private:
-    Value* send(long long command_id, const vector<long long> &commands) {
+    Value* send(long long command_id, const string &commands) {
 		Modulator mod;
 		mod.put_cell();
 		mod.put_number(command_id);
 		mod.put_cell();
 		mod.put_number(player_key_);
 		mod.put_cell();
-		mod.put_list(commands);
+		mod.put_raw(commands);
 		mod.put_nil();
 
 		cout << "command: " << "id=" << command_id << ", commands=" << commands << endl;
