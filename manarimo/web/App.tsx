@@ -14,6 +14,7 @@ import { HashRouter, Switch, Route, Link } from "react-router-dom";
 import { AlienSend } from "./pages/AlienSend";
 import { BattlePlayer } from "./pages/BattlePlayer/BattlePlayer";
 import { HistoryList } from "./pages/HistoryList";
+import { LocalGameList } from "./pages/LocalGameList";
 import { ReplayList } from "./pages/ReplayList";
 import { Visualizer } from "./pages/Visualizer/Visualizer";
 import { GameList } from "./pages/GameList";
@@ -49,12 +50,17 @@ export const App = () => {
               </NavItem>
               <NavItem>
                 <NavLink tag={Link} to="/games/current">
-                  Games (Current Tournament)
+                  Current Tournament
                 </NavLink>
               </NavItem>
               <NavItem>
                 <NavLink tag={Link} to="/games/unrated">
-                  Games (Unrated)
+                  Unrated
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/games/local">
+                  Local
                 </NavLink>
               </NavItem>
             </Nav>
@@ -86,7 +92,7 @@ export const App = () => {
           <Route
             exact
             path="/games/current"
-            render={({ match }) => {
+            render={() => {
               return <GameList gameType={"Rated"} />;
             }}
           />
@@ -95,16 +101,19 @@ export const App = () => {
             path="/games/rated/:tournamentId"
             render={({ match }) => {
               const tournamentId = match.params.tournamentId;
-              return <GameList gameType={"Rated"} tournamentId={tournamentId} />;
+              return (
+                <GameList gameType={"Rated"} tournamentId={tournamentId} />
+              );
             }}
           />
           <Route
             exact
             path="/games/unrated"
-            render={({ match }) => {
+            render={() => {
               return <GameList gameType={"Unrated"} />;
             }}
           />
+          <Route exact path="/games/local" component={LocalGameList} />
           <Redirect path="/" to="/" />
         </Switch>
       </Container>
