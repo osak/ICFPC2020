@@ -15,7 +15,7 @@ struct Vector {
 };
 
 ostream& operator << (ostream &os, const Vector &v) {
-   os << "(" << v.x << "," << v.y << ")" << endl;
+   os << "(" << v.x << "," << v.y << ")";
 	return os;
 }
 
@@ -43,6 +43,8 @@ struct Kamikaze : Command {
    virtual void modulate(Modulator& mod) {
       mod.put_cell();
       mod.put_number(1);
+      mod.put_cell();
+      mod.put_number(0);
       mod.put_nil();
    }
 };

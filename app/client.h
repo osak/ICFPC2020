@@ -24,7 +24,7 @@ class Client {
 		cout << "Engine=" << params.engine << endl;
 		cout << "Armament=" << params.armament << endl;
 		cout << "Reactor=" << params.reactor << endl;
-		cout << "CoreHull=" << params.reactor << endl;
+		cout << "CoreHull=" << params.core << endl;
 		string modulated = params.modulate();
 		return send(3, modulated);
 	}
