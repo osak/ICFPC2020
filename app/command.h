@@ -155,8 +155,8 @@ struct JoinParams {
       Modulator mod;
       mod.put_cell();
       mod.put_number(secret1);
-      //mod.put_cell();
-      //mod.put_number(secret2);
+      mod.put_cell();
+      mod.put_number(secret2);
 		mod.put_nil();
       return mod.to_string();
    }
