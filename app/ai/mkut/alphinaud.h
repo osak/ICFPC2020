@@ -126,8 +126,8 @@ class AlphinaudAI : public AI {
     vector<Command*> critical_shot(int unit_id, const ShipState& my_ship_state, const vector<ShipState>& enemy_ship_states) {
         for (auto enemy_ship_state : enemy_ship_states) {
             Vector next_enemy_location = simulate(Vector(enemy_ship_state.pos), Vector(enemy_ship_state.velocity)).first;
-            for (int dx = -1; dx <= 1; dx++) {
-                for (int dy = -1; dy <= 1; dy++) {
+            for (int dx = -2; dx <= 2; dx++) {
+                for (int dy = -2; dy <= 2; dy++) {
                     auto next_my_velocity = Vector(my_ship_state.velocity) + Vector(dx, dy);
                     Vector next_my_location = simulate(Vector(my_ship_state.pos), next_my_velocity).first;
                     if (critical_point(next_enemy_location, next_my_location)) {
@@ -207,7 +207,7 @@ public:
     StartParams start_params(const GameResponse& response) {
         int spec_point = response.game_info.ship_info.max_points;
         int reactor = 10;
-        int armament = 74; //max(spec_point - 208, 0) / 4;
+        int armament = max(spec_point - 208, 0) / 4;
         int engine = spec_point - 2 - reactor * 12 - armament * 4;
         int core = 1;
         return StartParams(engine, armament, reactor, core);
