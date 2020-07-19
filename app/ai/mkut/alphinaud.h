@@ -5,12 +5,13 @@
 #include "../../ai.h"
 
 class AlphinaudAI : public AI {
+    /*
 public:
     void test() {
         auto x = safe_move(16, 128, Vector(6, 27), Vector(0, -6), 100);
         cerr << x.first << "," << x.second << endl;
     }
-
+*/
     bool dead(const Vector &loc, int center_rad, int field_rad) {
         if (abs(loc.x) <= center_rad && abs(loc.y) <= center_rad) return true;
         return abs(loc.x) >= field_rad || abs(loc.y) >= field_rad;

@@ -31,9 +31,6 @@ Client *init_client(char **argv) {
 }
 
 int main(int argc, char **argv) {
-    AlphinaudAI* a = new AlphinaudAI();
-    a->test();
-    exit(0);
     Client *client = init_client(argv);
     AI* ai;
 
