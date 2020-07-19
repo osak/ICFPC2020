@@ -22,7 +22,7 @@ class Modulator {
         buffer_ += string(bits / 4, '1');
         buffer_ += "0";
 
-		cout << "mod: " << num << " " << bits << endl;
+		cout << "[DBG] modulating number: " << num << " " << bits << endl;
         if (bits > 0) {
             unsigned long long mask = (1ULL << (bits - 1));
             while (mask > 0) {
@@ -91,6 +91,72 @@ ostream& operator << (ostream &os, const Value &v) {
 
 ostream& operator << (ostream &os, const ConsCell &v) {
 	os << "(" << *v.car << "," << *v.cdr << ")";
+	return os;
+}
+
+struct GalaxyValue {
+	enum Type {
+		NUMBER,
+		LIST
+	} type;
+	long long num;
+	vector<GalaxyValue*> list;
+
+	GalaxyValue(long long num) : type(NUMBER), num(num) {}
+	GalaxyValue(const vector<GalaxyValue*> &list) : type(LIST), list(list) {}
+};
+
+GalaxyValue* as_galaxy(Value *v) {
+	if (v->type == Value::NUMBER) {
+		return new GalaxyValue(v->value);
+	}
+	if (v->ptr == nullptr) {
+		return new GalaxyValue(vector<GalaxyValue*>());
+	}
+
+	vector<GalaxyValue*> result;
+	const Value *cur = v;
+	while (cur->type == Value::PTR && cur->ptr != nullptr) {
+		result.push_back(as_galaxy(cur->ptr->car));
+		cur = cur->ptr->cdr;
+	}
+
+	// treat cons lists like (1, (2, 3)) as [1, 2, 3]
+	if (cur->type == Value::NUMBER) {
+		result.push_back(new GalaxyValue(cur->value));
+	}
+	return new GalaxyValue(result);
+}
+
+ostream& operator << (ostream &os, const GalaxyValue &gv) {
+	if (gv.type == GalaxyValue::NUMBER) {
+		os << gv.num;
+	} else {
+		os << "[";
+		bool first = true;
+		for (auto v : gv.list) {
+			if (!first) {
+				os << ",";
+			}
+			os << *v;
+			first = false;
+		}
+		os << "]";
+	}
+	return os;
+}
+
+ostream& operator << (ostream &os, const vector<long long> &v) {
+	bool first = true;
+	os << "[";
+	for (auto &val : v) {
+		if (!first) {
+			os << ",";
+		}
+		first = false;
+		os << val;
+	}
+	os << "]";
 	return os;
 }
 
@@ -169,6 +235,7 @@ class Client {
 		mod.put_list(commands);
 		mod.put_nil();
 
+		cout << "command: " << "id=" << command_id << ", commands=" << commands << endl;
 		cout << "sending: " << mod.to_string() << endl;
 		auto response = client_.Post("/aliens/send?apiKey=decffdda9f2d431792a37fbfb770f825", mod.to_string(), "text/plain");
 		if (!response) {
@@ -181,9 +248,10 @@ class Client {
 			return nullptr;
 		}
 
-		cout << response->body << endl;
+		cout << "received (raw):" << response->body << endl;
 		Value *stat = Demodulator().demodulate(response->body);
-		cout << *stat << endl;
+		cout << "received (cons):" << *stat << endl;
+		cout << "received (list):" << *as_galaxy(stat) << endl;
 		return stat;
 	}
 
@@ -210,10 +278,17 @@ Client *init_client(char **argv) {
     return new Client(serverName, serverPort, atoll(playerKey.c_str()));
 }
 
+void test() {
+	Value *v = Demodulator().demodulate("110110000111011000011111011110000100000000110101111011110001000000000110110000111011100100000000111101110000100001101110100000000011110110000111011000011101100001110110000100001111010111101110000100001101110100000000011111111011000011101011110111000110000101100010101111110100101111011000011101100001110110000111011000010011010110111001000000110110000100110000111111010110110000111111011000110000011100010101111110100101111011010101101101010110110101011011010100011010110111001000000110110000100110000000000");
+	cout << *v << endl;
+	cout << *as_galaxy(v) << endl;
+}
+
 int main(int argc, char **argv) {
+	test();
+
     Client *client = init_client(argv);
 
-	cout << *Demodulator().demodulate("11011000101101111111111111111100101111011111111111000011100001100010100110000011000000111111110110000") << endl;
 	client->join();
 	client->start();
 	while (true) {
