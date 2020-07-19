@@ -16,7 +16,7 @@ def print_help():
 
 
 def main(args):
-    if args[1] is "-h" or args[1] is "--help" or len(args) < 5:
+    if args[1] == "-h" or args[1] == "--help" or len(args) < 5:
         print_help()
         return
     attacker_path = args[1]
