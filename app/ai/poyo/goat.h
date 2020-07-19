@@ -192,7 +192,7 @@ public:
         int spec_point = response.game_info.ship_info.max_points;
         int reactor = max(spec_point - 160, 0) / 12;
         int armament = 0;
-        int engine = spec_point - 20 - reactor * 12;
+        int engine = spec_point - 40 - reactor * 12;
         int core = 20;
         return StartParams(engine, armament, reactor, core);
     }
