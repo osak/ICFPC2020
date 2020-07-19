@@ -15,20 +15,23 @@ struct Vector {
 };
 
 ostream& operator << (ostream &os, const Vector &v) {
-   os << "(" << v.x << "," << v.y << ")" << endl;
+   os << "(" << v.x << "," << v.y << ")";
 	return os;
 }
 
 struct Command {
+   int unit_id;
+   Command(int unit_id) : unit_id(unit_id) {}
    virtual void modulate(Modulator& mod) {
-
    }
 };
 
 struct Move : Command {
    Vector acceleration;
-   Move(const Vector& acceleration) : acceleration(acceleration) {}
+   Move(int unit_id, const Vector& acceleration) : Command(unit_id), acceleration(acceleration) {}
    virtual void modulate(Modulator& mod) {
+      mod.put_cell();
+      mod.put_number(0);
       mod.put_cell();
       mod.put_number(0);
       mod.put_cell();
@@ -38,15 +41,19 @@ struct Move : Command {
 };
 
 struct Kamikaze : Command {
+   Kamikaze(int unit_id) : Command(unit_id) {}
    virtual void modulate(Modulator& mod) {
       mod.put_cell();
       mod.put_number(1);
+      mod.put_cell();
+      mod.put_number(0);
       mod.put_nil();
    }
 };
 
 struct Attack : Command {
    Vector targetLocation;
+   Attack(int unit_id, const Vector& targetLocation) : Command(unit_id), targetLocation(targetLocation) {}
    virtual void modulate(Modulator& mod) {
       mod.put_cell();
       mod.put_number(2);

@@ -24,7 +24,7 @@ class Client {
 		cout << "Engine=" << params.engine << endl;
 		cout << "Armament=" << params.armament << endl;
 		cout << "Reactor=" << params.reactor << endl;
-		cout << "CoreHull=" << params.reactor << endl;
+		cout << "CoreHull=" << params.core << endl;
 		string modulated = params.modulate();
 		return send(3, modulated);
 	}
@@ -56,6 +56,11 @@ class Client {
 		if (response->status != 200) {
 			cout << "Server returned unexpected response code: " << response->status << " " << response->body << endl;
 			return nullptr;
+		}
+
+		if (response->body == "1101000") {
+			cout << "battle has finished." << endl;
+			exit(0);
 		}
 
 		cout << "received (raw):" << response->body << endl;
