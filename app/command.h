@@ -7,6 +7,7 @@ struct Vector {
    long long x, y;
    Vector() : x(0), y(0) {}
    Vector(long long x, long long y) : x(x), y(y) {}
+   Vector(pair<int, int> pair) : x(pair.first), y(pair.second) {}
    void modulate(Modulator& mod) {
       mod.put_cell();
       mod.put_number(x);
@@ -31,51 +32,6 @@ struct Command {
    int unit_id;
    Command(int unit_id) : unit_id(unit_id) {}
    virtual void modulate(Modulator& mod) {
-   }
-};
-
-struct Move : Command {
-   Vector acceleration;
-   Move(int unit_id, const Vector& acceleration) : Command(unit_id), acceleration(acceleration) {}
-   virtual void modulate(Modulator& mod) {
-      mod.put_cell();
-      mod.put_number(0);
-      mod.put_cell();
-      mod.put_number(unit_id);
-      mod.put_cell();
-      acceleration.modulate(mod);
-      mod.put_nil();
-   }
-};
-
-struct Kamikaze : Command {
-   Kamikaze(int unit_id) : Command(unit_id) {}
-   virtual void modulate(Modulator& mod) {
-      mod.put_cell();
-      mod.put_number(1);
-      mod.put_cell();
-      mod.put_number(0);
-      mod.put_nil();
-   }
-};
-
-struct Attack : Command {
-   Vector targetLocation;
-   Attack(int unit_id, const Vector& targetLocation) : Command(unit_id), targetLocation(targetLocation) {}
-   virtual void modulate(Modulator& mod) {
-      mod.put_cell();
-      mod.put_number(2);
-      mod.put_cell();
-      targetLocation.modulate(mod);
-      mod.put_nil();
-   }
-};
-
-struct JoinParams {
-   string modulate() const {
-      Modulator mod;
-		mod.put_nil();
-      return mod.to_string();
    }
 };
 
@@ -106,6 +62,78 @@ struct CommandParams {
          com->modulate(mod);
       }
       mod.put_nil();
+      return mod.to_string();
+   }
+};
+
+struct Move : Command {
+   Vector acceleration;
+   Move(int unit_id, const Vector& acceleration) : Command(unit_id), acceleration(acceleration) {}
+   virtual void modulate(Modulator& mod) {
+      mod.put_cell();
+      mod.put_number(0);
+      mod.put_cell();
+      mod.put_number(unit_id);
+      mod.put_cell();
+      acceleration.modulate(mod);
+      mod.put_nil();
+   }
+};
+
+struct Kamikaze : Command {
+   Kamikaze(int unit_id) : Command(unit_id) {}
+   virtual void modulate(Modulator& mod) {
+      mod.put_cell();
+      mod.put_number(1);
+      mod.put_cell();
+      mod.put_number(unit_id);
+      mod.put_nil();
+   }
+};
+
+struct Attack : Command {
+   Vector target_location;
+   int power;
+   Attack(int unit_id, const Vector& target_location, int power) : Command(unit_id), target_location(target_location), power(power) {}
+   virtual void modulate(Modulator& mod) {
+      mod.put_cell();
+      mod.put_number(2);
+      mod.put_cell();
+      mod.put_number(unit_id);
+      mod.put_cell();
+      target_location.modulate(mod);
+      mod.put_cell();
+      mod.put_number(power);
+      mod.put_nil();
+   }
+};
+
+struct Fission : Command {
+   StartParams childParams;
+   Fission(int unit_id, const StartParams& childParams) : Command(unit_id), childParams(childParams) {}
+   virtual void modulate(Modulator & mod) {
+      mod.put_cell();
+      mod.put_number(3);
+      mod.put_cell();
+      mod.put_number(unit_id);
+      mod.put_cell();
+		mod.put_cell();
+		mod.put_number(childParams.engine);
+      mod.put_cell();
+		mod.put_number(childParams.armament);
+		mod.put_cell();
+		mod.put_number(childParams.reactor);
+		mod.put_cell();
+		mod.put_number(childParams.core);
+		mod.put_nil();
+      mod.put_nil();
+   }
+};
+
+struct JoinParams {
+   string modulate() const {
+      Modulator mod;
+		mod.put_nil();
       return mod.to_string();
    }
 };
