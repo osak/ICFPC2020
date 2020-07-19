@@ -64,16 +64,27 @@ Vector safe_move(long long planet_size, const Vector& loc, const Vector& vel) {
             }
         }
     }
+    int next_area = area(tmp_loc);
+    if ((current_area + 1) % 4 != next_area) {
+        switch (current_area) {
+            case 0: return Vector(-1, -1);
+            case 1: return Vector(1, -1);
+            case 2: return Vector(1, 1);
+            case 3: return Vector(-1, 1);
+        }
+    }
     return Vector();
 }
 
 void test_safe_move() {
-    Vector loc(-4, 48), vel(0, 0);
+    Vector loc(27, 21), vel(0, 0);
     cout << safe_move(16, loc, vel) << endl;
 }
 
 int main(int argc, char **argv) {
 	// test();
+    // test_safe_move();
+    // exit(0);
 
     Client *client = init_client(argv);
 
