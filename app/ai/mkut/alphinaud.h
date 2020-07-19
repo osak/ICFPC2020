@@ -114,12 +114,12 @@ public:
     }
 
     int get_full_power(const ShipState& my_ship_state, int move) {
-        int remaining_heat = max(0, my_ship_state.max_heat - my_ship_state.heat + my_ship_state.ship_parameter.recharge_rate - move * 2);
+        int remaining_heat = max(0, my_ship_state.max_heat - my_ship_state.heat + my_ship_state.ship_parameter.recharge_rate - move * 8);
         return min(remaining_heat, my_ship_state.ship_parameter.attack);
     }
 
     int get_free_power(const ShipState& my_ship_state, int move) {
-        return max(0, my_ship_state.ship_parameter.recharge_rate - my_ship_state.heat - move * 2);
+        return max(0, my_ship_state.ship_parameter.recharge_rate - my_ship_state.heat - move * 8);
     }
 
     bool critical_point(const Vector& a, const Vector& b) {
