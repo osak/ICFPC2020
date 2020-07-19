@@ -5,6 +5,12 @@
 #include "../../ai.h"
 
 class MeteorAI : public AI {
+
+    bool dead(const Vector &loc, int center_rad, int field_rad) {
+        if (abs(loc.x) <= center_rad && abs(loc.y) <= center_rad) return true;
+        return abs(loc.x) >= field_rad || abs(loc.y) >= field_rad;
+    }
+
     pair<Vector, Vector> simulate(Vector loc, Vector vel) {
         if (abs(loc.x) >= abs(loc.y)) {
             if (loc.x < 0) ++vel.x;
@@ -34,8 +40,7 @@ class MeteorAI : public AI {
                 cerr << loc << endl;
             }
 
-            if (abs(loc.x) <= center_rad && abs(loc.y) <= center_rad) break;
-            if (abs(loc.x) >= field_rad || abs(loc.y) >= field_rad) break;
+            if (dead(loc, center_rad, field_rad)) break;
             ++cnt;
         }
 
@@ -54,17 +59,20 @@ class MeteorAI : public AI {
             new_vel.y += v.y;
 
             int result = test(loc, new_vel, center_rad, field_rad, max_turn);
+
+            auto next_param = simulate(loc, new_vel);
+            if (dead(next_param.first, center_rad, field_rad)) continue;
+
             if (best < result) {
                 best = result;
                 best_move = v;
             }
 
-            auto next_param = simulate(loc, new_vel);
 
             auto dfs_result = dfs(depth + 1, next_param.first, next_param.second, vec, center_rad, field_rad, max_turn);
             if (best < dfs_result.first) {
                 best = dfs_result.first;
-                best_move = dfs_result.second;
+                best_move = v;
             }
         }
 
@@ -99,15 +107,19 @@ class MeteorAI : public AI {
         return Vector(-best_move.x, -best_move.y);
     }
 
-    void test_safe_move() {
-        Vector loc(16 + rand()%112, 16 + rand()%112), vel(0, 0);
+public:
+    void test_safe_move(int x, int y) {
+        Vector loc(x, y), vel(0, 0);
 
         int planet = 16;
         int field_rad = 128;
 
-        cerr << loc << endl;
+        if (abs(loc.x) <= planet && abs(loc.y) <= planet) return;
+        if (abs(loc.x) >= field_rad || abs(loc.y) >= field_rad) return;
+
         int cost = 0;
-        for (int i = 0; i < 256; ++i) {
+        int cnt = 0;
+        while(cnt < 256) {
             // simulate
             auto vec = safe_move(planet, field_rad, loc, vel, 256);
 
@@ -115,15 +127,28 @@ class MeteorAI : public AI {
                 ++cost;
             }
 
-            vel.x += vec.x;
-            vel.y += vec.y;
+            vel.x -= vec.x;
+            vel.y -= vec.y;
             auto new_state = simulate(loc, vel);
             loc = new_state.first;
             vel = new_state.second;
-//        cerr << "current loc:" << loc << " current vel" << vel << endl;
+
+            if (dead(loc, planet, field_rad)) break;
+
+            ++cnt;
+
+//            cerr << "current loc:" << loc << " current vel" << vel << endl;
         }
 
-        cerr << "cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
+        if (cnt > 256 && cost < 30) {
+//            cerr << "cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
+        } else {
+            if (cnt < 250) {
+                cout << "dead at turn cnt: " << cnt << " cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
+            } else {
+                cout << "cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
+            }
+        }
     }
 
 public:
