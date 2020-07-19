@@ -208,7 +208,7 @@ public:
             Vector best_move = Vector(0, 0);
             int best = 20;
             for (auto& vec: vecs) {
-                int score = test(pos, {vec.x + vel.first, vec.y + vel.second}, response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, remaining_turn);
+                int score = test(pos, {-vec.x + vel.first, -vec.y + vel.second}, response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, remaining_turn);
                 if (score > best) {
                     best = score;
                     best_move = vec;
