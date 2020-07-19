@@ -88,6 +88,7 @@ class KamikazeAI {
                 Point thrust(dx, dy);
 
                 Point new_my_v = my_v + my_grav + thrust;
+                Point new_my_x = my_x + new_my_v;
                 double my_norm_sp = dot(new_my_v, my_norm);
                 double my_rot_sp = dot(new_my_v, my_rot) / my_height;
 
@@ -96,7 +97,10 @@ class KamikazeAI {
 
                 double norm_distance = abs(new_op_height - new_my_height);
                 double arg_distance = calc_arg_distance(new_my_arg, new_op_arg) * new_my_height;
-                double cost = pow(norm_distance, 3) + arg_distance;
+                double int_height = max(abs(new_my_x.real()), abs(new_my_x.imag()));
+                double planet_penalty = 2000 / max(1., int_height - planet_size);
+                double outer_penalty = 2000 / max(1., space_size - int_height);
+                double cost = pow(norm_distance, 3) + arg_distance + planet_penalty;
 
 //                double norm_chase_time = calc_chase_time(new_op_height - new_my_height, my_norm_sp - op_norm_sp, 1);
 //                double max_rot_acc = 1 / new_my_height;
