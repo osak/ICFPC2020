@@ -4,9 +4,17 @@ def add(p, q):
     return px + qx, py + qy
 
 
+def dot(p, q):
+    px, py = p
+    qx, qy = q
+    return px * qx + py * qy
+
+
 def main():
-    x = 64, 0
+    x = 48, 0
     v = 0, 0
+
+    target_velocity = 6
 
     cost = 0
     for turn in range(256):
@@ -27,12 +35,38 @@ def main():
             gy -= 1
         if py <= 0 and py <= -abs(px):
             gy += 1
+        g = gx, gy
+        nv = add(v, g)
 
+        xnorm = dot(x, x) ** 0.5
+        nx, ny = px / xnorm, py / xnorm
+        n = nx, ny
+        rx, ry = ny, -nx
+        r = rx, ry
 
+        r_v = dot(nv, r) / (dot(r, r) ** 0.5)
+        n_v = dot(nv, n) / (dot(n, n) ** 0.5)
 
-        nx = add(x, v)
-        nv = add(v, (gx, gy))
-        x, v = nx, nv
+        cur_diff = abs(r_v - target_velocity)
+        action = -9999, (-5, -5)
+        for ctx in range(-1, 2):
+            for cty in range(-1, 2):
+                ct = ctx, cty
+                cv = add(nv, ct)
+                cr_v = dot(cv, r) / (dot(r, r) ** 0.5)
+                cn_v = dot(cv, n) / (dot(n, n) ** 0.5)
+                improve = (cur_diff - abs(cr_v - target_velocity))
+                improve += (abs(n_v) - abs(cn_v))
+                cand_action = improve, ct
+                if cand_action > action:
+                    action = cand_action
+        tx, ty = action[1]
+
+        t = tx, ty
+        if tx != 0 or ty != 0:
+            cost += 1
+        v = add(add(v, g), t)
+        x = add(x, v)
     print("survived 256 turns with cost {}".format(cost))
 
 
