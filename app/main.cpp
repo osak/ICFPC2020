@@ -117,7 +117,7 @@ int main(int argc, char **argv) {
         Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity);
         cout << "Next move: " << next_move << endl;
         CommandParams params;
-        if (next_move.x != 0 && next_move.y != 0) {
+        if (next_move.x != 0 || next_move.y != 0) {
             params.commands.push_back(new Move(unit_id, next_move));
         }
 		response = GameResponse(as_galaxy(client->command(params)));
