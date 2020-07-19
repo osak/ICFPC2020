@@ -5,6 +5,12 @@
 #include "../../ai.h"
 
 class AlphinaudAI : public AI {
+public:
+    void test() {
+        auto x = safe_move(16, 128, Vector(6, 27), Vector(0, -6), 100);
+        cerr << x.first << "," << x.second << endl;
+    }
+
     bool dead(const Vector &loc, int center_rad, int field_rad) {
         if (abs(loc.x) <= center_rad && abs(loc.y) <= center_rad) return true;
         return abs(loc.x) >= field_rad || abs(loc.y) >= field_rad;
@@ -127,8 +133,9 @@ class AlphinaudAI : public AI {
             Vector next_enemy_location = simulate(Vector(enemy_ship_state.pos), Vector(enemy_ship_state.velocity)).first;
             for (int dx = -2; dx <= 2; dx++) {
                 for (int dy = -2; dy <= 2; dy++) {
-                    auto next_my_velocity = Vector(my_ship_state.velocity) + Vector(dx, dy);
-                    Vector next_my_location = simulate(Vector(my_ship_state.pos), next_my_velocity).first;
+                    auto next_my_loc_vel = simulate(Vector(my_ship_state.pos), Vector(my_ship_state.velocity) + Vector(dx, dy));
+                    auto next_my_location = next_my_loc_vel.first;
+                    auto next_my_velocity = next_my_loc_vel.second;
                     if (dead(next_my_location, center_rad, field_rad)) continue;
                     if (safe_move(center_rad, field_rad, next_my_location, next_my_velocity, 100).second < 50) continue;
                     if (critical_point(next_enemy_location, next_my_location)) {
