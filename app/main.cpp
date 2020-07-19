@@ -6,8 +6,7 @@
 #include <regex>
 #include <string>
 
-#include "ai/mkut/titan.h"
-#include "ai/yuusti/meteor.h"
+#include "ai/yuusti/alphinaud.h"
 
 using namespace std;
 
@@ -32,7 +31,7 @@ Client *init_client(char **argv) {
 
 int main(int argc, char **argv) {
     Client *client = init_client(argv);
-    AI* ai = new MeteorAI();
+    AI* ai = new AlphinaudAI();
 
     JoinParams join_params = ai->join_params();
 	GameResponse join_response = GameResponse(as_galaxy(client->join(join_params)));

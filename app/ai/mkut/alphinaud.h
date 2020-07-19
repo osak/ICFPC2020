@@ -4,7 +4,7 @@
 #include "../../game.h"
 #include "../../ai.h"
 
-class MeteorAI : public AI {
+class AlphinaudAI : public AI {
     pair<Vector, Vector> simulate(Vector loc, Vector vel) {
         if (abs(loc.x) >= abs(loc.y)) {
             if (loc.x < 0) ++vel.x;
@@ -158,6 +158,7 @@ public:
         auto next_shot = max_shot(unit_id, my_ship_state, enemy_ship_state);
          cout << "Next shot: " << next_shot->target_location << " " << next_shot->power << endl;
         CommandParams params;
+        params.commands.push_back(next_shot);
         if (next_move.x != 0 || next_move.y != 0) {
             params.commands.push_back(new Move(unit_id, next_move));
         }
