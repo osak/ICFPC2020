@@ -149,8 +149,8 @@ struct Fission : Command {
 };
 
 struct JoinParams {
-   long long secret1 = 192495633910;
-   long long secret2 = 103652820;
+   long long secret1 = 192495633910LL;
+   long long secret2 = 103652820LL;
    string modulate() const {
       Modulator mod;
       mod.put_cell();
