@@ -6,6 +6,7 @@
 #include "../../game.h"
 #include "../../ai.h"
 
+bool possible[MAX_P * 2 + 2][MAX_P * 2 + 2][MAX_D * 2 + 2][MAX_D * 2 + 2];
 int direction[MAX_P * 2 + 2][MAX_P * 2 + 2][MAX_D * 2 + 2][MAX_D * 2 + 2][2];
 
 class StaticAI : public AI {
@@ -35,8 +36,13 @@ class StaticAI : public AI {
         fprintf(stderr, "x: %d, y: %d\n", x, y);
         fprintf(stderr, "dx: %d, dy: %d\n", dx, dy);
         fflush(stderr);
-        int ndx = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][0];
-        int ndy = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][1];
+        int ndx = 0, ndy = 0;
+        if (possible[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D]) {
+            ndx = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][0];
+            ndy = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][1];
+        } else {
+            fprintf(stderr, "impossible\n");
+        }
         fprintf(stderr, "ndx: %d, ndy: %d\n", ndx, ndy);
         fflush(stderr);
         CommandParams params;
@@ -63,6 +69,7 @@ class StaticAI : public AI {
             int x, y, dx, dy, ndx, ndy;
             fscanf(fp, "%u", &value);
             decode(value, x, y, dx, dy, ndx, ndy);
+            possible[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D] = true;
             direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][0] = ndx;
             direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][1] = ndy;
         }
