@@ -25,9 +25,9 @@ class StaticAI : public AI {
     }
     
     CommandParams command_params(const GameResponse& response) {
+        int unit_id = response.game_info.is_defender ? 0 : 1;
         auto pos = response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
         auto vel = response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
-        int unit_id = response.game_info.is_defender ? response.game_state.defender_states[0].id : response.game_state.attacker_states[0].id;
         int x = pos.first;
         int y = pos.second;
         int dx = vel.first;
@@ -35,8 +35,10 @@ class StaticAI : public AI {
         fprintf(stderr, "x: %d, y: %d\n", x, y);
         fprintf(stderr, "dx: %d, dy: %d\n", dx, dy);
         fflush(stderr);
-        int ndx = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][0];
-        int ndy = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][1];
+        int ndx = 0;
+        int ndy = 0;
+        //int ndx = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][0];
+        //int ndy = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][1];
         fprintf(stderr, "ndx: %d, ndy: %d\n", ndx, ndy);
         fflush(stderr);
         CommandParams params;
