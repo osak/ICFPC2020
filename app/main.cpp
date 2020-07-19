@@ -93,8 +93,8 @@ void test_safe_move() {
 
 int main(int argc, char **argv) {
 	// test();
-    test_safe_move();
-    exit(0);
+    // test_safe_move();
+    // exit(0);
 
     Client *client = init_client(argv);
 
