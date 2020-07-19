@@ -63,7 +63,8 @@ def post_interact():
 
     return jsonify({
         "state": response["state"],
-        "data": response["data"]
+        "data": response["data"],
+        "sends": response["sends"]
     })
 
 

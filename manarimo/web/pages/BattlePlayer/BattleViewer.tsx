@@ -1,20 +1,57 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Col, Container, Input, Row, Table } from "reactstrap";
 import { RelayData } from "../../types";
+import { parseCommand } from "../../util/CommandParser";
+
+interface Location {
+  x: number;
+  y: number;
+}
 
 const BOARD_SIZE = 500;
+
+const drawAttack = (
+  ctx: CanvasRenderingContext2D,
+  from: Location,
+  to: Location,
+  normalize: (pos: number) => number
+) => {
+  ctx.beginPath();
+  ctx.strokeStyle = "lime";
+  ctx.moveTo(normalize(from.x), normalize(from.y));
+  ctx.lineTo(normalize(to.x), normalize(to.y));
+  ctx.stroke();
+};
+
+const drawPlayer = (
+  ctx: CanvasRenderingContext2D,
+  location: Location,
+  color: string,
+  normalize: (pos: number) => number,
+  magnify: (v: number) => number
+) => {
+  ctx.beginPath();
+  ctx.arc(
+    normalize(location.x),
+    normalize(location.y),
+    magnify(1),
+    0,
+    2 * Math.PI
+  );
+  ctx.fillStyle = color;
+  ctx.fill();
+};
 
 const drawPlanet = (
   ctx: CanvasRenderingContext2D,
   planetSize: number,
-  spaceSize: number,
-  magnify: (value: number) => number
+  magnify: (value: number) => number,
+  normalize: (v: number) => number
 ) => {
-  const center = spaceSize / 2;
   ctx.fillStyle = "olive";
   ctx.fillRect(
-    magnify(center - planetSize),
-    magnify(center - planetSize),
+    normalize(-planetSize),
+    normalize(-planetSize),
     magnify(2 * planetSize),
     magnify(2 * planetSize)
   );
@@ -34,9 +71,8 @@ export const BattleViewer = (props: Props) => {
   const turnData = replayData.data.details.turns[currentTurn];
   const planetSize = replayData.data.details.planet_size;
   const spaceSize = replayData.data.details.space_size;
-  const normalize = (v: number) =>
-    (v * BOARD_SIZE) / spaceSize + BOARD_SIZE / 2;
-  const magnify = (v: number) => (v * BOARD_SIZE) / spaceSize;
+  const magnify = (v: number) => (v * BOARD_SIZE) / (2 * spaceSize);
+  const normalize = (v: number) => magnify(v) + BOARD_SIZE / 2;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -44,33 +80,27 @@ export const BattleViewer = (props: Props) => {
       const ctx = canvas.getContext("2d");
       if (ctx) {
         ctx.clearRect(0, 0, BOARD_SIZE, BOARD_SIZE);
-        drawPlanet(ctx, planetSize, spaceSize, magnify);
+        drawPlanet(ctx, planetSize, magnify, normalize);
 
-        turnData.data
-          .filter((data) => data.state.is_attacker)
-          .forEach((data) => {
-            ctx.beginPath();
-            ctx.arc(
-              normalize(data.state.location.x),
-              normalize(data.state.location.y),
-              magnify(1),
-              0,
-              2 * Math.PI
-            );
-            ctx.fillStyle = "red";
-            ctx.fill();
-          });
-        turnData.data
-          .filter((data) => data.state.is_defender)
-          .forEach((data) => {
-            ctx.fillStyle = "blue";
-            ctx.fillRect(
-              normalize(data.state.location.x) - magnify(1),
-              normalize(data.state.location.y) - magnify(1),
-              magnify(2),
-              magnify(2)
-            );
-          });
+        turnData.data.forEach((data) => {
+          const playerColor = data.state.is_attacker
+            ? "red"
+            : data.state.is_defender
+            ? "blue"
+            : "black";
+          drawPlayer(ctx, data.state.location, playerColor, normalize, magnify);
+          const command = parseCommand(data.command);
+          if (command) {
+            if (command.command === "ATTACK") {
+              drawAttack(
+                ctx,
+                data.state.location,
+                { x: command.x, y: command.y },
+                normalize
+              );
+            }
+          }
+        });
       }
     }
   });
@@ -113,10 +143,13 @@ export const BattleViewer = (props: Props) => {
                   <Table>
                     <thead>
                       <tr>
+                        <th>Position</th>
+                        <th>Speed</th>
                         <th>Fuel</th>
                         <th>Attack</th>
-                        <th>Cool Speed</th>
+                        <th>Cooler</th>
                         <th>HP</th>
+                        <th>Command</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -127,12 +160,20 @@ export const BattleViewer = (props: Props) => {
                             data.state.is_defender !== is_attacker
                         )
                         .map((data, i) => {
+                          const command = parseCommand(data.command);
+
                           return (
                             <tr key={i}>
+                              <td>{`(${data.state.location.x}, ${data.state.location.y})`}</td>
+                              <td>{`(${data.state.velocity.x}, ${data.state.velocity.y})`}</td>
                               <td>{data.state.parameters.fuel}</td>
                               <td>{data.state.parameters.attack}</td>
                               <td>{data.state.parameters.cool_speed}</td>
                               <td>{data.state.parameters.health}</td>
+                              <td>
+                                <p>{JSON.stringify(data.command)}</p>
+                                <p>{command ? command.command : "null"}</p>
+                              </td>
                             </tr>
                           );
                         })}

@@ -16,7 +16,7 @@ export interface SendHistory {
 
 export interface TurnReplay {
   data: {
-    command: any;
+    command: unknown;
     state: {
       max_velocity: number;
       velocity: { x: number; y: number };
@@ -47,4 +47,36 @@ export interface RelayData {
       turns: TurnReplay[];
     };
   };
+}
+
+export interface TournamentDto {
+  tournamentId: number;
+  tournamentType: TournamentType;
+}
+
+export type TournamentType = "Lightning" | "Regular" | "Finals";
+export type GameType = "Rated" | "Unrated";
+
+export interface TeamDto {
+  teamName: string;
+}
+
+export interface PlayerDto {
+  submissionId?: number;
+  team: TeamDto;
+  playerKey: string;
+  debugLog?: string;
+}
+
+export interface GameDto {
+  gameId: string;
+  attacker: PlayerDto;
+  defender: PlayerDto;
+  finishedAt: string;
+}
+
+export interface GamesResponse {
+  hasMore: boolean;
+  next: string;
+  games: Array<GameDto>;
 }

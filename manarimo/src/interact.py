@@ -83,6 +83,7 @@ def apply(state, data):
 
 
 def run(state, data):
+    sends = []
     while True:
         raw, state, data = apply(state, data)
         raw_tree = get_tree(raw)
@@ -93,10 +94,12 @@ def run(state, data):
             break
         else:
             send_request = dem.serialize(send_data)
+            sends.append(send_request)
             data = send.exchange(send_request)["response"]
     return {
         "state": state,
-        "data": data
+        "data": data,
+        "sends": sends
     }
 
 

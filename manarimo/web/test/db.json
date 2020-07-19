@@ -303,8 +303,8 @@
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 48,
-                    "y": 24
+                    "x": -48,
+                    "y": 10
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
@@ -327,15 +327,15 @@
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -48,
-                    "y": -24
+                    "x": 48,
+                    "y": -10
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 110,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 450,
                     "health": 1
                   },
                   "velocity": {
@@ -354,7 +354,7 @@
                   [
                     0,
                     [
-                      1,
+                      -1,
                       -1
                     ]
                   ]
@@ -364,8 +364,8 @@
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 46,
-                    "y": 25
+                    "x": -46,
+                    "y": 11
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
@@ -376,7 +376,7 @@
                     "health": 1
                   },
                   "velocity": {
-                    "x": -2,
+                    "x": 2,
                     "y": 1
                   }
                 }
@@ -386,30 +386,30 @@
                   [
                     0,
                     [
-                      -1,
-                      0
+                      2,
+                      2
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 0,
+                  "heat": 11,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -46,
-                    "y": -24
+                    "x": 45,
+                    "y": -12
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 109,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 2,
-                    "y": 0
+                    "x": -3,
+                    "y": -2
                   }
                 }
               }
@@ -433,8 +433,8 @@
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 42,
-                    "y": 27
+                    "x": -44,
+                    "y": 13
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
@@ -445,40 +445,32 @@
                     "health": 1
                   },
                   "velocity": {
-                    "x": -4,
+                    "x": 2,
                     "y": 2
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    0,
-                    [
-                      -1,
-                      0
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 0,
+                  "heat": 6,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -42,
-                    "y": -24
+                    "x": 41,
+                    "y": -14
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 108,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 4,
-                    "y": 0
+                    "x": -4,
+                    "y": -2
                   }
                 }
               }
@@ -488,58 +480,58 @@
           {
             "data": [
               {
-                "command": null,
+                "command": [
+                  [
+                    0,
+                    [
+                      1,
+                      -1
+                    ]
+                  ]
+                ],
                 "state": {
                   "heat": 0,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 37,
-                    "y": 29
+                    "x": -42,
+                    "y": 16
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 204,
+                    "fuel": 203,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -5,
-                    "y": 2
+                    "x": 2,
+                    "y": 3
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    0,
-                    [
-                      0,
-                      1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 0,
+                  "heat": 1,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -37,
-                    "y": -25
+                    "x": 36,
+                    "y": -16
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 107,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 5,
-                    "y": -1
+                    "x": -5,
+                    "y": -2
                   }
                 }
               }
@@ -553,71 +545,53 @@
                   [
                     0,
                     [
-                      -1,
-                      -1
+                      1,
+                      0
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 7,
+                  "heat": 0,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 32,
-                    "y": 32
+                    "x": -40,
+                    "y": 19
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 203,
+                    "fuel": 202,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -5,
+                    "x": 2,
                     "y": 3
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      31,
-                      31
-                    ],
-                    40,
-                    39,
-                    4
-                  ],
-                  [
-                    0,
-                    [
-                      1,
-                      1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 28,
+                  "heat": 0,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -32,
-                    "y": -27
+                    "x": 30,
+                    "y": -18
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 106,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 5,
+                    "x": -6,
                     "y": -2
                   }
                 }
@@ -632,87 +606,18 @@
                   [
                     0,
                     [
-                      -1,
-                      -1
-                    ]
-                  ]
-                ],
-                "state": {
-                  "heat": 5,
-                  "is_attacker": false,
-                  "is_defender": true,
-                  "location": {
-                    "x": 27,
-                    "y": 35
-                  },
-                  "max_heat": 64,
-                  "max_velocity": 1,
-                  "parameters": {
-                    "attack": 30,
-                    "cool_speed": 10,
-                    "fuel": 202,
-                    "health": 1
-                  },
-                  "velocity": {
-                    "x": -5,
-                    "y": 3
-                  }
-                }
-              },
-              {
-                "command": [
-                  [
-                    0,
-                    [
                       1,
-                      1
+                      0
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 16,
-                  "is_attacker": true,
-                  "is_defender": false,
-                  "location": {
-                    "x": -27,
-                    "y": -30
-                  },
-                  "max_heat": 128,
-                  "max_velocity": 2,
-                  "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 105,
-                    "health": 1
-                  },
-                  "velocity": {
-                    "x": 5,
-                    "y": -3
-                  }
-                }
-              }
-            ],
-            "turn_id": 5
-          },
-          {
-            "data": [
-              {
-                "command": [
-                  [
-                    0,
-                    [
-                      -1,
-                      -1
-                    ]
-                  ]
-                ],
-                "state": {
-                  "heat": 3,
+                  "heat": 0,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 23,
-                    "y": 38
+                    "x": -38,
+                    "y": 22
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
@@ -723,7 +628,7 @@
                     "health": 1
                   },
                   "velocity": {
-                    "x": -4,
+                    "x": 2,
                     "y": 3
                   }
                 }
@@ -735,19 +640,83 @@
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -22,
-                    "y": -32
+                    "x": 23,
+                    "y": -20
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 105,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 5,
+                    "x": -7,
+                    "y": -2
+                  }
+                }
+              }
+            ],
+            "turn_id": 5
+          },
+          {
+            "data": [
+              {
+                "command": [
+                  [
+                    2,
+                    [
+                      15,
+                      -22
+                    ],
+                    30,
+                    31,
+                    4
+                  ]
+                ],
+                "state": {
+                  "heat": 20,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": -35,
+                    "y": 25
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 201,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 3,
+                    "y": 3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 26,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 15,
+                    "y": -22
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -8,
                     "y": -2
                   }
                 }
@@ -758,65 +727,49 @@
           {
             "data": [
               {
-                "command": [
-                  [
-                    0,
-                    [
-                      0,
-                      -1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 1,
+                  "heat": 10,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 19,
-                    "y": 41
+                    "x": -31,
+                    "y": 28
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 200,
+                    "fuel": 201,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -4,
+                    "x": 4,
                     "y": 3
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    0,
-                    [
-                      -1,
-                      0
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 0,
+                  "heat": 21,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -16,
-                    "y": -33
+                    "x": 7,
+                    "y": -23
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 104,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 6,
+                    "x": -8,
                     "y": -1
                   }
                 }
@@ -831,53 +784,53 @@
                   [
                     0,
                     [
-                      -1,
+                      1,
                       -1
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 0,
+                  "heat": 8,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 16,
-                    "y": 44
+                    "x": -27,
+                    "y": 32
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 199,
+                    "fuel": 200,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -3,
-                    "y": 3
+                    "x": 4,
+                    "y": 4
                   }
                 }
               },
               {
                 "command": null,
                 "state": {
-                  "heat": 0,
+                  "heat": 16,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -10,
-                    "y": -33
+                    "x": -1,
+                    "y": -23
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 104,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 6,
+                    "x": -8,
                     "y": 0
                   }
                 }
@@ -888,66 +841,50 @@
           {
             "data": [
               {
-                "command": [
-                  [
-                    0,
-                    [
-                      -1,
-                      -1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
                   "heat": 0,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 14,
-                    "y": 47
+                    "x": -23,
+                    "y": 35
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 198,
+                    "fuel": 200,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -2,
+                    "x": 4,
                     "y": 3
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    0,
-                    [
-                      1,
-                      1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 0,
+                  "heat": 11,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -5,
-                    "y": -33
+                    "x": -9,
+                    "y": -22
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 103,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 5,
-                    "y": 0
+                    "x": -8,
+                    "y": 1
                   }
                 }
               }
@@ -959,63 +896,58 @@
               {
                 "command": [
                   [
-                    0,
+                    2,
                     [
-                      -1,
-                      0
-                    ]
+                      -17,
+                      -20
+                    ],
+                    30,
+                    28,
+                    4
                   ]
                 ],
                 "state": {
-                  "heat": 0,
+                  "heat": 20,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 13,
-                    "y": 49
+                    "x": -19,
+                    "y": 37
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 197,
+                    "fuel": 200,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -1,
+                    "x": 4,
                     "y": 2
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    0,
-                    [
-                      0,
-                      -1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 0,
+                  "heat": 34,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": 0,
-                    "y": -31
+                    "x": -17,
+                    "y": -20
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 102,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 5,
+                    "x": -8,
                     "y": 2
                   }
                 }
@@ -1026,68 +958,49 @@
           {
             "data": [
               {
-                "command": [
-                  [
-                    0,
-                    [
-                      -1,
-                      0
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 3,
+                  "heat": 10,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 13,
-                    "y": 50
+                    "x": -15,
+                    "y": 38
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 196,
+                    "fuel": 200,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 0,
+                    "x": 4,
                     "y": 1
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      12,
-                      50
-                    ],
-                    40,
-                    22,
-                    4
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 20,
+                  "heat": 29,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": 5,
-                    "y": -28
+                    "x": -25,
+                    "y": -17
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 102,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 5,
+                    "x": -8,
                     "y": 3
                   }
                 }
@@ -1102,65 +1015,54 @@
                   [
                     0,
                     [
-                      -1,
-                      0
+                      0,
+                      -1
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 10,
+                  "heat": 8,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 14,
-                    "y": 50
+                    "x": -11,
+                    "y": 39
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 195,
+                    "fuel": 199,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 1,
-                    "y": 0
+                    "x": 4,
+                    "y": 1
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      13,
-                      50
-                    ],
-                    40,
-                    38,
-                    4
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 40,
+                  "heat": 24,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": 10,
-                    "y": -24
+                    "x": -32,
+                    "y": -14
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 102,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 5,
-                    "y": 4
+                    "x": -7,
+                    "y": 3
                   }
                 }
               }
@@ -1172,84 +1074,56 @@
               {
                 "command": [
                   [
-                    2,
-                    [
-                      15,
-                      -19
-                    ],
-                    30,
-                    21,
-                    4
-                  ],
-                  [
                     0,
                     [
-                      -1,
-                      0
+                      0,
+                      -1
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 50,
+                  "heat": 6,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 16,
-                    "y": 49
+                    "x": -7,
+                    "y": 40
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 194,
-                    "health": 1
-                  },
-                  "velocity": {
-                    "x": 2,
-                    "y": -1
-                  }
-                }
-              },
-              {
-                "command": [
-                  [
-                    2,
-                    [
-                      15,
-                      49
-                    ],
-                    40,
-                    51,
-                    4
-                  ],
-                  [
-                    0,
-                    [
-                      1,
-                      -1
-                    ]
-                  ]
-                ],
-                "state": {
-                  "heat": 73,
-                  "is_attacker": true,
-                  "is_defender": false,
-                  "location": {
-                    "x": 14,
-                    "y": -18
-                  },
-                  "max_heat": 128,
-                  "max_velocity": 2,
-                  "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 101,
+                    "fuel": 198,
                     "health": 1
                   },
                   "velocity": {
                     "x": 4,
-                    "y": 6
+                    "y": 1
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 19,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": -38,
+                    "y": -11
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -6,
+                    "y": 3
                   }
                 }
               }
@@ -1261,77 +1135,56 @@
               {
                 "command": [
                   [
-                    2,
-                    [
-                      18,
-                      -11
-                    ],
-                    24,
-                    16,
-                    4
-                  ],
-                  [
                     0,
                     [
                       0,
-                      1
+                      -1
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 64,
+                  "heat": 4,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 18,
-                    "y": 46
+                    "x": -3,
+                    "y": 41
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 170,
-                    "health": 1
-                  },
-                  "velocity": {
-                    "x": 2,
-                    "y": -3
-                  }
-                }
-              },
-              {
-                "command": [
-                  [
-                    2,
-                    [
-                      18,
-                      47
-                    ],
-                    40,
-                    63,
-                    4
-                  ]
-                ],
-                "state": {
-                  "heat": 109,
-                  "is_attacker": true,
-                  "is_defender": false,
-                  "location": {
-                    "x": 18,
-                    "y": -11
-                  },
-                  "max_heat": 128,
-                  "max_velocity": 2,
-                  "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 101,
+                    "fuel": 197,
                     "health": 1
                   },
                   "velocity": {
                     "x": 4,
-                    "y": 7
+                    "y": 1
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 14,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": -43,
+                    "y": -8
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -5,
+                    "y": 3
                   }
                 }
               }
@@ -1341,13 +1194,31 @@
           {
             "data": [
               {
-                "command": null,
+                "command": [
+                  [
+                    2,
+                    [
+                      -47,
+                      -5
+                    ],
+                    30,
+                    35,
+                    4
+                  ],
+                  [
+                    0,
+                    [
+                      -1,
+                      -1
+                    ]
+                  ]
+                ],
                 "state": {
-                  "heat": 64,
+                  "heat": 32,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 20,
+                    "x": 2,
                     "y": 42
                   },
                   "max_heat": 64,
@@ -1355,54 +1226,36 @@
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 112,
+                    "fuel": 196,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 2,
-                    "y": -4
+                    "x": 5,
+                    "y": 1
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      20,
-                      42
-                    ],
-                    39,
-                    68,
-                    4
-                  ],
-                  [
-                    0,
-                    [
-                      0,
-                      -1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 128,
+                  "heat": 44,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": 21,
-                    "y": -3
+                    "x": -47,
+                    "y": -5
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 92,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 3,
-                    "y": 8
+                    "x": -4,
+                    "y": 3
                   }
                 }
               }
@@ -1412,68 +1265,58 @@
           {
             "data": [
               {
-                "command": null,
+                "command": [
+                  [
+                    0,
+                    [
+                      -1,
+                      -1
+                    ]
+                  ]
+                ],
                 "state": {
-                  "heat": 64,
+                  "heat": 30,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 22,
-                    "y": 37
+                    "x": 8,
+                    "y": 43
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 94,
+                    "fuel": 195,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 2,
-                    "y": -5
+                    "x": 6,
+                    "y": 1
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      22,
-                      37
-                    ],
-                    20,
-                    28,
-                    4
-                  ],
-                  [
-                    0,
-                    [
-                      1,
-                      1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 128,
+                  "heat": 39,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": 22,
-                    "y": 4
+                    "x": -50,
+                    "y": -2
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 83,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 1,
-                    "y": 7
+                    "x": -3,
+                    "y": 3
                   }
                 }
               }
@@ -1485,84 +1328,56 @@
               {
                 "command": [
                   [
-                    2,
-                    [
-                      22,
-                      11
-                    ],
-                    10,
-                    2,
-                    4
-                  ],
-                  [
                     0,
                     [
-                      -1,
+                      0,
                       -1
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 64,
+                  "heat": 28,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 25,
-                    "y": 32
+                    "x": 14,
+                    "y": 44
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 76,
+                    "fuel": 194,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 3,
-                    "y": -5
+                    "x": 6,
+                    "y": 1
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      24,
-                      31
-                    ],
-                    20,
-                    36,
-                    4
-                  ],
-                  [
-                    0,
-                    [
-                      -1,
-                      -1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 128,
+                  "heat": 34,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": 23,
-                    "y": 12
+                    "x": -52,
+                    "y": 1
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 74,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 1,
-                    "y": 8
+                    "x": -2,
+                    "y": 3
                   }
                 }
               }
@@ -1574,84 +1389,56 @@
               {
                 "command": [
                   [
-                    2,
-                    [
-                      23,
-                      20
-                    ],
-                    10,
-                    26,
-                    4
-                  ],
-                  [
                     0,
                     [
                       0,
-                      1
+                      -1
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 64,
+                  "heat": 26,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 28,
-                    "y": 25
+                    "x": 20,
+                    "y": 45
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 59,
+                    "fuel": 193,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 3,
-                    "y": -7
+                    "x": 6,
+                    "y": 1
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      28,
-                      26
-                    ],
-                    20,
-                    35,
-                    4
-                  ],
-                  [
-                    0,
-                    [
-                      1,
-                      -1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 128,
+                  "heat": 29,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": 22,
-                    "y": 21
+                    "x": -53,
+                    "y": 4
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 59,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
                     "x": -1,
-                    "y": 9
+                    "y": 3
                   }
                 }
               }
@@ -1663,84 +1450,56 @@
               {
                 "command": [
                   [
-                    2,
-                    [
-                      20,
-                      30
-                    ],
-                    10,
-                    20,
-                    4
-                  ],
-                  [
                     0,
                     [
-                      -1,
+                      0,
                       -1
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 64,
+                  "heat": 24,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 31,
-                    "y": 19
+                    "x": 26,
+                    "y": 46
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 38,
+                    "fuel": 192,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 3,
-                    "y": -6
+                    "x": 6,
+                    "y": 1
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      30,
-                      18
-                    ],
-                    20,
-                    50,
-                    4
-                  ],
-                  [
-                    0,
-                    [
-                      1,
-                      1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 128,
+                  "heat": 24,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": 19,
-                    "y": 29
+                    "x": -53,
+                    "y": 7
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 45,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -3,
-                    "y": 8
+                    "x": 0,
+                    "y": 3
                   }
                 }
               }
@@ -1754,72 +1513,54 @@
                   [
                     0,
                     [
-                      0,
-                      -1
+                      -1,
+                      0
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 64,
+                  "heat": 22,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
                     "x": 33,
-                    "y": 14
+                    "y": 46
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 35,
+                    "fuel": 191,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 2,
-                    "y": -5
+                    "x": 7,
+                    "y": 0
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      33,
-                      13
-                    ],
-                    20,
-                    18,
-                    4
-                  ],
-                  [
-                    0,
-                    [
-                      1,
-                      1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 128,
+                  "heat": 19,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": 15,
-                    "y": 35
+                    "x": -52,
+                    "y": 10
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 36,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -4,
-                    "y": 6
+                    "x": 1,
+                    "y": 3
                   }
                 }
               }
@@ -1834,61 +1575,53 @@
                     0,
                     [
                       -1,
-                      -1
+                      0
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 62,
+                  "heat": 20,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 35,
-                    "y": 10
+                    "x": 41,
+                    "y": 45
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 34,
+                    "fuel": 190,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 2,
-                    "y": -4
+                    "x": 8,
+                    "y": -1
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    0,
-                    [
-                      1,
-                      1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 116,
+                  "heat": 14,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": 10,
-                    "y": 39
+                    "x": -50,
+                    "y": 13
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 35,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -5,
-                    "y": 4
+                    "x": 2,
+                    "y": 3
                   }
                 }
               }
@@ -1903,71 +1636,53 @@
                     0,
                     [
                       -1,
-                      -1
+                      0
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 64,
+                  "heat": 18,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 37,
-                    "y": 7
+                    "x": 50,
+                    "y": 43
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 26,
+                    "fuel": 189,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 2,
-                    "y": -3
+                    "x": 9,
+                    "y": -2
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      36,
-                      6
-                    ],
-                    32,
-                    46,
-                    4
-                  ],
-                  [
-                    0,
-                    [
-                      1,
-                      1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 128,
+                  "heat": 9,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": 4,
-                    "y": 41
+                    "x": -47,
+                    "y": 16
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 26,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -6,
-                    "y": 2
+                    "x": 3,
+                    "y": 3
                   }
                 }
               }
@@ -1977,81 +1692,116 @@
           {
             "data": [
               {
-                "command": [
-                  [
-                    0,
-                    [
-                      1,
-                      1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 64,
+                  "heat": 8,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 37,
-                    "y": 3
+                    "x": 58,
+                    "y": 41
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 22,
+                    "fuel": 189,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 0,
-                    "y": -4
+                    "x": 8,
+                    "y": -2
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      38,
-                      4
-                    ],
-                    20,
-                    22,
-                    4
-                  ],
-                  [
-                    0,
-                    [
-                      -1,
-                      -1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 128,
+                  "heat": 4,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -1,
-                    "y": 43
+                    "x": -43,
+                    "y": 19
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 17,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -5,
-                    "y": 2
+                    "x": 4,
+                    "y": 3
                   }
                 }
               }
             ],
             "turn_id": 23
+          },
+          {
+            "data": [
+              {
+                "command": [
+                  [
+                    0,
+                    [
+                      0,
+                      1
+                    ]
+                  ]
+                ],
+                "state": {
+                  "heat": 6,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 65,
+                    "y": 38
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 188,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 7,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 0,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": -38,
+                    "y": 22
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 5,
+                    "y": 3
+                  }
+                }
+              }
+            ],
+            "turn_id": 24
           },
           {
             "data": [
@@ -2066,130 +1816,48 @@
                   ]
                 ],
                 "state": {
-                  "heat": 64,
+                  "heat": 4,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 37,
-                    "y": -1
+                    "x": 72,
+                    "y": 35
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 21,
+                    "fuel": 187,
                     "health": 1
                   },
                   "velocity": {
-                    "x": 0,
-                    "y": -4
+                    "x": 7,
+                    "y": -3
                   }
                 }
               },
-              {
-                "command": [
-                  [
-                    2,
-                    [
-                      36,
-                      -1
-                    ],
-                    20,
-                    8,
-                    4
-                  ]
-                ],
-                "state": {
-                  "heat": 128,
-                  "is_attacker": true,
-                  "is_defender": false,
-                  "location": {
-                    "x": -6,
-                    "y": 44
-                  },
-                  "max_heat": 128,
-                  "max_velocity": 2,
-                  "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 17,
-                    "health": 1
-                  },
-                  "velocity": {
-                    "x": -5,
-                    "y": 1
-                  }
-                }
-              }
-            ],
-            "turn_id": 24
-          },
-          {
-            "data": [
               {
                 "command": null,
                 "state": {
-                  "heat": 61,
-                  "is_attacker": false,
-                  "is_defender": true,
-                  "location": {
-                    "x": 36,
-                    "y": -5
-                  },
-                  "max_heat": 64,
-                  "max_velocity": 1,
-                  "parameters": {
-                    "attack": 30,
-                    "cool_speed": 10,
-                    "fuel": 21,
-                    "health": 1
-                  },
-                  "velocity": {
-                    "x": -1,
-                    "y": -4
-                  }
-                }
-              },
-              {
-                "command": [
-                  [
-                    2,
-                    [
-                      36,
-                      -5
-                    ],
-                    20,
-                    7,
-                    4
-                  ],
-                  [
-                    0,
-                    [
-                      1,
-                      -1
-                    ]
-                  ]
-                ],
-                "state": {
-                  "heat": 128,
+                  "heat": 0,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -12,
-                    "y": 45
+                    "x": -32,
+                    "y": 25
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 8,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -6,
-                    "y": 1
+                    "x": 6,
+                    "y": 3
                   }
                 }
               }
@@ -2204,64 +1872,53 @@
                     0,
                     [
                       -1,
-                      1
+                      0
                     ]
                   ]
                 ],
                 "state": {
-                  "heat": 59,
+                  "heat": 2,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 35,
-                    "y": -10
+                    "x": 79,
+                    "y": 32
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 20,
+                    "fuel": 186,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -1,
-                    "y": -5
+                    "x": 7,
+                    "y": -3
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      34,
-                      -9
-                    ],
-                    20,
-                    3,
-                    4
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 128,
+                  "heat": 0,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -18,
-                    "y": 45
+                    "x": -25,
+                    "y": 28
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 8,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -6,
-                    "y": 0
+                    "x": 7,
+                    "y": 3
                   }
                 }
               }
@@ -2273,48 +1930,48 @@
               {
                 "command": null,
                 "state": {
-                  "heat": 49,
+                  "heat": 0,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 33,
-                    "y": -15
+                    "x": 85,
+                    "y": 29
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
                     "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 20,
+                    "fuel": 186,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -2,
-                    "y": -5
+                    "x": 6,
+                    "y": -3
                   }
                 }
               },
               {
                 "command": null,
                 "state": {
-                  "heat": 108,
+                  "heat": 0,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -24,
-                    "y": 44
+                    "x": -18,
+                    "y": 30
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 40,
-                    "cool_speed": 20,
-                    "fuel": 8,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -6,
-                    "y": -1
+                    "x": 7,
+                    "y": 2
                   }
                 }
               }
@@ -2326,66 +1983,48 @@
               {
                 "command": null,
                 "state": {
-                  "heat": 64,
+                  "heat": 0,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 30,
-                    "y": -20
+                    "x": 90,
+                    "y": 26
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
-                    "attack": 22,
+                    "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 0,
+                    "fuel": 186,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -3,
-                    "y": -5
+                    "x": 5,
+                    "y": -3
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      30,
-                      -20
-                    ],
-                    40,
-                    53,
-                    4
-                  ],
-                  [
-                    0,
-                    [
-                      -1,
-                      1
-                    ]
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 128,
+                  "heat": 0,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -29,
-                    "y": 41
+                    "x": -11,
+                    "y": 31
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 39,
-                    "cool_speed": 20,
-                    "fuel": 0,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -5,
-                    "y": -3
+                    "x": 7,
+                    "y": 1
                   }
                 }
               }
@@ -2397,48 +2036,48 @@
               {
                 "command": null,
                 "state": {
-                  "heat": 54,
+                  "heat": 0,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 26,
-                    "y": -25
+                    "x": 94,
+                    "y": 23
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
-                    "attack": 22,
+                    "attack": 30,
                     "cool_speed": 10,
-                    "fuel": 0,
+                    "fuel": 186,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -4,
-                    "y": -5
+                    "x": 4,
+                    "y": -3
                   }
                 }
               },
               {
                 "command": null,
                 "state": {
-                  "heat": 108,
+                  "heat": 0,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -34,
-                    "y": 37
+                    "x": -4,
+                    "y": 31
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 39,
-                    "cool_speed": 20,
-                    "fuel": 0,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -5,
-                    "y": -4
+                    "x": 7,
+                    "y": 0
                   }
                 }
               }
@@ -2450,59 +2089,48 @@
               {
                 "command": null,
                 "state": {
-                  "heat": 64,
+                  "heat": 0,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 21,
-                    "y": -30
+                    "x": 97,
+                    "y": 20
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
-                    "attack": 0,
-                    "cool_speed": 3,
-                    "fuel": 0,
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 186,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -5,
-                    "y": -5
+                    "x": 3,
+                    "y": -3
                   }
                 }
               },
               {
-                "command": [
-                  [
-                    2,
-                    [
-                      21,
-                      -30
-                    ],
-                    39,
-                    49,
-                    4
-                  ]
-                ],
+                "command": null,
                 "state": {
-                  "heat": 127,
+                  "heat": 0,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -39,
-                    "y": 32
+                    "x": 3,
+                    "y": 30
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 39,
-                    "cool_speed": 20,
-                    "fuel": 0,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -5,
-                    "y": -5
+                    "x": 7,
+                    "y": -1
                   }
                 }
               }
@@ -2512,50 +2140,58 @@
           {
             "data": [
               {
-                "command": null,
+                "command": [
+                  [
+                    0,
+                    [
+                      -1,
+                      0
+                    ]
+                  ]
+                ],
                 "state": {
-                  "heat": 61,
+                  "heat": 0,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 16,
-                    "y": -34
+                    "x": 100,
+                    "y": 17
                   },
                   "max_heat": 64,
                   "max_velocity": 1,
                   "parameters": {
-                    "attack": 0,
-                    "cool_speed": 3,
-                    "fuel": 0,
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 185,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -5,
-                    "y": -4
+                    "x": 3,
+                    "y": -3
                   }
                 }
               },
               {
                 "command": null,
                 "state": {
-                  "heat": 107,
+                  "heat": 0,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -43,
-                    "y": 27
+                    "x": 10,
+                    "y": 28
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 39,
-                    "cool_speed": 20,
-                    "fuel": 0,
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
                     "health": 1
                   },
                   "velocity": {
-                    "x": -4,
-                    "y": -5
+                    "x": 7,
+                    "y": -2
                   }
                 }
               }
@@ -2565,13 +2201,1093 @@
           {
             "data": [
               {
+                "command": [
+                  [
+                    0,
+                    [
+                      -1,
+                      0
+                    ]
+                  ]
+                ],
+                "state": {
+                  "heat": 0,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 103,
+                    "y": 14
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 184,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 3,
+                    "y": -3
+                  }
+                }
+              },
+              {
                 "command": null,
+                "state": {
+                  "heat": 0,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 17,
+                    "y": 25
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 7,
+                    "y": -3
+                  }
+                }
+              }
+            ],
+            "turn_id": 32
+          },
+          {
+            "data": [
+              {
+                "command": null,
+                "state": {
+                  "heat": 0,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 105,
+                    "y": 11
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 184,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 2,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 0,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 24,
+                    "y": 21
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 7,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 33
+          },
+          {
+            "data": [
+              {
+                "command": [
+                  [
+                    0,
+                    [
+                      -1,
+                      0
+                    ]
+                  ]
+                ],
+                "state": {
+                  "heat": 0,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 107,
+                    "y": 8
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 183,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 2,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 0,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 30,
+                    "y": 17
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 6,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 34
+          },
+          {
+            "data": [
+              {
+                "command": null,
+                "state": {
+                  "heat": 0,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 108,
+                    "y": 5
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 183,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 1,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 0,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 35,
+                    "y": 13
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 5,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 35
+          },
+          {
+            "data": [
+              {
+                "command": null,
+                "state": {
+                  "heat": 0,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 108,
+                    "y": 2
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 183,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 0,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 0,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 39,
+                    "y": 9
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 4,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 36
+          },
+          {
+            "data": [
+              {
+                "command": null,
+                "state": {
+                  "heat": 0,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 107,
+                    "y": -1
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 183,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -1,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 0,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 42,
+                    "y": 5
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 3,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 37
+          },
+          {
+            "data": [
+              {
+                "command": null,
+                "state": {
+                  "heat": 0,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 105,
+                    "y": -4
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 183,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -2,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 0,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 44,
+                    "y": 1
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 2,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 38
+          },
+          {
+            "data": [
+              {
+                "command": [
+                  [
+                    2,
+                    [
+                      45,
+                      -3
+                    ],
+                    30,
+                    22,
+                    4
+                  ]
+                ],
+                "state": {
+                  "heat": 20,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 102,
+                    "y": -7
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 183,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -3,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 17,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 45,
+                    "y": -3
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 1,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 39
+          },
+          {
+            "data": [
+              {
+                "command": [
+                  [
+                    2,
+                    [
+                      45,
+                      -7
+                    ],
+                    30,
+                    28,
+                    4
+                  ]
+                ],
+                "state": {
+                  "heat": 40,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 98,
+                    "y": -10
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 183,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -4,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 40,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 45,
+                    "y": -7
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 448,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": 0,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 40
+          },
+          {
+            "data": [
+              {
+                "command": [
+                  [
+                    2,
+                    [
+                      44,
+                      -11
+                    ],
+                    30,
+                    35,
+                    4
+                  ]
+                ],
+                "state": {
+                  "heat": 60,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 93,
+                    "y": -13
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 183,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -5,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 64,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 44,
+                    "y": -11
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 442,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -1,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 41
+          },
+          {
+            "data": [
+              {
+                "command": null,
+                "state": {
+                  "heat": 50,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 87,
+                    "y": -16
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 183,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -6,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 59,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 42,
+                    "y": -15
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 442,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -2,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 42
+          },
+          {
+            "data": [
+              {
+                "command": [
+                  [
+                    2,
+                    [
+                      39,
+                      -19
+                    ],
+                    24,
+                    32,
+                    4
+                  ]
+                ],
                 "state": {
                   "heat": 64,
                   "is_attacker": false,
                   "is_defender": true,
                   "location": {
-                    "x": 11,
+                    "x": 80,
+                    "y": -19
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 183,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -7,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 64,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 39,
+                    "y": -19
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 420,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -3,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 43
+          },
+          {
+            "data": [
+              {
+                "command": null,
+                "state": {
+                  "heat": 54,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 72,
+                    "y": -22
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 183,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -8,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 59,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 35,
+                    "y": -23
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 420,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -4,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 44
+          },
+          {
+            "data": [
+              {
+                "command": [
+                  [
+                    2,
+                    [
+                      30,
+                      -27
+                    ],
+                    20,
+                    21,
+                    4
+                  ]
+                ],
+                "state": {
+                  "heat": 64,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 63,
+                    "y": -25
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 183,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -9,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 64,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 30,
+                    "y": -27
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 409,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -5,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 45
+          },
+          {
+            "data": [
+              {
+                "command": null,
+                "state": {
+                  "heat": 54,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 53,
+                    "y": -28
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 183,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -10,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 59,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 24,
+                    "y": -31
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 409,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -6,
+                    "y": -4
+                  }
+                }
+              }
+            ],
+            "turn_id": 46
+          },
+          {
+            "data": [
+              {
+                "command": [
+                  [
+                    2,
+                    [
+                      18,
+                      -34
+                    ],
+                    20,
+                    23,
+                    4
+                  ],
+                  [
+                    0,
+                    [
+                      1,
+                      0
+                    ]
+                  ]
+                ],
+                "state": {
+                  "heat": 64,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 41,
+                    "y": -31
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 174,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -12,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 64,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 18,
+                    "y": -34
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 396,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -6,
+                    "y": -3
+                  }
+                }
+              }
+            ],
+            "turn_id": 47
+          },
+          {
+            "data": [
+              {
+                "command": [
+                  [
+                    2,
+                    [
+                      12,
+                      -36
+                    ],
+                    10,
+                    8,
+                    4
+                  ]
+                ],
+                "state": {
+                  "heat": 64,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 28,
+                    "y": -34
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 174,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -13,
+                    "y": -3
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 64,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 12,
+                    "y": -36
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 393,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -6,
+                    "y": -2
+                  }
+                }
+              }
+            ],
+            "turn_id": 48
+          },
+          {
+            "data": [
+              {
+                "command": [
+                  [
+                    2,
+                    [
+                      6,
+                      -37
+                    ],
+                    10,
+                    15,
+                    4
+                  ],
+                  [
+                    0,
+                    [
+                      -1,
+                      0
+                    ]
+                  ]
+                ],
+                "state": {
+                  "heat": 64,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 16,
+                    "y": -36
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 1,
+                  "parameters": {
+                    "attack": 30,
+                    "cool_speed": 10,
+                    "fuel": 165,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -12,
+                    "y": -2
+                  }
+                }
+              },
+              {
+                "command": null,
+                "state": {
+                  "heat": 64,
+                  "is_attacker": true,
+                  "is_defender": false,
+                  "location": {
+                    "x": 6,
+                    "y": -37
+                  },
+                  "max_heat": 64,
+                  "max_velocity": 2,
+                  "parameters": {
+                    "attack": 0,
+                    "cool_speed": 5,
+                    "fuel": 383,
+                    "health": 1
+                  },
+                  "velocity": {
+                    "x": -6,
+                    "y": -1
+                  }
+                }
+              }
+            ],
+            "turn_id": 49
+          },
+          {
+            "data": [
+              {
+                "command": [
+                  [
+                    0,
+                    [
+                      -1,
+                      0
+                    ]
+                  ]
+                ],
+                "state": {
+                  "heat": 72,
+                  "is_attacker": false,
+                  "is_defender": true,
+                  "location": {
+                    "x": 5,
                     "y": -37
                   },
                   "max_heat": 64,
@@ -2583,48 +3299,43 @@
                     "health": 0
                   },
                   "velocity": {
-                    "x": -5,
-                    "y": -3
+                    "x": -11,
+                    "y": -1
                   }
                 }
               },
               {
                 "command": [
                   [
-                    2,
-                    [
-                      11,
-                      -37
-                    ],
-                    39,
-                    52,
-                    4
+                    1,
+                    375,
+                    32
                   ]
                 ],
                 "state": {
-                  "heat": 126,
+                  "heat": 64,
                   "is_attacker": true,
                   "is_defender": false,
                   "location": {
-                    "x": -46,
-                    "y": 22
+                    "x": 0,
+                    "y": -37
                   },
-                  "max_heat": 128,
+                  "max_heat": 64,
                   "max_velocity": 2,
                   "parameters": {
-                    "attack": 39,
-                    "cool_speed": 20,
+                    "attack": 0,
+                    "cool_speed": 0,
                     "fuel": 0,
-                    "health": 1
+                    "health": 0
                   },
                   "velocity": {
-                    "x": -3,
-                    "y": -5
+                    "x": -6,
+                    "y": 0
                   }
                 }
               }
             ],
-            "turn_id": 32
+            "turn_id": 50
           }
         ]
       },
@@ -2640,7 +3351,7 @@
           "is_defender": false
         }
       ],
-      "turns": 31
+      "turns": 49
     }
   }
 }
