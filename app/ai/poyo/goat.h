@@ -256,9 +256,11 @@ public:
                 pair<int, int> target_next_pos = {target.pos.first + target.velocity.first, target.pos.second + target.velocity.second};
                 if (abs(next_pos.first - main_ship_next_pos.first) <= 4 && abs(next_pos.second - main_ship_next_pos.second) <= 4) {
                     // avoid bombing our main ship
+                    cout << "wow! our main unit is close!" << endl;
                     continue;
                 }
                 if (abs(next_pos.first - target_next_pos.first) <= 3 && abs(next_pos.second - target_next_pos.second) <= 3) {
+                    cout << "Try to attack!" << next_pos.first << "," << next_pos.second << endl;
                     params.commands.push_back(new Kamikaze(unit_id));
                 }
             }
