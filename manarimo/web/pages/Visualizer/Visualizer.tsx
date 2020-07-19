@@ -10,6 +10,7 @@ const INTERACT_API = `${API_BASE}/interact`;
 interface InteractiveState {
   state: string;
   data: string[];
+  sends: string[];
 }
 
 const parseState = (json: string) => {
@@ -34,6 +35,7 @@ export const Visualizer = () => {
   const images = interactiveState?.data ?? [];
   const [disableImages, setDisableImages] = useState<number[]>([]);
   const [state, setState] = useState(interactiveState?.state ?? "nil");
+  const sends = interactiveState?.sends ?? [];
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -107,6 +109,15 @@ export const Visualizer = () => {
         <Input
           type="textarea"
           value={state}
+          onChange={(e) => setState(e.target.value)}
+        />
+      </Row>
+      <Row className="my-2">
+        <Label>Sends</Label>
+        <Input
+          type="textarea"
+          value={sends.join("\n")}
+          disabled
           onChange={(e) => setState(e.target.value)}
         />
       </Row>
