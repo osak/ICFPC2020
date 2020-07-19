@@ -58,6 +58,11 @@ class Client {
 			return nullptr;
 		}
 
+		if (response->body == "1101000") {
+			cout << "battle has finished." << endl;
+			exit(0);
+		}
+
 		cout << "received (raw):" << response->body << endl;
 		Value *stat = Demodulator().demodulate(response->body);
 		cout << "received (cons):" << *stat << endl;
