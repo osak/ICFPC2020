@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
         Vector next_move = safe_move(response.game_info.field_info.planet_radius, my_location, my_velocity);
         CommandParams params;
         if (next_move.x != 0 && next_move.y != 0) {
-            params.commands.push_back(new Move(next_move));
+            //params.commands.push_back(new Move(next_move));
         }
 		client->command(params);
 	}
