@@ -48,6 +48,12 @@ class KamikazeAI {
 
     }
 
+    double calc_arg_distance(const double my_arg, const double op_arg) {
+        double d = abs(fmod(my_arg - op_arg, 2 * M_PI));
+        return min(d, 2 * M_PI - d);
+
+    }
+
     Vector chase_move(
             long long planet_size, long long space_size,
             const Vector &loc, const Vector &vel,
@@ -88,11 +94,14 @@ class KamikazeAI {
                 double new_my_height = my_height + my_norm_sp;
                 double new_my_arg = my_arg + my_rot_sp;
 
-                double norm_chase_time = calc_chase_time(new_op_height - new_my_height, my_norm_sp - op_norm_sp, 1);
-                double max_rot_acc = 1 / new_my_height;
-                double arg_chase_time = calc_arg_chase_time(new_my_arg, new_op_arg, my_rot_sp - op_rot_sp, max_rot_acc);
+                double norm_distance = abs(new_op_height - new_my_height);
+                double arg_distance = calc_arg_distance(new_my_arg, new_op_arg) * new_my_height;
+                double cost = pow(norm_distance, 3) + arg_distance;
 
-                double cost = max(norm_chase_time, arg_chase_time);
+//                double norm_chase_time = calc_chase_time(new_op_height - new_my_height, my_norm_sp - op_norm_sp, 1);
+//                double max_rot_acc = 1 / new_my_height;
+//                double arg_chase_time = calc_arg_chase_time(new_my_arg, new_op_arg, my_rot_sp - op_rot_sp, max_rot_acc);
+//                double cost = max(norm_chase_time, arg_chase_time);
 
                 if (cost < min_cost) {
                     min_cost = cost;
@@ -113,7 +122,7 @@ class KamikazeAI {
         const int next_my_y = loc.y + vel.y;
         const int next_op_x = enemy_loc.x + enemy_vel.x;
         const int next_op_y = enemy_loc.y + enemy_vel.y;
-        
+
         const int distance = max(abs(next_my_x - next_op_x), abs(next_my_y - next_op_y));
         return distance <= 1;
     }
