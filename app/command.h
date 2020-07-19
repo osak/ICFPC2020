@@ -110,6 +110,7 @@ struct Fission : Command {
       mod.put_number(3);
       mod.put_cell();
 		mod.put_number(childParams.engine);
+      mod.put_cell();
 		mod.put_cell();
 		mod.put_number(childParams.armament);
 		mod.put_cell();
@@ -117,6 +118,7 @@ struct Fission : Command {
 		mod.put_cell();
 		mod.put_number(childParams.core);
 		mod.put_nil();
+      mod.put_nil();
    }
 };
 
