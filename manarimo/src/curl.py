@@ -34,9 +34,21 @@ def post_interact(base):
     print(post_result.text)
 
 
+def post_replay(base):
+    headers = {'Content-type': 'application/json'}
+
+    data_obj = {
+        "playerKey": "1392211421083123212"
+    }
+
+    post_result = requests.post(base + "/api/replay", data=json.dumps(data_obj), headers=headers)
+    print(post_result.status_code)
+    print(post_result.text)
+
+
 def main():
     base = LOCAL_BASE
-    post_interact(base)
+    post_replay(base)
 
 
 if __name__ == '__main__':

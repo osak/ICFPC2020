@@ -7,6 +7,7 @@ import psycopg2.extras
 from pathlib import Path
 import src.interact as interact
 import sys
+import src.gamestate as gamestate
 
 
 DATABASE_URL = os.environ["DATABASE_URL"]
@@ -15,6 +16,7 @@ root_dir = Path(__file__).parent.parent
 app = Flask(__name__, static_folder=str(root_dir/"web-dist"), static_url_path="/web-dist")
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
 sys.setrecursionlimit(100000)
+
 
 def get_connection():
     return psycopg2.connect(DATABASE_URL)
@@ -62,6 +64,16 @@ def post_interact():
     return jsonify({
         "state": response["state"],
         "data": response["data"]
+    })
+
+
+@app.route("/api/replay", methods=["POST"])
+def post_replay():
+    player_key = request.json["playerKey"]
+    response = send.exchange("[5, {}]".format(player_key))
+
+    return jsonify({
+        "data": gamestate.decode(response["response"])
     })
 
 
