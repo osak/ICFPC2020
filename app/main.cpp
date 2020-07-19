@@ -170,14 +170,14 @@ class Client {
 		mod.put_nil();
 
 		cout << "sending: " << mod.to_string() << endl;
-		auto response = client_.Post("/alians/send", mod.to_string(), "text/plain");
+		auto response = client_.Post("/alians/send?apiKey=decffdda9f2d431792a37fbfb770f825", mod.to_string(), "text/plain");
 		if (!response) {
 			cout << "Server didn't respond" << endl;
 			return nullptr;
 		}
 
 		if (response->status != 200) {
-			cout << "Server returned unexpected response code: " << response->status << endl;
+			cout << "Server returned unexpected response code: " << response->status << " " << response->body << endl;
 			return nullptr;
 		}
 
