@@ -79,7 +79,18 @@ def post_replay():
 
 @app.route("/aliens/send", methods=["POST"])
 def aliens_send():
-    send.raw(request.data)
+    return send.raw(request.data)
+
+@app.route("/api/battledome", methods=["POST"])
+def battledome():
+    response = send.exchange("[1, 0]")
+    data = eval(response['response'])
+    attacker_key = data[1][0][1]
+    defender_key = data[1][1][1]
+    return jsonify({
+        "attackerKey": str(attacker_key),
+        "defenderKey": str(defender_key)
+    })
 
 @app.route("/")
 def hello():
