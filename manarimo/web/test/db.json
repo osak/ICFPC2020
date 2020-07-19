@@ -3353,5 +3353,99 @@
       ],
       "turns": 49
     }
+  },
+  "local_runs": {
+    "items": [
+      {
+        "attacker_key": "8678156983279039464",
+        "attacker_name": "azusa",
+        "defender_key": "8034679751677541093",
+        "defender_name": "nyan",
+        "id": 1,
+        "send_at": "Sun, 19 Jul 2020 15:27:53 GMT",
+        "timestamp": "2020-07-19T15:27:53.789381+00:00"
+      },
+      {
+        "attacker_key": "8072357782361077079",
+        "attacker_name": "azusa",
+        "defender_key": "4314202084451193941",
+        "defender_name": "nyan",
+        "id": 2,
+        "send_at": "Sun, 19 Jul 2020 15:33:24 GMT",
+        "timestamp": "2020-07-19T15:33:24.532849+00:00"
+      },
+      {
+        "attacker_key": "4608467276976141781",
+        "attacker_name": "a",
+        "defender_key": "8063364653248452159",
+        "defender_name": "b",
+        "id": 3,
+        "send_at": "Sun, 19 Jul 2020 15:36:49 GMT",
+        "timestamp": "2020-07-19T15:36:49.443338+00:00"
+      },
+      {
+        "attacker_key": "4956603426938755856",
+        "attacker_name": "azusa",
+        "defender_key": "5195251335397212729",
+        "defender_name": "nyan",
+        "id": 4,
+        "send_at": "Sun, 19 Jul 2020 15:38:41 GMT",
+        "timestamp": "2020-07-19T15:38:41.289631+00:00"
+      },
+      {
+        "attacker_key": "9119424612920359186",
+        "attacker_name": "a",
+        "defender_key": "1201312192720856675",
+        "defender_name": "d",
+        "id": 5,
+        "send_at": "Sun, 19 Jul 2020 15:39:38 GMT",
+        "timestamp": "2020-07-19T15:39:38.132302+00:00"
+      },
+      {
+        "attacker_key": "1528791733514572245",
+        "attacker_name": "a",
+        "defender_key": "3471493737100432934",
+        "defender_name": "local_battle/a.out",
+        "id": 6,
+        "send_at": "Sun, 19 Jul 2020 15:40:02 GMT",
+        "timestamp": "2020-07-19T15:40:02.456641+00:00"
+      },
+      {
+        "attacker_key": "8093425778468290291",
+        "attacker_name": "a",
+        "defender_key": "8811272802868096774",
+        "defender_name": "b",
+        "id": 7,
+        "send_at": "Sun, 19 Jul 2020 15:44:46 GMT",
+        "timestamp": "2020-07-19T15:44:46.527214+00:00"
+      },
+      {
+        "attacker_key": "377915353726344087",
+        "attacker_name": "-nakano",
+        "defender_key": "6959938995743178126",
+        "defender_name": "azunyan",
+        "id": 8,
+        "send_at": "Sun, 19 Jul 2020 15:46:13 GMT",
+        "timestamp": "2020-07-19T15:46:13.887530+00:00"
+      },
+      {
+        "attacker_key": "145067332267294793",
+        "attacker_name": "nakano",
+        "defender_key": "887173852771275402",
+        "defender_name": "azunyan",
+        "id": 9,
+        "send_at": "Sun, 19 Jul 2020 15:46:42 GMT",
+        "timestamp": "2020-07-19T15:46:42.322574+00:00"
+      },
+      {
+        "attacker_key": "708526187252055844",
+        "attacker_name": "a",
+        "defender_key": "640840037147419158",
+        "defender_name": "b",
+        "id": 10,
+        "send_at": "Sun, 19 Jul 2020 15:46:46 GMT",
+        "timestamp": "2020-07-19T15:46:46.543939+00:00"
+      }
+    ]
   }
 }
