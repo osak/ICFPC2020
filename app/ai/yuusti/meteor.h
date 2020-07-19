@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include "../../command.h"
 #include "../../game.h"
 #include "../../ai.h"
@@ -47,13 +48,24 @@ class MeteorAI : public AI {
         return cnt;
     }
 
-    pair<int, Vector> dfs(int depth, const Vector &loc, const Vector &vel, const vector<Vector> &vec, int center_rad, long long field_rad, int max_turn) {
+    bool danger(const Vector &loc, const Vector &vel, const Vector &eloc, const Vector &evel) {
+        auto a = simulate(loc, vel).first;
+        auto b = simulate(eloc, evel).first;
+
+
+        return a.x == b.x || a.y == b.y || (abs(a.x - b.x) == abs(a.y - b.y));
+    }
+
+    pair<int, Vector> dfs(int depth, const Vector &loc, const Vector &vel, const vector<Vector> &vec, int center_rad, long long field_rad, int max_turn, bool danger) {
         if (depth == 4) return make_pair(-1, Vector(0, 0));
 
         int best = -1;
         Vector best_move = Vector(0, 0);
 
-        for (const auto &v: vec) {
+        int use_thruster = danger && depth == 0;
+        for (int i = 0 + use_thruster; i < vec.size() + use_thruster; ++i) {
+            const auto &v = vec[i%vec.size()];
+
             auto new_vel = vel;
             new_vel.x += v.x;
             new_vel.y += v.y;
@@ -69,7 +81,7 @@ class MeteorAI : public AI {
             }
 
 
-            auto dfs_result = dfs(depth + 1, next_param.first, next_param.second, vec, center_rad, field_rad, max_turn);
+            auto dfs_result = dfs(depth + 1, next_param.first, next_param.second, vec, center_rad, field_rad, max_turn, false);
             if (best < dfs_result.first) {
                 best = dfs_result.first;
                 best_move = v;
@@ -79,7 +91,7 @@ class MeteorAI : public AI {
         return make_pair(best, best_move);
     }
 
-    Vector safe_move(long long planet_size, int field_size, const Vector &loc, const Vector &vel, int remaining_turn) {
+    Vector safe_move(long long planet_size, int field_size, const Vector &loc, const Vector &vel, int remaining_turn, bool danger) {
         vector<vector<Vector>> vecs = {
                 {Vector(0, 0), Vector(0, 1),  Vector(1, 0),  Vector(1, 1)},
                 {Vector(0, 0), Vector(0, 1),  Vector(-1, 0), Vector(-1, 1)},
@@ -90,7 +102,7 @@ class MeteorAI : public AI {
         int best = -1;
         Vector best_move = Vector(0, 0);
         for (const auto &vec: vecs) {
-            auto result = dfs(0, loc, vel, vec, planet_size, field_size, remaining_turn);
+            auto result = dfs(0, loc, vel, vec, planet_size, field_size, remaining_turn, danger);
 
             auto new_vel = vel;
             new_vel.x += result.second.x; new_vel.y += result.second.y;
@@ -121,7 +133,7 @@ public:
         int cnt = 0;
         while(cnt < 256) {
             // simulate
-            auto vec = safe_move(planet, field_rad, loc, vel, 256);
+            auto vec = safe_move(planet, field_rad, loc, vel, 256, false);
 
             if (vec.x != 0 || vec.y != 0) {
                 ++cost;
@@ -165,10 +177,15 @@ public:
     }
     CommandParams command_params(const GameResponse& response) {
         int unit_id = response.game_info.is_defender ? 0 : 1;
-        auto pos = response.game_info.is_defender ? response.game_state.defender_state.pos : response.game_state.attacker_state.pos;
-        auto vel = response.game_info.is_defender ? response.game_state.defender_state.velocity : response.game_state.attacker_state.velocity;
+        auto pos = response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
+        auto vel = response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
+
+        auto epos = !response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
+        auto evel = !response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
+
         Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
-        Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn);
+        Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn,
+                danger(pos, vel, epos, evel));
         cout << "Next move: " << next_move << endl;
         CommandParams params;
         if (next_move.x != 0 || next_move.y != 0) {
