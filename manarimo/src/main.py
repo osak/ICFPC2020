@@ -77,6 +77,9 @@ def post_replay():
         "data": gamestate.decode(response["response"])
     })
 
+@app.route("/aliens/send", methods=["POST"])
+def aliens_send():
+    send.raw(request.data)
 
 @app.route("/")
 def hello():
