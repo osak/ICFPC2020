@@ -8,6 +8,17 @@
 class KamikazeAI : public AI {
     const int kamikaze_rad = 3;
 
+    int consecutiveZeroVelocities;
+public:
+    KamikazeAI() {
+        consecutiveZeroVelocities = 0;
+    }
+private:
+
+    bool is_enemy_stopping() {
+        return consecutiveZeroVelocities >= 10;
+    }
+
     bool dead(const Vector &loc, int center_rad, int field_rad) {
         if (abs(loc.x) <= center_rad && abs(loc.y) <= center_rad) return true;
         return abs(loc.x) >= field_rad || abs(loc.y) >= field_rad;
@@ -36,18 +47,21 @@ class KamikazeAI : public AI {
 
         while (cnt < max_turn) {
             auto p = simulate(loc, vel);
-            auto q = simulate(eloc, evel);
             loc = p.first;
             vel = p.second;
-            eloc = q.first;
-            evel = q.second;
+            if (not is_enemy_stopping()) {
+                auto q = simulate(eloc, evel);
+                eloc = q.first;
+                evel = q.second;
+            }
             if (show_trail) {
                 cerr << loc << endl;
             }
 
             if (dead(loc, center_rad, field_rad)) break;
-            if (cnt <= trace_turn && max(abs(loc.x - eloc.x), abs(loc.y - eloc.y)) <= kamikaze_rad) {
-                return max_turn + (trace_turn + 1 - cnt);
+            const int distance = max(abs(loc.x - eloc.x), abs(loc.y - eloc.y));
+            if (cnt <= trace_turn && distance <= kamikaze_rad) {
+                return max_turn + (trace_turn + 1 - cnt) + (kamikaze_rad - distance);
             }
             ++cnt;
         }
@@ -70,8 +84,8 @@ class KamikazeAI : public AI {
         Vector best_move = Vector(0, 0);
 
         const auto next_enemy = simulate(eloc, evel);
-        const Vector next_eloc = next_enemy.first;
-        const Vector next_evel = next_enemy.second;
+        const Vector next_eloc = is_enemy_stopping() ? eloc : next_enemy.first;
+        const Vector next_evel = is_enemy_stopping() ? evel : next_enemy.second;
 
         int use_thruster = danger && depth == 0;
         for (int i = 0 + use_thruster; i < vec.size() + use_thruster; ++i) {
@@ -148,6 +162,7 @@ public:
     void test_safe_move(int x, int y) {
         Vector loc(x, y), vel(0, 0);
         Vector eloc(-x, -y), evel(0, 0);
+        consecutiveZeroVelocities = 50;
 
         int planet = 16;
         int field_rad = 128;
@@ -215,6 +230,13 @@ public:
 
         Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
         Vector enemy_location(epos.first, epos.second), enemy_velocity(evel.first, evel.second);
+
+        if (evel.first == 0 && evel.second == 0) {
+            consecutiveZeroVelocities++;
+        } else {
+            consecutiveZeroVelocities = 0;
+        }
+        cout << "is_enemy_stopping(): " << is_enemy_stopping() << endl;
 
         if (check_kamikaze(my_location, my_velocity, enemy_location, enemy_velocity)) {
             cout << "Ten-nou Heika Banzai!!!!!" << endl;
