@@ -12,7 +12,9 @@ import {
 } from "reactstrap";
 import { HashRouter, Switch, Route, Link } from "react-router-dom";
 import { AlienSend } from "./pages/AlienSend";
+import { BattlePlayer } from "./pages/BattlePlayer";
 import { HistoryList } from "./pages/HistoryList";
+import { ReplayList } from "./pages/ReplayList";
 import { Visualizer } from "./pages/Visualizer/Visualizer";
 
 export const App = () => {
@@ -39,6 +41,11 @@ export const App = () => {
                   Visualizer
                 </NavLink>
               </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/replay">
+                  Replay
+                </NavLink>
+              </NavItem>
             </Nav>
             <Nav className="ml-auto" navbar>
               <NavLink
@@ -56,6 +63,15 @@ export const App = () => {
           <Route exact path="/" component={HistoryList} />
           <Route exact path="/submit" component={AlienSend} />
           <Route exact path="/vis" component={Visualizer} />
+          <Route exact path="/replay" component={ReplayList} />
+          <Route
+            exact
+            path="/replay/:replayId"
+            render={({ match }) => {
+              const replayId = match.params.replayId ?? "";
+              return <BattlePlayer replayId={replayId} />;
+            }}
+          />
           <Redirect path="/" to="/" />
         </Switch>
       </Container>

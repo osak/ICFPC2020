@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button, ButtonGroup, Container, Input, Label, Row } from "reactstrap";
+import { CanvasBoard } from "../../components/CanvasBoard";
 import { parseImageString } from "../../util/ImageParser";
-import { CanvasBoard } from "./CanvasBoard";
 import { useHistory } from "react-router-dom";
 
 declare var API_BASE: string;

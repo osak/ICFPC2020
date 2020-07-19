@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 
 const TOOLTIP_W = 100;
 const TOOLTIP_H = 50;
-const COLOR_PALLETE = [
+const COLOR_PALLET = [
   "navy",
   "red",
   "lime",
@@ -12,7 +12,6 @@ const COLOR_PALLETE = [
   "maroon",
   "green",
 ];
-
 const renderTooltip = (
   ctx: CanvasRenderingContext2D,
   actualX: number,
@@ -81,7 +80,7 @@ export const CanvasBoard = (props: Props) => {
       normalizedLayers.forEach((layer, layerId) => {
         layer.forEach(([x, y]) => {
           ctx.globalAlpha = 0.7;
-          ctx.fillStyle = COLOR_PALLETE[layerId % COLOR_PALLETE.length];
+          ctx.fillStyle = COLOR_PALLET[layerId % COLOR_PALLET.length];
           ctx.fillRect(x * blockWidth, y * blockWidth, blockWidth, blockWidth);
           ctx.globalAlpha = 1.0;
         });
