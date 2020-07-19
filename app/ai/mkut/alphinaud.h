@@ -119,16 +119,18 @@ class AlphinaudAI : public AI {
         return false;
     }
 
-    vector<Command*> critical_shot(int unit_id, const ShipState& my_ship_state, const ShipState& enemy_ship_state) {
-        Vector next_enemy_location = simulate(Vector(enemy_ship_state.pos), Vector(enemy_ship_state.velocity)).first;
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                Vector next_my_location = simulate(Vector(my_ship_state.pos), Vector(my_ship_state.velocity)).first;
-                if (critical_point(next_enemy_location, next_my_location)) {
-                    vector<Command*> ret;
-                    ret.push_back(new Move(unit_id, Vector(-dx, -dy)));
-                    ret.push_back(new Attack(unit_id, next_enemy_location, get_full_power(my_ship_state)));
-                    return ret;
+    vector<Command*> critical_shot(int unit_id, const ShipState& my_ship_state, const vector<ShipState>& enemy_ship_states) {
+        for (auto enemy_ship_state : enemy_ship_states) {
+            Vector next_enemy_location = simulate(Vector(enemy_ship_state.pos), Vector(enemy_ship_state.velocity)).first;
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    Vector next_my_location = simulate(Vector(my_ship_state.pos), Vector(my_ship_state.velocity)).first;
+                    if (critical_point(next_enemy_location, next_my_location)) {
+                        vector<Command*> ret;
+                        ret.push_back(new Move(unit_id, Vector(-dx, -dy)));
+                        ret.push_back(new Attack(unit_id, next_enemy_location, get_full_power(my_ship_state)));
+                        return ret;
+                    }
                 }
             }
         }
@@ -192,17 +194,17 @@ public:
     }
     CommandParams command_params(const GameResponse& response) {
         int unit_id = response.game_info.is_defender ? 0 : 1;
-        auto pos = response.game_info.is_defender ? response.game_state.defender_state.pos : response.game_state.attacker_state.pos;
-        auto vel = response.game_info.is_defender ? response.game_state.defender_state.velocity : response.game_state.attacker_state.velocity;
+        auto pos = response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
+        auto vel = response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
         Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
         Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn);
         cout << "Next move: " << next_move << endl;
 
-        auto my_ship_state = response.game_info.is_defender ? response.game_state.defender_state : response.game_state.attacker_state;
-        auto enemy_ship_state = !response.game_info.is_defender ? response.game_state.defender_state : response.game_state.attacker_state;
+        auto my_ship_state = response.game_info.is_defender ? response.game_state.defender_states[0] : response.game_state.attacker_states[0];
+        auto enemy_ship_states = !response.game_info.is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
         CommandParams params;
         bool move = false;
-        for (auto command : critical_shot(unit_id, my_ship_state, enemy_ship_state)) {
+        for (auto command : critical_shot(unit_id, my_ship_state, enemy_ship_states)) {
             params.commands.push_back(command);
             move = true;
         };
