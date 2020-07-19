@@ -154,7 +154,7 @@ export const BattleViewer = (props: Props) => {
                     </thead>
                     <tbody>
                       {turnData.data.map((data, ship_id) => {
-                        if (data.state.is_defender === is_defender) {
+                        if (data.state.is_defender !== is_defender) {
                           return null;
                         }
                         const commands = parseCommand(data.command);
