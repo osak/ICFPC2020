@@ -77,6 +77,23 @@ struct ConsCell {
 	ConsCell(Value *car, Value *cdr) : car(car), cdr(cdr) {}
 };
 
+ostream& operator <<(ostream&, const ConsCell&);
+ostream& operator << (ostream &os, const Value &v) {
+	if (v.type == Value::NUMBER) {
+		os << v.value;
+	} else if (v.ptr == nullptr) {
+		os << "nil";
+	} else {
+		os << *v.ptr;
+	}
+	return os;
+}
+
+ostream& operator << (ostream &os, const ConsCell &v) {
+	os << "(" << *v.car << "," << *v.cdr << ")";
+	return os;
+}
+
 class Demodulator {
 	public:
 	Value* demodulate(const string &str) {
@@ -86,10 +103,10 @@ class Demodulator {
 
 	private:
 	Value* demodulate_top(const string &str, int &pos) {
-		const string tag = str.substr(0, 2);
+		const string tag = str.substr(pos, 2);
 		pos += 2;
 		if (tag == "00") {
-			return nullptr;
+			return new Value(nullptr);
 		} else if (tag == "01") {
 			return demodulate_number(str, pos, 1);
 		} else if (tag == "10") {
@@ -110,11 +127,11 @@ class Demodulator {
 
 		long long value = 0;
 		for (int i = 0; i < bits; ++i) {
-			if (str[pos] == '1') value += 1;
 			value <<= 1;
+			if (str[pos] == '1') value += 1;
 			pos++;
 		}
-		return new Value(value);
+		return new Value(value * sign);
 	}
 
 	Value* demodulate_cell(const string &str, int &pos) {
@@ -166,6 +183,7 @@ class Client {
 
 		cout << response->body << endl;
 		Value *stat = Demodulator().demodulate(response->body);
+		cout << stat << endl;
 		return stat;
 	}
 
@@ -195,6 +213,7 @@ Client *init_client(char **argv) {
 int main(int argc, char **argv) {
     Client *client = init_client(argv);
 
+	cout << *Demodulator().demodulate("11011000101101111111111111111100101111011111111111000011100001100010100110000011000000111111110110000") << endl;
 	client->join();
 	client->start();
 	while (true) {
