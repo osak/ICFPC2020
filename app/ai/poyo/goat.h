@@ -4,6 +4,8 @@
 #include "../../game.h"
 #include "../../ai.h"
 
+int thresholds[5] = {10, 20, 50, 100, 256};
+
 class GoatAI : public AI {
 
     bool dead(const Vector &loc, int center_rad, int field_rad) {
@@ -182,7 +184,6 @@ public:
 
     bool fissioned = false;
     int num_children = 0;
-    int thresholds[5] = {10, 20, 50, 100, 256};
 
     JoinParams join_params() {
         return JoinParams();
