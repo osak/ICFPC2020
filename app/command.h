@@ -34,6 +34,37 @@ struct Command {
    }
 };
 
+struct StartParams {
+   int engine, armament, reactor, core;
+   StartParams(int engine, int armament, int reactor, int core) : engine(engine), armament(armament), reactor(reactor), core(core) {}
+   string modulate() const {
+      Modulator mod;
+		mod.put_cell();
+		mod.put_number(engine);
+		mod.put_cell();
+		mod.put_number(armament);
+		mod.put_cell();
+		mod.put_number(reactor);
+		mod.put_cell();
+		mod.put_number(core);
+		mod.put_nil();
+      return mod.to_string();
+   }
+};
+
+struct CommandParams {
+   vector<Command*> commands;
+   string modulate() const {
+      Modulator mod;
+      for (auto com : commands) {
+         mod.put_cell();
+         com->modulate(mod);
+      }
+      mod.put_nil();
+      return mod.to_string();
+   }
+};
+
 struct Move : Command {
    Vector acceleration;
    Move(int unit_id, const Vector& acceleration) : Command(unit_id), acceleration(acceleration) {}
@@ -93,37 +124,6 @@ struct JoinParams {
    string modulate() const {
       Modulator mod;
 		mod.put_nil();
-      return mod.to_string();
-   }
-};
-
-struct StartParams {
-   int engine, armament, reactor, core;
-   StartParams(int engine, int armament, int reactor, int core) : engine(engine), armament(armament), reactor(reactor), core(core) {}
-   string modulate() const {
-      Modulator mod;
-		mod.put_cell();
-		mod.put_number(engine);
-		mod.put_cell();
-		mod.put_number(armament);
-		mod.put_cell();
-		mod.put_number(reactor);
-		mod.put_cell();
-		mod.put_number(core);
-		mod.put_nil();
-      return mod.to_string();
-   }
-};
-
-struct CommandParams {
-   vector<Command*> commands;
-   string modulate() const {
-      Modulator mod;
-      for (auto com : commands) {
-         mod.put_cell();
-         com->modulate(mod);
-      }
-      mod.put_nil();
       return mod.to_string();
    }
 };
