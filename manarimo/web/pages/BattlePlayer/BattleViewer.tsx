@@ -111,6 +111,8 @@ export const BattleViewer = (props: Props) => {
                   <Table>
                     <thead>
                       <tr>
+                        <th>Position</th>
+                        <th>Speed</th>
                         <th>Fuel</th>
                         <th>Attack</th>
                         <th>Cool Speed</th>
@@ -127,6 +129,8 @@ export const BattleViewer = (props: Props) => {
                         .map((data, i) => {
                           return (
                             <tr key={i}>
+                              <td>`"(${data.state.location.x}, ${data.state.location.y})"`</td>
+                              <td>`"(${data.state.velocity.x}, ${data.state.velocity.y})"`</td>
                               <td>{data.state.parameters.fuel}</td>
                               <td>{data.state.parameters.attack}</td>
                               <td>{data.state.parameters.cool_speed}</td>
