@@ -109,9 +109,11 @@ struct Fission : Command {
       mod.put_cell();
       mod.put_number(3);
       mod.put_cell();
-		mod.put_number(childParams.engine);
+      mod.put_number(unit_id);
       mod.put_cell();
 		mod.put_cell();
+		mod.put_number(childParams.engine);
+      mod.put_cell();
 		mod.put_number(childParams.armament);
 		mod.put_cell();
 		mod.put_number(childParams.reactor);
