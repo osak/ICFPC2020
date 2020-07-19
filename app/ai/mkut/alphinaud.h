@@ -5,7 +5,12 @@
 #include "../../ai.h"
 
 class AlphinaudAI : public AI {
-public:
+
+    bool dead(const Vector &loc, int center_rad, int field_rad) {
+        if (abs(loc.x) <= center_rad && abs(loc.y) <= center_rad) return true;
+        return abs(loc.x) >= field_rad || abs(loc.y) >= field_rad;
+    }
+
     pair<Vector, Vector> simulate(Vector loc, Vector vel) {
         if (abs(loc.x) >= abs(loc.y)) {
             if (loc.x < 0) ++vel.x;
@@ -35,8 +40,7 @@ public:
                 cerr << loc << endl;
             }
 
-            if (abs(loc.x) <= center_rad && abs(loc.y) <= center_rad) break;
-            if (abs(loc.x) >= field_rad || abs(loc.y) >= field_rad) break;
+            if (dead(loc, center_rad, field_rad)) break;
             ++cnt;
         }
 
@@ -55,17 +59,20 @@ public:
             new_vel.y += v.y;
 
             int result = test(loc, new_vel, center_rad, field_rad, max_turn);
+
+            auto next_param = simulate(loc, new_vel);
+            if (dead(next_param.first, center_rad, field_rad)) continue;
+
             if (best < result) {
                 best = result;
                 best_move = v;
             }
 
-            auto next_param = simulate(loc, new_vel);
 
             auto dfs_result = dfs(depth + 1, next_param.first, next_param.second, vec, center_rad, field_rad, max_turn);
             if (best < dfs_result.first) {
                 best = dfs_result.first;
-                best_move = dfs_result.second;
+                best_move = v;
             }
         }
 
@@ -100,10 +107,54 @@ public:
         return Vector(-best_move.x, -best_move.y);
     }
 
-    Attack* max_shot(int unit_id, const ShipState& my_ship_state, const ShipState& enemy_ship_state) {
-        Vector next_enemy_pos = simulate(Vector(enemy_ship_state.pos), Vector(enemy_ship_state.velocity)).first;
-        int power = max(0, my_ship_state.ship_parameter.recharge_rate - my_ship_state.heat);
-        return new Attack(unit_id, next_enemy_pos, power);
+    int get_full_power(const ShipState& my_ship_state, bool move) {
+        int remaining_heat = max(0, my_ship_state.max_heat - my_ship_state.heat + my_ship_state.ship_parameter.recharge_rate - (move ? 8 : 0));
+        return min(remaining_heat, my_ship_state.ship_parameter.attack);
+    }
+
+    int get_free_power(const ShipState& my_ship_state, bool move) {
+        return max(0, my_ship_state.ship_parameter.recharge_rate - my_ship_state.heat - (move ? 8 : 0));
+    }
+
+    bool critical_point(const Vector& a, const Vector& b) {
+        if (a.x == b.x) return true;
+        if (a.y == b.y) return true;
+        if (abs(a.x - b.x) == abs(a.y - b.y)) return true;
+        return false;
+    }
+
+    vector<Command*> critical_shot(int unit_id, const ShipState& my_ship_state, const vector<ShipState>& enemy_ship_states) {
+        for (auto enemy_ship_state : enemy_ship_states) {
+            Vector next_enemy_location = simulate(Vector(enemy_ship_state.pos), Vector(enemy_ship_state.velocity)).first;
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dy = -1; dy <= 1; dy++) {
+                    auto next_my_velocity = Vector(my_ship_state.velocity) + Vector(dx, dy);
+                    Vector next_my_location = simulate(Vector(my_ship_state.pos), next_my_velocity).first;
+                    if (critical_point(next_enemy_location, next_my_location)) {
+                        vector<Command*> ret;
+                        if (dx != 0 && dy != 0) {
+                            ret.push_back(new Move(unit_id, Vector(-dx, -dy)));
+                        }
+                        int power = get_full_power(my_ship_state, dx != 0 && dy != 0);
+                        ret.push_back(new Attack(unit_id, next_enemy_location, power));
+                        if (power >= my_ship_state.ship_parameter.recharge_rate * 3) {
+                            return ret;
+                        }
+                    }
+                }
+            }
+        }
+        return vector<Command*>();
+    }
+
+    Command* free_shot(int unit_id, const ShipState& my_ship_state, const vector<ShipState>& enemy_ship_states, bool move) {
+        auto enemy_ship_state = enemy_ship_states[enemy_ship_states.size() - 1];
+        Vector next_enemy_location = simulate(Vector(enemy_ship_state.pos), Vector(enemy_ship_state.velocity)).first;
+        int power = get_free_power(my_ship_state, move);
+        if (power > 0) {
+            return new Attack(unit_id, next_enemy_location, power);
+        }
+        return NULL;
     }
 
     void test_safe_move() {
@@ -112,9 +163,12 @@ public:
         int planet = 16;
         int field_rad = 128;
 
-        cerr << loc << endl;
+        if (abs(loc.x) <= planet && abs(loc.y) <= planet) return;
+        if (abs(loc.x) >= field_rad || abs(loc.y) >= field_rad) return;
+
         int cost = 0;
-        for (int i = 0; i < 256; ++i) {
+        int cnt = 0;
+        while(cnt < 256) {
             // simulate
             auto vec = safe_move(planet, field_rad, loc, vel, 256);
 
@@ -122,15 +176,28 @@ public:
                 ++cost;
             }
 
-            vel.x += vec.x;
-            vel.y += vec.y;
+            vel.x -= vec.x;
+            vel.y -= vec.y;
             auto new_state = simulate(loc, vel);
             loc = new_state.first;
             vel = new_state.second;
-//        cerr << "current loc:" << loc << " current vel" << vel << endl;
+
+            if (dead(loc, planet, field_rad)) break;
+
+            ++cnt;
+
+//            cerr << "current loc:" << loc << " current vel" << vel << endl;
         }
 
-        cerr << "cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
+        if (cnt > 256 && cost < 30) {
+//            cerr << "cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
+        } else {
+            if (cnt < 250) {
+                cout << "dead at turn cnt: " << cnt << " cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
+            } else {
+                cout << "cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
+            }
+        }
     }
 
 public:
@@ -139,28 +206,56 @@ public:
     }
     StartParams start_params(const GameResponse& response) {
         int spec_point = response.game_info.ship_info.max_points;
-        int reactor = max(spec_point - 80, 0) / 16;
-        int armament = max(spec_point - 80, 0) / 16;
+        int reactor = 16;
+        int armament = max(spec_point - 280, 0) / 4;
         int engine = spec_point - 2 - reactor * 12 - armament * 4;
         int core = 1;
         return StartParams(engine, armament, reactor, core);
     }
     CommandParams command_params(const GameResponse& response) {
         int unit_id = response.game_info.is_defender ? 0 : 1;
-        auto pos = response.game_info.is_defender ? response.game_state.defender_state.pos : response.game_state.attacker_state.pos;
-        auto vel = response.game_info.is_defender ? response.game_state.defender_state.velocity : response.game_state.attacker_state.velocity;
+        auto pos = response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
+        auto vel = response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
         Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
         Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn);
         cout << "Next move: " << next_move << endl;
 
-        auto my_ship_state = response.game_info.is_defender ? response.game_state.defender_state : response.game_state.attacker_state;
-        auto enemy_ship_state = !response.game_info.is_defender ? response.game_state.defender_state : response.game_state.attacker_state;
-        auto next_shot = max_shot(unit_id, my_ship_state, enemy_ship_state);
-         cout << "Next shot: " << next_shot->target_location << " " << next_shot->power << endl;
+        auto my_ship_state = response.game_info.is_defender ? response.game_state.defender_states[0] : response.game_state.attacker_states[0];
+        auto enemy_ship_states = !response.game_info.is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
         CommandParams params;
-        params.commands.push_back(next_shot);
-        if (next_move.x != 0 || next_move.y != 0) {
-            params.commands.push_back(new Move(unit_id, next_move));
+        bool move = false;
+        for (auto command : critical_shot(unit_id, my_ship_state, enemy_ship_states)) {
+            params.commands.push_back(command);
+            move = true;
+        };
+
+        if (!move) {
+            Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn);
+            if (next_move.x != 0 || next_move.y != 0) {
+                params.commands.push_back(new Move(unit_id, next_move));
+                move = true;
+            }
+        }
+
+        // randomize
+        if (!move && my_ship_state.pos.first == -enemy_ship_states[0].pos.first && my_ship_state.pos.second == -enemy_ship_states[0].pos.second &&
+            my_ship_state.velocity.first == -enemy_ship_states[0].velocity.first && my_ship_state.velocity.second == -enemy_ship_states[0].velocity.second &&
+            !(my_ship_state.velocity.first == 0 && my_ship_state.velocity.second == 0)) {
+            params.commands.push_back(new Move(unit_id, Vector(my_ship_state.pos.first > 0 ? 1 : -1, 0)));
+            move = true;
+        }
+
+        {
+            Command* command = free_shot(unit_id, my_ship_state, enemy_ship_states, move);
+            if (command != NULL) {
+                params.commands.push_back(command);
+            }
+        }
+
+        cout << "Next commands: " << endl;
+        for (auto command : params.commands) {
+            command->print();
+            cout << endl;
         }
         return params;
     }
