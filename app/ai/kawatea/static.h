@@ -28,11 +28,20 @@ class StaticAI : public AI {
         auto pos = response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
         auto vel = response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
         int unit_id = response.game_info.is_defender ? response.game_state.defender_states[0].id : response.game_state.attacker_states[0].id;
-        int dx = direction[pos.first + MAX_P][pos.second + MAX_P][vel.first + MAX_D][vel.second + MAX_D][0];
-        int dy = direction[pos.first + MAX_P][pos.second + MAX_P][vel.first + MAX_D][vel.second + MAX_D][1];
+        int x = pos.first;
+        int y = pos.second;
+        int dx = vel.first;
+        int dy = vel.second;
+        fprintf(stderr, "x: %d, y: %d\n", x, y);
+        fprintf(stderr, "dx: %d, dy: %d\n", dx, dy);
+        fflush(stderr);
+        int ndx = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][0];
+        int ndy = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][1];
+        fprintf(stderr, "ndx: %d, ndy: %d\n", ndx, ndy);
+        fflush(stderr);
         CommandParams params;
-        if (dx != 0 || dy != 0) {
-            params.commands.push_back(new Move(unit_id, Vector(dx, dy)));
+        if (ndx != 0 || ndy != 0) {
+            params.commands.push_back(new Move(unit_id, Vector(ndx, ndy)));
         }
         return params;
     }
@@ -42,10 +51,13 @@ class StaticAI : public AI {
         FILE* fp = fopen("ai/kawatea/pre.txt", "r");
         if (fp == NULL) {
             fprintf(stderr, "failed to open pre.txt\n");
+            fflush(stderr);
             return;
         }
         int num;
         fscanf(fp, "%d", &num);
+        fprintf(stderr, "loading %d records\n", num);
+        fflush(stderr);
         for (int i = 0; i < num; i++) {
             unsigned value;
             int x, y, dx, dy, ndx, ndy;
@@ -54,6 +66,8 @@ class StaticAI : public AI {
             direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][0] = ndx;
             direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][1] = ndy;
         }
+        fprintf(stderr, "loaded %d records\n", num);
+        fflush(stderr);
         fclose(fp);
     }
 };
