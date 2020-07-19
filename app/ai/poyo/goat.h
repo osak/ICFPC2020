@@ -259,13 +259,13 @@ public:
                 if (unit_id == main_ship.id) {
                     continue;
                 }
-                pair<int, int> main_ship_next_pos = {main_ship.pos.first + main_ship.velocity.first + next_move.x, main_ship.pos.second + main_ship.velocity.second + next_move.y};
+                pair<int, int> main_ship_next_pos = {main_ship.pos.first + main_ship.velocity.first - next_move.x, main_ship.pos.second + main_ship.velocity.second - next_move.y};
                 pair<int, int> target_next_pos = {target.pos.first + target.velocity.first, target.pos.second + target.velocity.second};
                 
                 const int initialBestDistance = 4;
                 int bestDistance = initialBestDistance;
                 pair<int, int> bestMove = {0, 0};
-                for (int i = -2; i <= 2; i++) for (int j = -2; j <= 2; j++) {
+                for (int i = -2; i <= 2; i++) { for (int j = -2; j <= 2; j++) {
                     pair<int, int> next_pos = {ship.pos.first + ship.velocity.first + i, ship.pos.second + ship.velocity.second + j};
                     if (distance(next_pos, main_ship_next_pos) <= 4) {
                         // avoid bombing our main ship
@@ -275,10 +275,10 @@ public:
                         bestDistance = distance(next_pos, target_next_pos);
                         bestMove = {i, j};
                     }
-                }
+                }}
                 if (bestDistance < initialBestDistance) {
                     cout << "DOITDOITDOIT! " << ship.pos.first + ship.velocity.first + bestMove.first << ", " << ship.pos.second + ship.velocity.second + bestMove.second << endl; 
-                    params.commands.push_back(new Move(unit_id, Vector(bestMove.first, bestMove.second)));
+                    params.commands.push_back(new Move(unit_id, Vector(-bestMove.first, -bestMove.second)));
                     params.commands.push_back(new Kamikaze(unit_id));
                 }
             }
