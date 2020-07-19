@@ -133,8 +133,11 @@ public:
             params.commands.push_back(new Move(unit_id, next_move));
         } else if (!fissioned) {
             if (life > 1) {
-                params.commands.push_back(new Fission(unit_id, StartParams(0, 0, 0, 1)));
-                fissioned = true;
+                int score = test(pos, Vector(0, 0), response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, response.game_info.max_turns - response.game_state.current_turn);
+                if (score >= response.game_info.max_turns - response.game_state.current_turn) {
+                    params.commands.push_back(new Fission(unit_id, StartParams(0, 0, 0, 1)));
+                    fissioned = true;
+                }
             }
         } else {
             vector<Vector> vecs = {Vector(1, 1), Vector(1, -1), Vector(-1, 1), Vector(-1, -1)};
