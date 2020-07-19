@@ -1,6 +1,8 @@
-import { connect, PromiseState } from "react-refetch";
 import React from "react";
-import { RelayData } from "../types";
+import { connect, PromiseState } from "react-refetch";
+import { Alert, Spinner } from "reactstrap";
+import { RelayData } from "../../types";
+import { BattleViewer } from "./BattleViewer";
 
 declare var API_BASE: string;
 const REPLAY_API = `${API_BASE}/replay`;
@@ -14,10 +16,18 @@ interface InnerProps extends OuterProps {
 }
 
 const InnerBattlePlayer = (props: InnerProps) => {
-  if (props.replay_data.fulfilled) {
-    console.log(props.replay_data.value);
+  if (props.replay_data.pending) {
+    return <Spinner />;
   }
-  return <>battle {props.replayId}</>;
+  if (props.replay_data.rejected) {
+    return <Alert color="danger">Server Error</Alert>;
+  }
+  return (
+    <BattleViewer
+      replayData={props.replay_data.value}
+      replayId={props.replayId}
+    />
+  );
 };
 
 export const BattlePlayer = connect<OuterProps, InnerProps>((props) => ({

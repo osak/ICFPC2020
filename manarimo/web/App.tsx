@@ -12,7 +12,7 @@ import {
 } from "reactstrap";
 import { HashRouter, Switch, Route, Link } from "react-router-dom";
 import { AlienSend } from "./pages/AlienSend";
-import { BattlePlayer } from "./pages/BattlePlayer";
+import { BattlePlayer } from "./pages/BattlePlayer/BattlePlayer";
 import { HistoryList } from "./pages/HistoryList";
 import { ReplayList } from "./pages/ReplayList";
 import { Visualizer } from "./pages/Visualizer/Visualizer";
