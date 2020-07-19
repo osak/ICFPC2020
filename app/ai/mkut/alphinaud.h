@@ -107,6 +107,30 @@ class AlphinaudAI : public AI {
         return Vector(-best_move.x, -best_move.y);
     }
 
+    vector<Command*> try_kamikaze(int unit_id, const ShipState& my_ship_state, const ShipState& enemy_ship_state) {
+        int enemy_hp = enemy_ship_state.ship_parameter.recharge_rate * 2 + enemy_ship_state.ship_parameter.life + enemy_ship_state.ship_parameter.attack + enemy_ship_state.ship_parameter.energy;
+        if (enemy_hp > 200) {
+            return vector<Command*>();
+        }
+        Vector next_enemy_location = simulate(Vector(enemy_ship_state.pos), Vector(enemy_ship_state.velocity)).first;
+        for (int dx = -3; dx <= 3; dx++) {
+            for (int dy = -3; dy <= 3; dy++) {
+                auto next_my_velocity = Vector(my_ship_state.velocity) + Vector(dx, dy);
+                Vector next_my_location = simulate(Vector(my_ship_state.pos), next_my_velocity).first;
+                if (next_my_location == next_enemy_location) {
+                    if (dx == -3) dx = -2;
+                    if (dx == 3) dx = 2;
+                    if (dy == -3) dx = -2;
+                    if (dy == 3) dx = 2;
+                    vector<Command*> ret;
+                    ret.push_back(new Move(unit_id, Vector(-dx, -dy)));
+                    ret.push_back(new Kamikaze(unit_id));
+                }
+            }
+        }
+        return vector<Command*>();
+    }
+
     int get_full_power(const ShipState& my_ship_state, bool move) {
         int remaining_heat = max(0, my_ship_state.max_heat - my_ship_state.heat + my_ship_state.ship_parameter.recharge_rate - (move ? 8 : 0));
         return min(remaining_heat, my_ship_state.ship_parameter.attack);
@@ -214,23 +238,28 @@ public:
     }
     CommandParams command_params(const GameResponse& response) {
         int unit_id = response.game_info.is_defender ? 0 : 1;
-        auto pos = response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
-        auto vel = response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
-        Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
-        Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn);
-        cout << "Next move: " << next_move << endl;
-
         auto my_ship_state = response.game_info.is_defender ? response.game_state.defender_states[0] : response.game_state.attacker_states[0];
         auto enemy_ship_states = !response.game_info.is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
+
         CommandParams params;
         bool move = false;
+        if (enemy_ship_states.size() == 1) {
+            auto commands = try_kamikaze(unit_id, my_ship_state, enemy_ship_states[0]);
+            if (commands.size() > 0) {
+                for (auto command : commands) {
+                    params.commands.push_back(command);
+                    return params;
+                }
+            }
+        }
+
         for (auto command : critical_shot(unit_id, my_ship_state, enemy_ship_states)) {
             params.commands.push_back(command);
             move = true;
         };
 
         if (!move) {
-            Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn);
+            Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, Vector(my_ship_state.pos), Vector(my_ship_state.velocity), response.game_info.max_turns - response.game_state.current_turn);
             if (next_move.x != 0 || next_move.y != 0) {
                 params.commands.push_back(new Move(unit_id, next_move));
                 move = true;
