@@ -16,6 +16,7 @@ import { BattlePlayer } from "./pages/BattlePlayer";
 import { HistoryList } from "./pages/HistoryList";
 import { ReplayList } from "./pages/ReplayList";
 import { Visualizer } from "./pages/Visualizer/Visualizer";
+import { GameList } from "./pages/GameList";
 
 export const App = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,6 +47,16 @@ export const App = () => {
                   Replay
                 </NavLink>
               </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/games/current">
+                  Games (Current Tournament)
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/games/unrated">
+                  Games (Unrated)
+                </NavLink>
+              </NavItem>
             </Nav>
             <Nav className="ml-auto" navbar>
               <NavLink
@@ -70,6 +81,28 @@ export const App = () => {
             render={({ match }) => {
               const replayId = match.params.replayId ?? "";
               return <BattlePlayer replayId={replayId} />;
+            }}
+          />
+          <Route
+            exact
+            path="/games/current"
+            render={({ match }) => {
+              return <GameList gameType={"Rated"} />;
+            }}
+          />
+          <Route
+            exact
+            path="/games/rated/:tournamentId"
+            render={({ match }) => {
+              const tournamentId = match.params.tournamentId;
+              return <GameList gameType={"Rated"} tournamentId={tournamentId} />;
+            }}
+          />
+          <Route
+            exact
+            path="/games/unrated"
+            render={({ match }) => {
+              return <GameList gameType={"Unrated"} />;
             }}
           />
           <Redirect path="/" to="/" />

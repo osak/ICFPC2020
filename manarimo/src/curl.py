@@ -47,7 +47,7 @@ def post_replay(base):
 
 
 def main():
-    base = LOCAL_BASE
+    base = PROD_BASE
     post_replay(base)
 
 

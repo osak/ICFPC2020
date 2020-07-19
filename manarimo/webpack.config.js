@@ -7,10 +7,14 @@ let constants;
 if (process.env.NODE_ENV == "production") {
   constants = {
     API_BASE: JSON.stringify("https://manarimo.herokuapp.com/api"),
+    OFFICIAL_API_BASE: JSON.stringify("https://icfpc2020-api.testkontur.ru"),
+    OFFICIAL_API_KEY: JSON.stringify("decffdda9f2d431792a37fbfb770f825")
   };
 } else {
   constants = {
-    API_BASE: JSON.stringify("http://localhost:3000/api"),
+    API_BASE: JSON.stringify("http://localhost:8080/api"),
+    OFFICIAL_API_BASE: JSON.stringify("https://icfpc2020-api.testkontur.ru"),
+    OFFICIAL_API_KEY: JSON.stringify("decffdda9f2d431792a37fbfb770f825")
   };
 }
 

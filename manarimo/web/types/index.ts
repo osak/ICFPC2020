@@ -48,3 +48,33 @@ export interface RelayData {
     };
   };
 }
+
+export interface TournamentDto {
+  tournamentId: number,
+  tournamentType: TournamentType
+}
+
+export type TournamentType = "Lightning" | "Regular" | "Finals";
+export type GameType = "Rated" | "Unrated";
+
+export interface TeamDto {
+  teamName: string
+}
+
+export interface PlayerDto {
+  team: TeamDto,
+  playerKey: string,
+  debugLog?: string  
+}
+
+export interface GameDto {
+  gameId: string,
+  attacker: PlayerDto,
+  defender: PlayerDto
+}
+
+export interface GamesResponse {
+  hasMore: boolean,
+  next: string,
+  games: Array<GameDto>
+}
