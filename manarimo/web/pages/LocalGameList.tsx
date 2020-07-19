@@ -19,6 +19,7 @@ const InnerLocalGameList = (props: Props) => {
     return <Alert color="danger">Server Error</Alert>;
   }
   const response = props.localRunResponse.value.items;
+  response.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
 
   return (
     <Container>

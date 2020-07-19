@@ -44,8 +44,8 @@ int main(int argc, char **argv) {
 	while (true) {
         clock_t start_time = clock();
         long long planet_radius = response.game_info.field_info.planet_radius;
-        auto pos = response.game_info.is_defender ? response.game_state.defender_state.pos : response.game_state.attacker_state.pos;
-        auto vel = response.game_info.is_defender ? response.game_state.defender_state.velocity : response.game_state.attacker_state.velocity;
+        auto pos = response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
+        auto vel = response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
         Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
         cout << "My location: " << my_location << endl;
         cout << "My velocity: " << my_velocity << endl;
