@@ -5,6 +5,7 @@
 #include "../../ai.h"
 
 class GoatAI : public AI {
+
     bool dead(const Vector &loc, int center_rad, int field_rad) {
         if (abs(loc.x) <= center_rad && abs(loc.y) <= center_rad) return true;
         return abs(loc.x) >= field_rad || abs(loc.y) >= field_rad;
@@ -46,13 +47,24 @@ class GoatAI : public AI {
         return cnt;
     }
 
-    pair<int, Vector> dfs(int depth, const Vector &loc, const Vector &vel, const vector<Vector> &vec, int center_rad, long long field_rad, int max_turn) {
+    bool danger(const Vector &loc, const Vector &vel, const Vector &eloc, const Vector &evel) {
+        auto a = simulate(loc, vel).first;
+        auto b = simulate(eloc, evel).first;
+
+
+        return a.x == b.x || a.y == b.y || (abs(a.x - b.x) == abs(a.y - b.y));
+    }
+
+    pair<int, Vector> dfs(int depth, const Vector &loc, const Vector &vel, const vector<Vector> &vec, int center_rad, long long field_rad, int max_turn, bool danger) {
         if (depth == 4) return make_pair(-1, Vector(0, 0));
 
         int best = -1;
         Vector best_move = Vector(0, 0);
 
-        for (const auto &v: vec) {
+        int use_thruster = danger && depth == 0;
+        for (int i = 0 + use_thruster; i < vec.size() + use_thruster; ++i) {
+            const auto &v = vec[i%vec.size()];
+
             auto new_vel = vel;
             new_vel.x += v.x;
             new_vel.y += v.y;
@@ -68,7 +80,7 @@ class GoatAI : public AI {
             }
 
 
-            auto dfs_result = dfs(depth + 1, next_param.first, next_param.second, vec, center_rad, field_rad, max_turn);
+            auto dfs_result = dfs(depth + 1, next_param.first, next_param.second, vec, center_rad, field_rad, max_turn, false);
             if (best < dfs_result.first) {
                 best = dfs_result.first;
                 best_move = v;
@@ -78,7 +90,7 @@ class GoatAI : public AI {
         return make_pair(best, best_move);
     }
 
-    Vector safe_move(long long planet_size, int field_size, const Vector &loc, const Vector &vel, int remaining_turn) {
+    Vector safe_move(long long planet_size, int field_size, const Vector &loc, const Vector &vel, int remaining_turn, bool danger) {
         vector<vector<Vector>> vecs = {
                 {Vector(0, 0), Vector(0, 1),  Vector(1, 0),  Vector(1, 1)},
                 {Vector(0, 0), Vector(0, 1),  Vector(-1, 0), Vector(-1, 1)},
@@ -89,7 +101,7 @@ class GoatAI : public AI {
         int best = -1;
         Vector best_move = Vector(0, 0);
         for (const auto &vec: vecs) {
-            auto result = dfs(0, loc, vel, vec, planet_size, field_size, remaining_turn);
+            auto result = dfs(0, loc, vel, vec, planet_size, field_size, remaining_turn, danger);
 
             auto new_vel = vel;
             new_vel.x += result.second.x; new_vel.y += result.second.y;
@@ -106,9 +118,53 @@ class GoatAI : public AI {
         return Vector(-best_move.x, -best_move.y);
     }
 
+public:
+    void test_safe_move(int x, int y) {
+        Vector loc(x, y), vel(0, 0);
+
+        int planet = 16;
+        int field_rad = 128;
+
+        if (abs(loc.x) <= planet && abs(loc.y) <= planet) return;
+        if (abs(loc.x) >= field_rad || abs(loc.y) >= field_rad) return;
+
+        int cost = 0;
+        int cnt = 0;
+        while(cnt < 256) {
+            // simulate
+            auto vec = safe_move(planet, field_rad, loc, vel, 256, false);
+
+            if (vec.x != 0 || vec.y != 0) {
+                ++cost;
+            }
+
+            vel.x -= vec.x;
+            vel.y -= vec.y;
+            auto new_state = simulate(loc, vel);
+            loc = new_state.first;
+            vel = new_state.second;
+
+            if (dead(loc, planet, field_rad)) break;
+
+            ++cnt;
+
+//            cerr << "current loc:" << loc << " current vel" << vel << endl;
+        }
+
+        if (cnt > 256 && cost < 30) {
+//            cerr << "cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
+        } else {
+            if (cnt < 250) {
+                cout << "dead at turn cnt: " << cnt << " cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
+            } else {
+                cout << "cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
+            }
+        }
+    }
+
+
     bool fissioned = false;
 
-public:
     JoinParams join_params() {
         return JoinParams();
     }
@@ -123,11 +179,15 @@ public:
     CommandParams command_params(const GameResponse& response) {
         auto pos = response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
         auto vel = response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
+        auto epos = !response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
+        auto evel = !response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
+
         int life = response.game_info.is_defender ? response.game_state.defender_states[0].ship_parameter.life : response.game_state.attacker_states[0].ship_parameter.life;
         int unit_id = response.game_info.is_defender ? response.game_state.defender_states[0].id : response.game_state.attacker_states[0].id;
         int remaining_turn = response.game_info.max_turns - response.game_state.current_turn;
         Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
-        Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, remaining_turn);
+        Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn,
+                danger(pos, vel, epos, evel));
         cout << "Next move: " << next_move << endl;
         CommandParams params;
         if (next_move.x != 0 || next_move.y != 0) {
