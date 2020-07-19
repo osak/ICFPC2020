@@ -182,6 +182,7 @@ public:
 
     bool fissioned = false;
     int num_children = 0;
+    int thresholds[5] = {10, 20, 50, 100, 256};
 
     JoinParams join_params() {
         return JoinParams();
@@ -191,7 +192,7 @@ public:
         int reactor = max(spec_point - 160, 0) / 12;
         int armament = 0;
         int engine = spec_point - 20 - reactor * 12;
-        int core = 10;
+        int core = 20;
         return StartParams(engine, armament, reactor, core);
     }
 
@@ -228,7 +229,8 @@ public:
                     if (life > 1 && ship.ship_parameter.energy > 5 && remaining_turn > 5) {
                         int score = test(pos, vel, response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, remaining_turn);
 
-                        if ((num_children < 1 && score > 30) || (num_children < 2 && score > 100) || score >= remaining_turn) {
+                        int threshold = thresholds[min(num_children, 4)];
+                        if (score >= min(threshold, remaining_turn)) {
                             cout << "Fission! It will live for " << score << "turns" << endl;
                             num_children++;
                             params.commands.push_back(new Fission(unit_id, StartParams(2, 0, 0, 1)));
