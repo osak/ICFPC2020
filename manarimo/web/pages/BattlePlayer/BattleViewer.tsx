@@ -7,14 +7,13 @@ const BOARD_SIZE = 500;
 const drawPlanet = (
   ctx: CanvasRenderingContext2D,
   planetSize: number,
-  spaceSize: number,
-  magnify: (value: number) => number
+  magnify: (value: number) => number,
+  normalize: (v: number) => number
 ) => {
-  const center = spaceSize / 2;
   ctx.fillStyle = "olive";
   ctx.fillRect(
-    magnify(center - planetSize),
-    magnify(center - planetSize),
+    normalize(-planetSize),
+    normalize(-planetSize),
     magnify(2 * planetSize),
     magnify(2 * planetSize)
   );
@@ -34,9 +33,8 @@ export const BattleViewer = (props: Props) => {
   const turnData = replayData.data.details.turns[currentTurn];
   const planetSize = replayData.data.details.planet_size;
   const spaceSize = replayData.data.details.space_size;
-  const normalize = (v: number) =>
-    (v * BOARD_SIZE) / spaceSize + BOARD_SIZE / 2;
-  const magnify = (v: number) => (v * BOARD_SIZE) / spaceSize;
+  const magnify = (v: number) => (v * BOARD_SIZE) / (2 * spaceSize);
+  const normalize = (v: number) => magnify(v) + BOARD_SIZE / 2;
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -44,7 +42,7 @@ export const BattleViewer = (props: Props) => {
       const ctx = canvas.getContext("2d");
       if (ctx) {
         ctx.clearRect(0, 0, BOARD_SIZE, BOARD_SIZE);
-        drawPlanet(ctx, planetSize, spaceSize, magnify);
+        drawPlanet(ctx, planetSize, magnify, normalize);
 
         turnData.data
           .filter((data) => data.state.is_attacker)
