@@ -46,24 +46,26 @@ type CommandType =
   | ReturnType<typeof parseJetCommand>
   | ReturnType<typeof parseSuicide>;
 
-export const parseCommand = (commandObject: unknown): CommandType | null => {
-  if (
-    commandObject === null ||
-    commandObject === undefined ||
-    !Array.isArray(commandObject)
-  ) {
+const parseSingleCommand = (command: unknown): CommandType | null => {
+  if (!Array.isArray(command)) {
     return null;
   }
-
-  const commandArray = commandObject[0];
-  switch (commandArray[0]) {
+  switch (command[0]) {
     case JET:
-      return parseJetCommand(commandArray);
+      return parseJetCommand(command);
     case SUICIDE:
-      return parseSuicide(commandArray);
+      return parseSuicide(command);
     case ATTACK:
-      return parseAttack(commandArray);
+      return parseAttack(command);
     default:
       return null;
   }
+};
+
+export const parseCommand = (commands: unknown): CommandType[] => {
+  if (!Array.isArray(commands)) {
+    return [];
+  }
+
+  return commands.map((command) => parseSingleCommand(command));
 };
