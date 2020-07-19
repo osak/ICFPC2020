@@ -137,7 +137,7 @@ class AlphinaudAI : public AI {
                         }
                         int power = get_full_power(my_ship_state, dx != 0 && dy != 0);
                         ret.push_back(new Attack(unit_id, next_enemy_location, power));
-                        if (power < my_ship_state.ship_parameter.recharge_rate * 3) {
+                        if (power >= my_ship_state.ship_parameter.recharge_rate * 3) {
                             return ret;
                         }
                     }
