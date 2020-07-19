@@ -83,6 +83,7 @@ pair<int, int> to_pair(const GalaxyValue* value) {
 struct ShipState {
     bool is_defender;
     bool is_attacker;
+    int id;
     pair<int, int> pos;
     pair<int, int> velocity;
     ShipParameter ship_parameter;
@@ -101,7 +102,8 @@ struct ShipState {
         assert(ship->list.size() == 8);
 
         is_defender = static_cast<bool>(ship->list[0]->num);
-        is_attacker = static_cast<bool>(ship->list[1]->num);
+        is_attacker = !is_defender;
+        id = static_cast<bool>(ship->list[1]->num);
         pos = to_pair(ship->list[2]);
         velocity = to_pair(ship->list[3]);
         ship_parameter = ShipParameter(ship->list[4]);
@@ -116,8 +118,6 @@ struct ShipState {
 struct GameState {
     int current_turn;
     FieldInfo field_info;
-    ShipState defender_state; // deprecated
-    ShipState attacker_state; // deprecated
     vector<ShipState> defender_states;
     vector<ShipState> attacker_states;
 
@@ -130,10 +130,6 @@ struct GameState {
         field_info = FieldInfo(value->list[1]);
 
         auto* ship_states = value->list[2];
-
-        // to be removed
-        defender_state = ShipState(ship_states->list[0]);
-        attacker_state = ShipState(ship_states->list[1]);
 
         for (auto& state: ship_states->list) {
             ShipState ship_state = ShipState(state);
