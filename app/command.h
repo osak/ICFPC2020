@@ -29,11 +29,21 @@ struct Move : Command {
    Vector acceleration;
    Move(const Vector& acceleration) : acceleration(acceleration) {}
    virtual void modulate(Modulator& mod) {
+      //[4, 3985075716549918131, []]
+      mod.put_cell();
+      mod.put_number(4);
+      mod.put_cell();
+      mod.put_number(3985075716549918131);
+      mod.put_cell();
+      mod.put_nil();
+      mod.put_nil();
+      /*
       mod.put_cell();
       mod.put_number(0);
       // mod.put_cell();
       acceleration.modulate(mod);
       // mod.put_nil();
+      */
    }
 };
 
