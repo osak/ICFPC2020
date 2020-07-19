@@ -71,6 +71,24 @@ struct Attack : Command {
    }
 };
 
+struct Fission : Command {
+   StartParams childParams;
+   Fission(int unit_id, const StartParams& childParams) : Command(unit_id), childParams(childParams) {}
+   virtual void modulate(Modulator & mod) {
+      mod.put_cell();
+      mod.put_number(3);
+      mod.put_cell();
+		mod.put_number(childParams.engine);
+		mod.put_cell();
+		mod.put_number(childParams.armament);
+		mod.put_cell();
+		mod.put_number(childParams.reactor);
+		mod.put_cell();
+		mod.put_number(childParams.core);
+		mod.put_nil();
+   }
+};
+
 struct JoinParams {
    string modulate() const {
       Modulator mod;
