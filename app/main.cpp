@@ -76,7 +76,7 @@ Vector safe_move(long long planet_size, long long space_size, const Vector& loc,
             tmp_vel.x += dx;
             tmp_vel.y += dy;
             double t = living_time(planet_size, space_size, loc, tmp_vel);
-            cerr << dx << "," << dy << ":" << t << endl;
+            // cerr << dx << "," << dy << ":" << t << endl;
             if (t > max_t) {
                 max_t = t;
                 max_dx = dx;
@@ -108,7 +108,9 @@ int main(int argc, char **argv) {
 	GameResponse response(as_galaxy(client->start(StartParams(engine, armament, reactor, core))));
     int unit_id = response.game_info.is_defender ? 0 : 1;
     cout << "Unit ID: " << unit_id << endl;
+    double accum_time = 0;
 	while (true) {
+        clock_t start_time = clock();
         long long planet_radius = response.game_info.field_info.planet_radius;
         auto pos = response.game_info.is_defender ? response.game_state.defender_state.pos : response.game_state.attacker_state.pos;
         auto vel = response.game_info.is_defender ? response.game_state.defender_state.velocity : response.game_state.attacker_state.velocity;
@@ -121,6 +123,12 @@ int main(int argc, char **argv) {
         if (next_move.x != 0 || next_move.y != 0) {
             params.commands.push_back(new Move(unit_id, next_move));
         }
+        clock_t end_time = clock();
+        double time_used = static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC * 1000.0;
+        accum_time += time_used;
+        cout << "time used: " << time_used << endl;
+        cout << "accumulated time used: " << accum_time << endl;
+
 		response = GameResponse(as_galaxy(client->command(params)));
 	}
 
