@@ -162,8 +162,8 @@ public:
         }
     }
 
-
     bool fissioned = false;
+    int num_children = 0;
 
     JoinParams join_params() {
         return JoinParams();
@@ -194,9 +194,11 @@ public:
             params.commands.push_back(new Move(unit_id, next_move));
         } else if (!fissioned) {
             if (life > 1 && remaining_turn > 5) {
-                int score = test(pos, Vector(0, 0), response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, remaining_turn);
-                if (score >= remaining_turn) {
+                int score = test(pos, vel, response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, remaining_turn);
+
+                if ((num_children < 2 && score > 100) || score >= remaining_turn) {
                     cout << "Fission! It will live for " << score << "turns" << endl;
+                    num_children++;
                     params.commands.push_back(new Fission(unit_id, StartParams(0, 0, 0, 1)));
                     fissioned = true;
                 }
@@ -206,7 +208,7 @@ public:
             Vector best_move = Vector(0, 0);
             int best = 20;
             for (auto& vec: vecs) {
-                int score = test(pos, vec, response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, remaining_turn);
+                int score = test(pos, Vector(vec.x + vel.x, vec.y + vel.y), response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, remaining_turn);
                 if (score > best) {
                     best = score;
                     best_move = vec;
