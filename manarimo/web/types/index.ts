@@ -80,3 +80,15 @@ export interface GamesResponse {
   next: string;
   games: Array<GameDto>;
 }
+
+export interface LocalRunEntry {
+  id: number;
+  attacker_key: string;
+  attacker_name: string;
+  defender_key: string;
+  defender_name: string;
+  timestamp: string;
+}
+export interface LocalRunResponse {
+  items: LocalRunEntry[];
+}
