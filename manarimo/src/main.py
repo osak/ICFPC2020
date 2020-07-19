@@ -79,7 +79,7 @@ def post_replay():
 
 @app.route("/aliens/send", methods=["POST"])
 def aliens_send():
-    return send.raw(request.data)
+    return send.raw(request.get_data())
 
 @app.route("/api/battledome", methods=["POST"])
 def battledome():
