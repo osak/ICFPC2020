@@ -47,44 +47,54 @@ int area(const Vector& loc) {
     }
 }
 
-Vector safe_move(long long planet_size, const Vector& loc, const Vector& vel) {
-    int current_area = area(loc);
-
+int living_time(long long planet_size, long long space_size, const Vector& loc, const Vector& vel) {
     Vector tmp_loc = loc, tmp_vel = vel;
-    while (area(tmp_loc) == current_area) {
+    int ret = 0;
+    while (true) {
+        if (abs(tmp_loc.x) <= planet_size || abs(tmp_loc.y) <= planet_size || abs(tmp_loc.x) > space_size || abs(tmp_loc.y) > space_size) {
+            break;
+        }
         auto pair = next_location_and_velocity(tmp_loc, tmp_vel);
         tmp_loc = pair.first;
         tmp_vel = pair.second;
-        if (abs(tmp_loc.x) <= planet_size || abs(tmp_loc.y) <= planet_size) {
-            switch (current_area) {
-                case 0: return tmp_vel.x > 0 ? Vector(0, -1) : Vector(-1, -1);
-                case 1: return tmp_vel.y > 0 ? Vector(1, 0) : Vector(1, -1);
-                case 2: return tmp_vel.x < 0 ? Vector(0, 1) : Vector(1, 1);
-                case 3: return tmp_vel.y < 0 ? Vector(-1, 0) : Vector(-1, 1);
+        ret++;
+        if (ret > 100) {
+            return ret;
+        }
+    }
+    return ret;
+}
+
+Vector safe_move(long long planet_size, long long space_size, const Vector& loc, const Vector& vel) {
+    int max_t = living_time(planet_size, space_size, loc, vel);
+    int max_dx = 0;
+    int max_dy = 0;
+    for (int dx = -1; dx <= 1; dx++) {
+        for (int dy = -1; dy <= 1; dy++) {
+            if (dx == 0 && dy == 0) continue;
+            Vector tmp_vel = vel;
+            tmp_vel.x += dx;
+            tmp_vel.y += dy;
+            int t = living_time(planet_size, space_size, loc, tmp_vel);
+            if (t > max_t) {
+                max_t = t;
+                max_dx = dx;
+                max_dy = dy;
             }
         }
     }
-    int next_area = area(tmp_loc);
-    if ((current_area + 1) % 4 != next_area) {
-        switch (current_area) {
-            case 0: return Vector(-1, -1);
-            case 1: return Vector(1, -1);
-            case 2: return Vector(1, 1);
-            case 3: return Vector(-1, 1);
-        }
-    }
-    return Vector();
+    return Vector(-max_dx, -max_dy);
 }
 
 void test_safe_move() {
     Vector loc(27, 21), vel(0, 0);
-    cout << safe_move(16, loc, vel) << endl;
+    cout << safe_move(16, 128, loc, vel) << endl;
 }
 
 int main(int argc, char **argv) {
 	// test();
-    // test_safe_move();
-    // exit(0);
+    test_safe_move();
+    exit(0);
 
     Client *client = init_client(argv);
 
@@ -104,7 +114,7 @@ int main(int argc, char **argv) {
         Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
         cout << "My location: " << my_location << endl;
         cout << "My velocity: " << my_velocity << endl;
-        Vector next_move = safe_move(response.game_info.field_info.planet_radius, my_location, my_velocity);
+        Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity);
         cout << "Next move: " << next_move << endl;
         CommandParams params;
         if (next_move.x != 0 && next_move.y != 0) {
