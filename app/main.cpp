@@ -183,7 +183,7 @@ class Client {
 
 		cout << response->body << endl;
 		Value *stat = Demodulator().demodulate(response->body);
-		cout << stat << endl;
+		cout << *stat << endl;
 		return stat;
 	}
 
