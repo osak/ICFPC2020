@@ -116,14 +116,14 @@ public:
         int spec_point = response.game_info.ship_info.max_points;
         int reactor = max(spec_point - 160, 0) / 12;
         int armament = 0;
-        int engine = spec_point - 4 - reactor * 12;
-        int core = 2;
+        int engine = spec_point - 10 - reactor * 12;
+        int core = 5;
         return StartParams(engine, armament, reactor, core);
     }
     CommandParams command_params(const GameResponse& response) {
-        int unit_id = response.game_info.is_defender ? 0 : 1;
         auto pos = response.game_info.is_defender ? response.game_state.defender_states[0].pos : response.game_state.attacker_states[0].pos;
         auto vel = response.game_info.is_defender ? response.game_state.defender_states[0].velocity : response.game_state.attacker_states[0].velocity;
+        int unit_id = response.game_info.is_defender ? response.game_state.defender_states[0].id : response.game_state.attacker_states[0].id;
         Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
         Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn);
         cout << "Next move: " << next_move << endl;
@@ -131,9 +131,28 @@ public:
         if (next_move.x != 0 || next_move.y != 0) {
             params.commands.push_back(new Move(unit_id, next_move));
         } else if (!fissioned) {
-            cout << "Fisshoned!" << endl;
-            params.commands.push_back(new Fission(unit_id, StartParams(0, 0, 0, 1)));
-            fissioned = true;
+            if (response.game_state.defender_states[0].ship_parameter.life > 1) {
+                params.commands.push_back(new Fission(unit_id, StartParams(0, 0, 0, 1)));
+                fissioned = true;
+            }
+        } else {
+            vector<Vector> vecs = {Vector(1, 1), Vector(1, -1), Vector(-1, 1), Vector(-1, -1)};
+            Vector best_move = Vector(0, 0);
+            int best = 20;
+            for (auto& vec: vecs) {
+                int score = test(pos, vec, response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, response.game_info.max_turns - response.game_state.current_turn);
+                if (score > best) {
+                    best = score;
+                    best_move = vec;
+                }
+            }
+
+            if (best_move.x != 0 || best_move.y != 0) {
+                cout << "Decided move a bit: " << best_move << endl;
+                params.commands.push_back(new Move(unit_id, best_move));
+                fissioned = false;
+            }
+            
         }
         return params;
     }
