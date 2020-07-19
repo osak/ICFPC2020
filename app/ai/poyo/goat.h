@@ -132,6 +132,10 @@ class GoatAI : public AI {
         return main_ship;
     }
 
+    int distance(pair<int, int> a, pair<int, int> b) {
+        return max(abs(a.first - b.first), abs(a.second - b.second));
+    }
+
 public:
     void test_safe_move(int x, int y) {
         Vector loc(x, y), vel(0, 0);
@@ -199,6 +203,7 @@ public:
         ShipState main_ship = ships[0];
         CommandParams params;
         ShipState target = getMainShip(enemies);
+        Vector next_move;
 
         cout << "Target: " << target.pos.first + target.velocity.first << " " << target.pos.second + target.velocity.second << endl;
 
@@ -214,19 +219,19 @@ public:
                 int life = ship.ship_parameter.life;
                 int remaining_turn = response.game_info.max_turns - response.game_state.current_turn;
                 Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
-                Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn,
+                next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity, response.game_info.max_turns - response.game_state.current_turn,
                         danger(pos, vel, epos, evel));
                 cout << "Next move: " << next_move << endl;
                 if (next_move.x != 0 || next_move.y != 0) {
                     params.commands.push_back(new Move(unit_id, next_move));
                 } else if (!fissioned) {
-                    if (life > 1 && remaining_turn > 5) {
+                    if (life > 1 && ship.ship_parameter.energy > 5 && remaining_turn > 5) {
                         int score = test(pos, vel, response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, remaining_turn);
 
                         if ((num_children < 2 && score > 100) || score >= remaining_turn) {
                             cout << "Fission! It will live for " << score << "turns" << endl;
                             num_children++;
-                            params.commands.push_back(new Fission(unit_id, StartParams(0, 0, 0, 1)));
+                            params.commands.push_back(new Fission(unit_id, StartParams(2, 0, 0, 1)));
                             fissioned = true;
                         }
                     }
@@ -246,6 +251,7 @@ public:
                         cout << "Decided move a bit: " << best_move << endl;
                         params.commands.push_back(new Move(unit_id, best_move));
                         fissioned = false;
+                        next_move = best_move;
                     }
             
                 }
@@ -253,17 +259,26 @@ public:
                 if (unit_id == main_ship.id) {
                     continue;
                 }
-                cout << "Unit" << unit_id << endl;
-                pair<int, int> next_pos = {ship.pos.first + ship.velocity.first, ship.pos.second + ship.velocity.second};
-                pair<int, int> main_ship_next_pos = {main_ship.pos.first + main_ship.velocity.first, main_ship.pos.second + main_ship.velocity.second};
+                pair<int, int> main_ship_next_pos = {main_ship.pos.first + main_ship.velocity.first + next_move.x, main_ship.pos.second + main_ship.velocity.second + next_move.y};
                 pair<int, int> target_next_pos = {target.pos.first + target.velocity.first, target.pos.second + target.velocity.second};
-                if (abs(next_pos.first - main_ship_next_pos.first) <= 4 && abs(next_pos.second - main_ship_next_pos.second) <= 4) {
-                    // avoid bombing our main ship
-                    cout << "wow! our main unit is close!" << endl;
-                    continue;
+                
+                const int initialBestDistance = 4;
+                int bestDistance = initialBestDistance;
+                pair<int, int> bestMove = {0, 0};
+                for (int i = -2; i <= 2; i++) for (int j = -2; j <= 2; j++) {
+                    pair<int, int> next_pos = {ship.pos.first + ship.velocity.first + i, ship.pos.second + ship.velocity.second + j};
+                    if (distance(next_pos, main_ship_next_pos) <= 4) {
+                        // avoid bombing our main ship
+                        continue;
+                    }
+                    if (distance(next_pos, target_next_pos) < bestDistance) {
+                        bestDistance = distance(next_pos, target_next_pos);
+                        bestMove = {i, j};
+                    }
                 }
-                if (abs(next_pos.first - target_next_pos.first) <= 3 && abs(next_pos.second - target_next_pos.second) <= 3) {
-                    cout << "Try to attack!" << next_pos.first << "," << next_pos.second << endl;
+                if (bestDistance < initialBestDistance) {
+                    cout << "DOITDOITDOIT! " << ship.pos.first + ship.velocity.first + bestMove.first << ", " << ship.pos.second + ship.velocity.second + bestMove.second << endl; 
+                    params.commands.push_back(new Move(unit_id, Vector(bestMove.first, bestMove.second)));
                     params.commands.push_back(new Kamikaze(unit_id));
                 }
             }
