@@ -22,7 +22,12 @@ const InnerBattlePlayer = (props: InnerProps) => {
   if (props.replay_data.rejected) {
     return <Alert color="danger">Server Error</Alert>;
   }
-  return <BattleViewer replayData={props.replay_data.value} />;
+  return (
+    <BattleViewer
+      replayData={props.replay_data.value}
+      replayId={props.replayId}
+    />
+  );
 };
 
 export const BattlePlayer = connect<OuterProps, InnerProps>((props) => ({

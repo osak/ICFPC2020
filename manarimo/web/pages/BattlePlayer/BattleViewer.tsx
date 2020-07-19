@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Container, Input, Row } from "reactstrap";
+import { Col, Container, Input, Row, Table } from "reactstrap";
 import { RelayData } from "../../types";
 
 const BOARD_SIZE = 500;
@@ -21,11 +21,12 @@ const drawPlanet = (
 };
 
 interface Props {
+  replayId: string;
   replayData: RelayData;
 }
 
 export const BattleViewer = (props: Props) => {
-  const { replayData } = props;
+  const { replayData, replayId } = props;
   const totalTurns = replayData.data.details.turns.length;
   const [currentTurn, setCurrentTurn] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -56,13 +57,13 @@ export const BattleViewer = (props: Props) => {
               0,
               2 * Math.PI
             );
-            ctx.fillStyle = "maroon";
+            ctx.fillStyle = "red";
             ctx.fill();
           });
         turnData.data
           .filter((data) => data.state.is_defender)
           .forEach((data) => {
-            ctx.fillStyle = "navy";
+            ctx.fillStyle = "blue";
             ctx.fillRect(
               normalize(data.state.location.x) - magnify(1),
               normalize(data.state.location.y) - magnify(1),
@@ -77,7 +78,71 @@ export const BattleViewer = (props: Props) => {
   return (
     <Container>
       <Row>
-        <canvas width={BOARD_SIZE} height={BOARD_SIZE} ref={canvasRef} />
+        <h2>Battle #{replayId}</h2>
+      </Row>
+      <Row>
+        <Col>
+          <canvas
+            style={{
+              borderStyle: "solid",
+              borderColor: "black",
+              borderWidth: "1px",
+            }}
+            width={BOARD_SIZE}
+            height={BOARD_SIZE}
+            ref={canvasRef}
+          />
+        </Col>
+        <Col>
+          <Row>
+            <Table>
+              <tbody>
+                <tr>
+                  <th>Turn</th>
+                  <td>{turnData.turn_id}</td>
+                </tr>
+              </tbody>
+            </Table>
+          </Row>
+          {[true, false].map((is_attacker, i) => {
+            const player = is_attacker ? "Attacker" : "Defender";
+            return (
+              <React.Fragment key={i}>
+                <Row>
+                  <h4>{player}</h4>
+                  <Table>
+                    <thead>
+                      <tr>
+                        <th>Fuel</th>
+                        <th>Attack</th>
+                        <th>Cool Speed</th>
+                        <th>HP</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {turnData.data
+                        .filter(
+                          (data) =>
+                            data.state.is_attacker === is_attacker &&
+                            data.state.is_defender !== is_attacker
+                        )
+                        .map((data, i) => {
+                          return (
+                            <tr key={i}>
+                              <td>{data.state.parameters.fuel}</td>
+                              <td>{data.state.parameters.attack}</td>
+                              <td>{data.state.parameters.cool_speed}</td>
+                              <td>{data.state.parameters.health}</td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </Table>
+                </Row>
+              </React.Fragment>
+            );
+          })}
+        </Col>
       </Row>
       <Row>
         <Input
@@ -88,7 +153,6 @@ export const BattleViewer = (props: Props) => {
           onChange={(e) => setCurrentTurn(parseInt(e.target.value))}
         />
       </Row>
-      <Row>Turn: {turnData.turn_id}</Row>
     </Container>
   );
 };
