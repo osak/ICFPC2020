@@ -11,10 +11,11 @@ def dot(p, q):
 
 
 def main():
-    x = 48, 0
+    x = 48, 6
     v = 0, 0
 
-    target_velocity = 6
+    target_velocity = 8
+    target_height = 48
 
     cost = 0
     for turn in range(256):
@@ -40,12 +41,12 @@ def main():
 
         xnorm = dot(x, x) ** 0.5
         nx, ny = px / xnorm, py / xnorm
-        n = nx, ny
         rx, ry = ny, -nx
         r = rx, ry
 
         r_v = dot(nv, r) / (dot(r, r) ** 0.5)
-        n_v = dot(nv, n) / (dot(n, n) ** 0.5)
+
+        cur_height = xnorm
 
         cur_diff = abs(r_v - target_velocity)
         action = -9999, (-5, -5)
@@ -54,9 +55,10 @@ def main():
                 ct = ctx, cty
                 cv = add(nv, ct)
                 cr_v = dot(cv, r) / (dot(r, r) ** 0.5)
-                cn_v = dot(cv, n) / (dot(n, n) ** 0.5)
+                cx = add(x, cv)
+                cand_height = dot(cx, cx) ** 0.5
                 improve = (cur_diff - abs(cr_v - target_velocity))
-                improve += (abs(n_v) - abs(cn_v))
+                improve += (abs(cur_height - target_height) - abs(cand_height - target_height))
                 cand_action = improve, ct
                 if cand_action > action:
                     action = cand_action
