@@ -170,7 +170,7 @@ class Client {
 		mod.put_nil();
 
 		cout << "sending: " << mod.to_string() << endl;
-		auto response = client_.Post("/alians/send?apiKey=decffdda9f2d431792a37fbfb770f825", mod.to_string(), "text/plain");
+		auto response = client_.Post("/aliens/send?apiKey=decffdda9f2d431792a37fbfb770f825", mod.to_string(), "text/plain");
 		if (!response) {
 			cout << "Server didn't respond" << endl;
 			return nullptr;
