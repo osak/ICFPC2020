@@ -39,7 +39,11 @@ class StaticAI : public AI {
     
     private:
     void load() {
-        FILE* fp = fopen("pre.txt", "r");
+        FILE* fp = fopen("ai/kawatea/pre.txt", "r");
+        if (fp == NULL) {
+            fprintf(stderr, "failed to open pre.txt\n");
+            return;
+        }
         int num;
         fscanf(fp, "%d", &num);
         for (int i = 0; i < num; i++) {
@@ -48,7 +52,8 @@ class StaticAI : public AI {
             fscanf(fp, "%u", &value);
             decode(value, x, y, dx, dy, ndx, ndy);
             direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][0] = ndx;
-            direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][0] = ndy;
+            direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][1] = ndy;
         }
+        fclose(fp);
     }
 };
