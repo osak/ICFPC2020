@@ -151,7 +151,9 @@ public:
         if (next_move.x != 0 || next_move.y != 0) {
             params.commands.push_back(new Move(unit_id, next_move));
         } else if (!fissioned) {
+            cout << "Fisshoned!" << endl;
             params.commands.push_back(new Fission(unit_id, StartParams(0, 0, 0, 1)));
+            fissioned = true;
         }
         return params;
     }
