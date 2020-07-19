@@ -47,33 +47,57 @@ int area(const Vector& loc) {
     }
 }
 
-Vector safe_move(long long planet_size, const Vector& loc, const Vector& vel) {
-    int current_area = area(loc);
-
+double living_time(long long planet_size, long long space_size, const Vector& loc, const Vector& vel) {
     Vector tmp_loc = loc, tmp_vel = vel;
-    while (area(tmp_loc) == current_area) {
+    double ret = 0;
+    int cnt = 0;
+    while (true) {
+        if ((abs(tmp_loc.x) <= planet_size && abs(tmp_loc.y) <= planet_size) || (abs(tmp_loc.x) > space_size && abs(tmp_loc.y) > space_size)) {
+            break;
+        }
         auto pair = next_location_and_velocity(tmp_loc, tmp_vel);
         tmp_loc = pair.first;
         tmp_vel = pair.second;
-        if (abs(tmp_loc.x) <= planet_size || abs(tmp_loc.y) <= planet_size) {
-            switch (current_area) {
-                case 0: return Vector(-1, -1);
-                case 1: return Vector(1, -1);
-                case 2: return Vector(1, 1);
-                case 3: return Vector(-1, 1);
+        ret += acos(loc * tmp_loc / loc.norm() / tmp_loc.norm());
+        cnt++;
+        if (cnt > 100) {
+            return ret;
+        }
+    }
+    return ret;
+}
+
+Vector safe_move(long long planet_size, long long space_size, const Vector& loc, const Vector& vel) {
+    int max_t = living_time(planet_size, space_size, loc, vel);
+    int max_dx = 0;
+    int max_dy = 0;
+    for (int dx = -1; dx <= 1; dx++) {
+        for (int dy = -1; dy <= 1; dy++) {
+            if (dx == 0 && dy == 0) continue;
+            Vector tmp_vel = vel;
+            tmp_vel.x += dx;
+            tmp_vel.y += dy;
+            double t = living_time(planet_size, space_size, loc, tmp_vel);
+            // cerr << dx << "," << dy << ":" << t << endl;
+            if (t > max_t) {
+                max_t = t;
+                max_dx = dx;
+                max_dy = dy;
             }
         }
     }
-    return Vector();
+    return Vector(-max_dx, -max_dy);
 }
 
 void test_safe_move() {
-    Vector loc(-4, 48), vel(0, 0);
-    cout << safe_move(16, loc, vel) << endl;
+    Vector loc(-10, -48), vel(0, 0);
+    cout << safe_move(16, 128, loc, vel) << endl;
 }
 
 int main(int argc, char **argv) {
 	// test();
+    // test_safe_move();
+    // exit(0);
 
     Client *client = init_client(argv);
 
@@ -85,20 +109,29 @@ int main(int argc, char **argv) {
     int core = 1;
 	GameResponse response(as_galaxy(client->start(StartParams(engine, armament, reactor, core))));
     int unit_id = response.game_info.is_defender ? 0 : 1;
+    cout << "Unit ID: " << unit_id << endl;
+    double accum_time = 0;
 	while (true) {
+        clock_t start_time = clock();
         long long planet_radius = response.game_info.field_info.planet_radius;
         auto pos = response.game_info.is_defender ? response.game_state.defender_state.pos : response.game_state.attacker_state.pos;
         auto vel = response.game_info.is_defender ? response.game_state.defender_state.velocity : response.game_state.attacker_state.velocity;
         Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
         cout << "My location: " << my_location << endl;
         cout << "My velocity: " << my_velocity << endl;
-        Vector next_move = safe_move(response.game_info.field_info.planet_radius, my_location, my_velocity);
+        Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, my_location, my_velocity);
         cout << "Next move: " << next_move << endl;
         CommandParams params;
-        if (next_move.x != 0 && next_move.y != 0) {
+        if (next_move.x != 0 || next_move.y != 0) {
             params.commands.push_back(new Move(unit_id, next_move));
         }
-		client->command(params);
+        clock_t end_time = clock();
+        double time_used = static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC * 1000.0;
+        accum_time += time_used;
+        cout << "time used: " << time_used << endl;
+        cout << "accumulated time used: " << accum_time << endl;
+
+		response = GameResponse(as_galaxy(client->command(params)));
 	}
 
     return 0;
