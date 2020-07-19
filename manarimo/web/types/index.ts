@@ -72,7 +72,8 @@ export interface GameDto {
   gameId: string;
   attacker: PlayerDto;
   defender: PlayerDto;
-  finishedAt: string;
+  finishedAt?: string;
+  winner?: "Defender" | "Attacker" | "Nobody";
 }
 
 export interface GamesResponse {
