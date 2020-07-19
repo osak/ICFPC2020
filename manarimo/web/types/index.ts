@@ -62,6 +62,7 @@ export interface TeamDto {
 }
 
 export interface PlayerDto {
+  submissionId?: number,
   team: TeamDto,
   playerKey: string,
   debugLog?: string  
@@ -70,7 +71,8 @@ export interface PlayerDto {
 export interface GameDto {
   gameId: string,
   attacker: PlayerDto,
-  defender: PlayerDto
+  defender: PlayerDto,
+  finishedAt: string
 }
 
 export interface GamesResponse {

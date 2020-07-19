@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect, PromiseState } from "react-refetch";
 import { Container, Button, Row, Table } from "reactstrap";
-import { GameDto, GamesResponse } from "../../types";
+import { GameDto, GamesResponse, PlayerDto } from "../../types";
 
 declare var OFFICIAL_API_KEY: string;
 const TAKE: number = 100;
@@ -26,6 +26,14 @@ interface InnerProps extends Props {
   games: PromiseState<GamesState>
 }
 
+function serializeTeamname(player: PlayerDto) {
+    if (player.submissionId !== undefined) {
+        return `${player.team.teamName} #${player.submissionId}`;
+    } else {
+        return player.team.teamName;
+    }
+}
+
 const InnerGameTable = (props: InnerProps) => {
   if (props.games.pending) {
       return <span>Loading...</span>
@@ -43,6 +51,7 @@ const InnerGameTable = (props: InnerProps) => {
                 <tr>
                     <th>Attacker</th>
                     <th>Defender</th>
+                    <th>Finished at</th>
                     <th>Visualize</th>
                 </tr>
                 </thead>
@@ -50,10 +59,13 @@ const InnerGameTable = (props: InnerProps) => {
                 {props.games.value.games.map((game: GameDto) => (
                     <tr key={game.gameId}>
                     <td>
-                        {game.attacker.team.teamName}
+                        {serializeTeamname(game.attacker)}
                     </td>
                     <td>
-                        {game.defender.team.teamName}
+                        {serializeTeamname(game.defender)}
+                    </td>
+                    <td>
+                        {game.finishedAt}
                     </td>
                     <td>
                         <a href={"/#/replay/" + game.attacker.playerKey}>Go</a>
