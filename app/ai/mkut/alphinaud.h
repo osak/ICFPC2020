@@ -102,8 +102,7 @@ public:
 
     Attack* max_shot(int unit_id, const ShipState& my_ship_state, const ShipState& enemy_ship_state) {
         Vector next_enemy_pos = simulate(Vector(enemy_ship_state.pos), Vector(enemy_ship_state.velocity)).first;
-        int remaining_heat = my_ship_state.max_heat - my_ship_state.heat + my_ship_state.ship_parameter.recharge_rate;
-        int power = min(remaining_heat, my_ship_state.ship_parameter.attack);
+        int power = max(0, my_ship_state.ship_parameter.recharge_rate - my_ship_state.heat);
         return new Attack(unit_id, next_enemy_pos, power);
     }
 
@@ -140,8 +139,8 @@ public:
     }
     StartParams start_params(const GameResponse& response) {
         int spec_point = response.game_info.ship_info.max_points;
-        int reactor = 10;
-        int armament = max(spec_point - 250, 0) / 4;
+        int reactor = max(spec_point - 80, 0) / 16;
+        int armament = max(spec_point - 80, 0) / 16;
         int engine = spec_point - 2 - reactor * 12 - armament * 4;
         int core = 1;
         return StartParams(engine, armament, reactor, core);
