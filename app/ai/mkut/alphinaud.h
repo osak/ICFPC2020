@@ -124,10 +124,13 @@ class AlphinaudAI : public AI {
             Vector next_enemy_location = simulate(Vector(enemy_ship_state.pos), Vector(enemy_ship_state.velocity)).first;
             for (int dx = -1; dx <= 1; dx++) {
                 for (int dy = -1; dy <= 1; dy++) {
-                    Vector next_my_location = simulate(Vector(my_ship_state.pos), Vector(my_ship_state.velocity)).first;
+                    auto next_my_velocity = Vector(my_ship_state.velocity) + Vector(dx, dy);
+                    Vector next_my_location = simulate(Vector(my_ship_state.pos), next_my_velocity).first;
                     if (critical_point(next_enemy_location, next_my_location)) {
                         vector<Command*> ret;
-                        ret.push_back(new Move(unit_id, Vector(-dx, -dy)));
+                        if (dx != 0 && dy != 0) {
+                            ret.push_back(new Move(unit_id, Vector(-dx, -dy)));
+                        }
                         ret.push_back(new Attack(unit_id, next_enemy_location, get_full_power(my_ship_state)));
                         return ret;
                     }

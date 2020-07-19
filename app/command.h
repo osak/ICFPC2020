@@ -21,6 +21,10 @@ struct Vector {
    double operator*(const Vector& other) const {
       return x * other.x + y * other.y;
    }
+
+   Vector operator+(const Vector& other) const {
+      return Vector(x + other.x, y + other.y);
+   }
 };
 
 ostream& operator << (ostream &os, const Vector &v) {
@@ -81,7 +85,7 @@ struct Move : Command {
       mod.put_nil();
    }
    virtual void print() {
-      cout << "Move(" << unit_id << ") " << acceleration << endl;
+      cout << "Move(" << unit_id << ") " << acceleration;
    }
 };
 
