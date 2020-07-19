@@ -116,8 +116,8 @@ public:
         int spec_point = response.game_info.ship_info.max_points;
         int reactor = max(spec_point - 160, 0) / 12;
         int armament = 0;
-        int engine = spec_point - 10 - reactor * 12;
-        int core = 5;
+        int engine = spec_point - 20 - reactor * 12;
+        int core = 10;
         return StartParams(engine, armament, reactor, core);
     }
     CommandParams command_params(const GameResponse& response) {
