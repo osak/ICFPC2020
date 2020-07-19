@@ -116,8 +116,10 @@ struct ShipState {
 struct GameState {
     int current_turn;
     FieldInfo field_info;
-    ShipState defender_state;
-    ShipState attacker_state;
+    ShipState defender_state; // deprecated
+    ShipState attacker_state; // deprecated
+    vector<ShipState> defender_states;
+    vector<ShipState> attacker_states;
 
     GameState() {}
 
@@ -128,9 +130,19 @@ struct GameState {
         field_info = FieldInfo(value->list[1]);
 
         auto* ship_states = value->list[2];
-        assert(ship_states->list.size() == 2);
+
+        // to be removed
         defender_state = ShipState(ship_states->list[0]);
         attacker_state = ShipState(ship_states->list[1]);
+
+        for (auto& state: ship_states->list) {
+            ShipState ship_state = ShipState(state);
+            if (ship_state.is_defender) {
+                defender_states.push_back(ship_state);
+            } else {
+                attacker_states.push_back(ship_state);
+            }
+        }
     }
 };
 
