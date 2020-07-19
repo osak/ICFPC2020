@@ -4,6 +4,7 @@ import { Container, Button, Row, Table } from "reactstrap";
 import { GameDto, GamesResponse, PlayerDto } from "../../types";
 import { Link } from "react-router-dom";
 
+declare var OFFICIAL_API_BASE: string;
 declare var OFFICIAL_API_KEY: string;
 
 interface GamesFetchBase {
@@ -34,6 +35,15 @@ function serializeTeamname(player: PlayerDto) {
     }
 }
 
+function renderLogLink(player: PlayerDto) {
+    if (player.debugLog !== undefined) {
+        const url = `${OFFICIAL_API_BASE}/logs?logKey=${encodeURIComponent(player.debugLog)}&apiKey=${OFFICIAL_API_KEY}`
+        return <a href={url}>Log</a>
+    } else {
+        return null;
+    }
+}
+
 const InnerGameTable = (props: InnerProps) => {
   if (props.games.pending) {
     return <span>Loading...</span>;
@@ -51,14 +61,15 @@ const InnerGameTable = (props: InnerProps) => {
             <tr>
               <th>Attacker</th>
               <th>Defender</th>
+              <th>Finished at</th>
               <th>Visualize</th>
             </tr>
           </thead>
           <tbody>
             {props.games.value.games.map((game: GameDto) => (
               <tr key={game.gameId}>
-                <td>{serializeTeamname(game.attacker)}</td>
-                <td>{serializeTeamname(game.defender)}</td>
+                <td><span>{serializeTeamname(game.attacker)} </span>{renderLogLink(game.attacker)}</td>
+                <td><span>{serializeTeamname(game.defender)} </span>{renderLogLink(game.defender)}</td>
                 <td>{game.finishedAt}</td>
                 <td>
                   <Link to={`/replay/${game.attacker.playerKey}`}>Go</Link>
