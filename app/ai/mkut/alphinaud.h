@@ -5,7 +5,6 @@
 #include "../../ai.h"
 
 class AlphinaudAI : public AI {
-
     bool dead(const Vector &loc, int center_rad, int field_rad) {
         if (abs(loc.x) <= center_rad && abs(loc.y) <= center_rad) return true;
         return abs(loc.x) >= field_rad || abs(loc.y) >= field_rad;
@@ -79,7 +78,7 @@ class AlphinaudAI : public AI {
         return make_pair(best, best_move);
     }
 
-    Vector safe_move(long long planet_size, int field_size, const Vector &loc, const Vector &vel, int remaining_turn) {
+    pair<Vector, int> safe_move(long long planet_size, int field_size, const Vector &loc, const Vector &vel, int remaining_turn) {
         vector<vector<Vector>> vecs = {
                 {Vector(0, 0), Vector(0, 1),  Vector(1, 0),  Vector(1, 1)},
                 {Vector(0, 0), Vector(0, 1),  Vector(-1, 0), Vector(-1, 1)},
@@ -104,31 +103,7 @@ class AlphinaudAI : public AI {
             }
         }
 
-        return Vector(-best_move.x, -best_move.y);
-    }
-
-    vector<Command*> try_kamikaze(int unit_id, const ShipState& my_ship_state, const ShipState& enemy_ship_state) {
-        int enemy_hp = enemy_ship_state.ship_parameter.recharge_rate * 2 + enemy_ship_state.ship_parameter.life + enemy_ship_state.ship_parameter.attack + enemy_ship_state.ship_parameter.energy;
-        if (enemy_hp > 200) {
-            return vector<Command*>();
-        }
-        Vector next_enemy_location = simulate(Vector(enemy_ship_state.pos), Vector(enemy_ship_state.velocity)).first;
-        for (int dx = -3; dx <= 3; dx++) {
-            for (int dy = -3; dy <= 3; dy++) {
-                auto next_my_velocity = Vector(my_ship_state.velocity) + Vector(dx, dy);
-                Vector next_my_location = simulate(Vector(my_ship_state.pos), next_my_velocity).first;
-                if (next_my_location == next_enemy_location) {
-                    if (dx == -3) dx = -2;
-                    if (dx == 3) dx = 2;
-                    if (dy == -3) dx = -2;
-                    if (dy == 3) dx = 2;
-                    vector<Command*> ret;
-                    ret.push_back(new Move(unit_id, Vector(-dx, -dy)));
-                    ret.push_back(new Kamikaze(unit_id));
-                }
-            }
-        }
-        return vector<Command*>();
+        return make_pair(Vector(-best_move.x, -best_move.y), best);
     }
 
     int get_full_power(const ShipState& my_ship_state, int move) {
@@ -147,13 +122,15 @@ class AlphinaudAI : public AI {
         return false;
     }
 
-    vector<Command*> critical_shot(int unit_id, const ShipState& my_ship_state, const vector<ShipState>& enemy_ship_states) {
+    vector<Command*> critical_shot(int unit_id, const ShipState& my_ship_state, const vector<ShipState>& enemy_ship_states, int center_rad, int field_rad) {
         for (auto enemy_ship_state : enemy_ship_states) {
             Vector next_enemy_location = simulate(Vector(enemy_ship_state.pos), Vector(enemy_ship_state.velocity)).first;
             for (int dx = -2; dx <= 2; dx++) {
                 for (int dy = -2; dy <= 2; dy++) {
                     auto next_my_velocity = Vector(my_ship_state.velocity) + Vector(dx, dy);
                     Vector next_my_location = simulate(Vector(my_ship_state.pos), next_my_velocity).first;
+                    if (dead(next_my_location, center_rad, field_rad)) continue;
+                    if (safe_move(center_rad, field_rad, next_my_location, next_my_velocity, 100).second < 50) continue;
                     if (critical_point(next_enemy_location, next_my_location)) {
                         vector<Command*> ret;
                         if (dx != 0 && dy != 0) {
@@ -194,7 +171,7 @@ class AlphinaudAI : public AI {
         int cnt = 0;
         while(cnt < 256) {
             // simulate
-            auto vec = safe_move(planet, field_rad, loc, vel, 256);
+            auto vec = safe_move(planet, field_rad, loc, vel, 256).first;
 
             if (vec.x != 0 || vec.y != 0) {
                 ++cost;
@@ -243,23 +220,14 @@ public:
 
         CommandParams params;
         int move = 0;
-        if (enemy_ship_states.size() == 1) {
-            auto commands = try_kamikaze(unit_id, my_ship_state, enemy_ship_states[0]);
-            if (commands.size() > 0) {
-                for (auto command : commands) {
-                    params.commands.push_back(command);
-                    return params;
-                }
-            }
-        }
 
-        for (auto command : critical_shot(unit_id, my_ship_state, enemy_ship_states)) {
+        for (auto command : critical_shot(unit_id, my_ship_state, enemy_ship_states, response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius)) {
             params.commands.push_back(command);
             move = 2;
         };
 
         if (!move) {
-            Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, Vector(my_ship_state.pos), Vector(my_ship_state.velocity), response.game_info.max_turns - response.game_state.current_turn);
+            Vector next_move = safe_move(response.game_info.field_info.planet_radius, response.game_info.field_info.field_radius, Vector(my_ship_state.pos), Vector(my_ship_state.velocity), response.game_info.max_turns - response.game_state.current_turn).first;
             if (next_move.x != 0 || next_move.y != 0) {
                 params.commands.push_back(new Move(unit_id, next_move));
                 move = max(abs(next_move.x), abs(next_move.y));
