@@ -1,3 +1,5 @@
+#pragma once
+
 #include "modem.h"
 using namespace std;
 
@@ -12,15 +14,21 @@ struct Vector {
    }
 };
 
+ostream& operator << (ostream &os, const Vector &v) {
+   os << "(" << v.x << "," << v.y << ")" << endl;
+	return os;
+}
+
 struct Command {
-   void modulate(Modulator& mod) {
+   virtual void modulate(Modulator& mod) {
+
    }
 };
 
 struct Move : Command {
    Vector acceleration;
    Move(const Vector& acceleration) : acceleration(acceleration) {}
-   void modulate(Modulator& mod) {
+   virtual void modulate(Modulator& mod) {
       mod.put_cell();
       mod.put_number(0);
       mod.put_cell();
@@ -30,7 +38,7 @@ struct Move : Command {
 };
 
 struct Kamikaze : Command {
-   void modulate(Modulator& mod) {
+   virtual void modulate(Modulator& mod) {
       mod.put_cell();
       mod.put_number(1);
       mod.put_nil();
@@ -39,7 +47,7 @@ struct Kamikaze : Command {
 
 struct Attack : Command {
    Vector targetLocation;
-   void modulate(Modulator& mod) {
+   virtual void modulate(Modulator& mod) {
       mod.put_cell();
       mod.put_number(2);
       mod.put_cell();

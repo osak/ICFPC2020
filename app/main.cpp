@@ -293,7 +293,7 @@ Vector safe_move(long long planet_size, const Vector& loc, const Vector& vel) {
 
     Vector tmp_loc = loc, tmp_vel = vel;
     while (area(tmp_loc) == current_area) {
-        auto pair = next_location_and_velocity(loc, vel);
+        auto pair = next_location_and_velocity(tmp_loc, tmp_vel);
         tmp_loc = pair.first;
         tmp_vel = pair.second;
         if (abs(tmp_loc.x) <= planet_size || abs(tmp_loc.y) <= planet_size) {
@@ -306,6 +306,11 @@ Vector safe_move(long long planet_size, const Vector& loc, const Vector& vel) {
         }
     }
     return Vector();
+}
+
+void test_safe_move() {
+    Vector loc(40, 20), vel(0, 0);
+    cout << safe_move(16, loc, vel) << endl;
 }
 
 int main(int argc, char **argv) {
