@@ -52,7 +52,7 @@ double living_time(long long planet_size, long long space_size, const Vector& lo
     double ret = 0;
     int cnt = 0;
     while (true) {
-        if ((abs(tmp_loc.x) <= planet_size && abs(tmp_loc.y) <= planet_size) || (abs(tmp_loc.x) > space_size && abs(tmp_loc.y) > space_size)) {
+        if ((abs(tmp_loc.x) <= planet_size && abs(tmp_loc.y) <= planet_size) || (abs(tmp_loc.x) > space_size || abs(tmp_loc.y) > space_size)) {
             break;
         }
         auto pair = next_location_and_velocity(tmp_loc, tmp_vel);
@@ -78,7 +78,7 @@ Vector safe_move(long long planet_size, long long space_size, const Vector& loc,
             tmp_vel.x += dx;
             tmp_vel.y += dy;
             double t = living_time(planet_size, space_size, loc, tmp_vel);
-            // cerr << dx << "," << dy << ":" << t << endl;
+            cerr << dx << "," << dy << ":" << t << endl;
             if (t > max_t) {
                 max_t = t;
                 max_dx = dx;
@@ -90,14 +90,14 @@ Vector safe_move(long long planet_size, long long space_size, const Vector& loc,
 }
 
 void test_safe_move() {
-    Vector loc(-10, -48), vel(0, 0);
+    Vector loc(52, 27), vel(9, -9);
     cout << safe_move(16, 128, loc, vel) << endl;
 }
 
 int main(int argc, char **argv) {
 	// test();
-    // test_safe_move();
-    // exit(0);
+    test_safe_move();
+    exit(0);
 
     Client *client = init_client(argv);
 
