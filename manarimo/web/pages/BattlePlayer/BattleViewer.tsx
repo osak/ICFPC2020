@@ -164,8 +164,8 @@ export const BattleViewer = (props: Props) => {
 
                           return (
                             <tr key={i}>
-                              <td>`"(${data.state.location.x}, ${data.state.location.y})"`</td>
-                              <td>`"(${data.state.velocity.x}, ${data.state.velocity.y})"`</td>
+                              <td>{`(${data.state.location.x}, ${data.state.location.y})`}</td>
+                              <td>{`(${data.state.velocity.x}, ${data.state.velocity.y})`}</td>
                               <td>{data.state.parameters.fuel}</td>
                               <td>{data.state.parameters.attack}</td>
                               <td>{data.state.parameters.cool_speed}</td>
