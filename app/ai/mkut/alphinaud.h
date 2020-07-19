@@ -141,7 +141,7 @@ public:
                     if (safe_move(center_rad, field_rad, next_my_location, next_my_velocity, 100).second < 50) continue;
                     if (critical_point(next_enemy_location, next_my_location)) {
                         vector<Command*> ret;
-                        if (dx != 0 && dy != 0) {
+                        if (dx != 0 || dy != 0) {
                             ret.push_back(new Move(unit_id, Vector(-dx, -dy)));
                         }
                         int power = get_full_power(my_ship_state, max(abs(dx), abs(dy)));
