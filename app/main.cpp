@@ -68,7 +68,7 @@ Vector safe_move(long long planet_size, const Vector& loc, const Vector& vel) {
 }
 
 void test_safe_move() {
-    Vector loc(40, 20), vel(0, 0);
+    Vector loc(-4, 48), vel(0, 0);
     cout << safe_move(16, loc, vel) << endl;
 }
 
@@ -84,15 +84,19 @@ int main(int argc, char **argv) {
     int engine = spec_point - 2 - reactor * 12;
     int core = 1;
 	GameResponse response(as_galaxy(client->start(StartParams(engine, armament, reactor, core))));
+    int unit_id = response.game_info.is_defender ? 0 : 1;
 	while (true) {
         long long planet_radius = response.game_info.field_info.planet_radius;
         auto pos = response.game_info.is_defender ? response.game_state.defender_state.pos : response.game_state.attacker_state.pos;
         auto vel = response.game_info.is_defender ? response.game_state.defender_state.velocity : response.game_state.attacker_state.velocity;
         Vector my_location(pos.first, pos.second), my_velocity(vel.first, vel.second);
+        cout << "My location: " << my_location << endl;
+        cout << "My velocity: " << my_velocity << endl;
         Vector next_move = safe_move(response.game_info.field_info.planet_radius, my_location, my_velocity);
+        cout << "Next move: " << next_move << endl;
         CommandParams params;
         if (next_move.x != 0 && next_move.y != 0) {
-            params.commands.push_back(new Move(next_move));
+            params.commands.push_back(new Move(unit_id, next_move));
         }
 		client->command(params);
 	}
