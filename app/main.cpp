@@ -85,6 +85,7 @@ int main(int argc, char **argv) {
     int core = 1;
 	GameResponse response(as_galaxy(client->start(StartParams(engine, armament, reactor, core))));
     int unit_id = response.game_info.is_defender ? 0 : 1;
+    cout << "Unit ID: " << unit_id << endl;
 	while (true) {
         long long planet_radius = response.game_info.field_info.planet_radius;
         auto pos = response.game_info.is_defender ? response.game_state.defender_state.pos : response.game_state.attacker_state.pos;
