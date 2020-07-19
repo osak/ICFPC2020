@@ -7,6 +7,7 @@
 #include <string>
 
 #include "ai/mkut/titan.h"
+#include "ai/yuusti/meteor.h"
 
 using namespace std;
 
@@ -31,7 +32,7 @@ Client *init_client(char **argv) {
 
 int main(int argc, char **argv) {
     Client *client = init_client(argv);
-    AI* ai = new TitanAI();
+    AI* ai = new MeteorAI();
 
     JoinParams join_params = ai->join_params();
 	GameResponse join_response = GameResponse(as_galaxy(client->join(join_params)));
