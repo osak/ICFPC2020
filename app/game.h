@@ -103,7 +103,7 @@ struct ShipState {
 
         is_defender = static_cast<bool>(ship->list[0]->num);
         is_attacker = !is_defender;
-        id = static_cast<bool>(ship->list[1]->num);
+        id = ship->list[1]->num;
         pos = to_pair(ship->list[2]);
         velocity = to_pair(ship->list[3]);
         ship_parameter = ShipParameter(ship->list[4]);
