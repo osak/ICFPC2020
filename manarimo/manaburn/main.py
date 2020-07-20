@@ -58,7 +58,6 @@ def save_games(games):
         (
             s['submissionId'],
             s['team']['teamName'],
-            "{} {}".format(s['submissionId'], s['team']['teamName']),
             "{} {}".format(s['submissionId'], s['team']['teamName'])
         )
         for s in enemy_submissions.values()
@@ -90,8 +89,7 @@ def save_games(games):
             INSERT INTO submissions (
                 submission_id,
                 branch_name,
-                commit_message,
-                alias
+                commit_message
             ) VALUES %s ON CONFLICT DO NOTHING""", submission_rows)
         conn.commit()
 
@@ -145,7 +143,6 @@ def save_submissions():
             s['submissionId'],
             s.get('branchName', 'submission'),
             s['commitMessage'],
-            s['commitHash'][0:8],
             s['createdAt']
         )
         for s in resp.json()
@@ -157,7 +154,6 @@ def save_submissions():
                 submission_id,
                 branch_name,
                 commit_message,
-                alias,
                 created_at
             ) VALUES %s ON CONFLICT DO NOTHING""", rows)
         conn.commit()
