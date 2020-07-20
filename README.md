@@ -35,7 +35,7 @@ Portal website provides web-based communication UI with aliens, scoreboards, rep
 * Galaxy engine core: [mkut/galaxy/kawatea2.cpp](mkut/galaxy/kawatea2.cpp)
 * Interactive UI: [manarimo/web/pages/Visualizer](manarimo/web/pages/Visualizer)
 
-We built a browser-based interactive UI on top of our Galaxy engine written in C++. You can try it in our portal size.
+We built a browser-based interactive UI on top of our Galaxy engine written in C++. You can try it in our portal site.
 
 # Contest Feedback
 We've really enjoyed the contest! The first hours for figuring out the runes of alien program, exploring the galaxy to find additional puzzles and hidden powers,
