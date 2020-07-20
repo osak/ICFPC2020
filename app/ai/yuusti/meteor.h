@@ -289,7 +289,7 @@ public:
             vel.y = -2;
         }
 
-        return Vector(-vel.x, -vel.y);
+        return vel;
     }
 
     Act main_move(const ShipState &state, const GameInfo &game_info, const GameState &game_state) {
@@ -314,7 +314,7 @@ public:
     void add_fission(const ShipState &state, CommandParams &params) {
         if (state.ship_parameter.life > 1) {
             if (state.ship_parameter.life >= initial_core) {
-                params.commands.push_back(new Fission(state.id, StartParams(state.ship_parameter.energy / 2, 0, 0, state.ship_parameter.life / 2)));
+                params.commands.push_back(new Fission(state.id, StartParams(state.ship_parameter.energy / 2, 0, state.ship_parameter.energy / 2, state.ship_parameter.life / 2)));
             } else if (state.ship_parameter.energy >= kamikaze_size) {
                 params.commands.push_back(new Fission(state.id, StartParams(kamikaze_size, 0, 0, 1)));
             }
@@ -326,9 +326,9 @@ public:
     }
     StartParams start_params(const GameResponse& response) {
         int spec_point = response.game_info.ship_info.max_points;
-        int reactor = 8;
+        int reactor = 4;
         int armament = 0;
-        int initial_core = 50;
+        int initial_core = response.game_info.is_defender ? 48 : 36;
         int engine = spec_point - reactor * 12 - initial_core*2;
         return StartParams(engine, armament, reactor, initial_core);
     }
