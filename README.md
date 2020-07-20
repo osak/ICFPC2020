@@ -14,7 +14,13 @@ ICFPC 2020 Team Atelier Manarimo
 
 # Space Battle AI
 Source: app/ai/***.h
-
+* mkut/alisaie: 分身して射撃するゴミAI。分身すると射撃の威力が下がること知らず？
+* mkut/alphinaud: ちょうど最大火力で打てる角度の時だけ打つAI。移動して打てそうな時も移動して打つ。移動しなくてもそこそこのダメージ出ること知らず？
+* mkut/titan: とりあえず生き続けるAIだけど操縦が下手なのでたまに激突して死ぬ。
+* kawatea/static: 安定軌道を前計算してそれに乗るAI。いろんなAIのベースになっている。
+* kawatea/fission: 安定軌道に乗ったら分裂するAI。
+* yuusti/meteor: 中央に突っ込んで即死するAI。
+* poyo/goat: 分裂するAI全ての始まり。
 
 # Portal
 * Atelier Manarimo Portal: https://manarimo.herokuapp.com (we'll shut down it in a few days after contest ended)
