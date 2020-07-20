@@ -68,7 +68,7 @@ class FissionAI : public AI {
             
             if (energy == 0) break;
             
-            if (!is_static(x, y, dx, dy) || prev_fissioned) {
+            if (!is_static(x, y, dx, dy) || prev_fissioned || positions.count(s)) {
                 int ndx = 0, ndy = 0, d = 1e9, e = 0;
                 bool keep = false;
                 
@@ -88,7 +88,7 @@ class FissionAI : public AI {
                         if (!next_positions.count(ss) && is_alive(ss.x, ss.y, ss.dx, ss.dy)) {
                             int nd = get_dist(ss.x, ss.y, ss.dx, ss.dy);
                             int ne = max(abs(i), abs(j));
-                            if (keep || nd < d || (nd == d && ne > e)) {
+                            if (keep || nd < d || ne > e) {
                                 ndx = -i;
                                 ndy = -j;
                                 d = nd;
@@ -102,7 +102,7 @@ class FissionAI : public AI {
                 if (ndx != 0 || ndy != 0) {
                     params.commands.push_back(new Move(ship.id, Vector(ndx, ndy)));
                 }
-            } else if (life > 1 && !positions.count(s)) {
+            } else if (life > 1) {
                 params.commands.push_back(new Fission(ship.id, StartParams(0, 0, 0, 1)));
                 fissioned = true;
             }
