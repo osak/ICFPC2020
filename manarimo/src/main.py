@@ -130,6 +130,31 @@ def get_games():
                 results.append(dict_row)
     return jsonify({"items": results})
 
+@app.route("/api/submissions", methods=["GET"])
+def get_manarimo_submissions():
+    with get_connection() as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+            cursor.execute("SELECT * FROM submissions")
+            results = []
+            for row in cursor.fetchall():
+                dict_row = dict(row)
+                if dict_row['created_at'] != None:
+                    dict_row["created_at"] = dict_row["created_at"].isoformat()
+                results.append(dict_row)
+    return jsonify({"items": results})
+
+@app.route("/api/submissions/<submission_id>", methods=["POST"])
+def update_submission(submission_id):
+    new_alias = request.json['alias']
+    with get_connection() as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+            cursor.execute("UPDATE submissions SET alias=%s WHERE submission_id=%s RETURNING *", (new_alias, submission_id))
+            result = dict(cursor.fetchone())
+            if result['created_at'] != None:
+                result["created_at"] = result["created_at"].isoformat()
+        conn.commit()
+    return jsonify({"updated": result})
+
 @app.route("/")
 def hello():
     return app.send_static_file('index.html')
