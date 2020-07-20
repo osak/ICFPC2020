@@ -72,8 +72,8 @@ class FissionAI : public AI {
                             if (nd < d || (nd == d && ne > e)) {
                                 ndx = -i;
                                 ndy = -j;
-                                nd = d;
-                                ne = e;
+                                d = nd;
+                                e = ne;
                             }
                         }
                     }
