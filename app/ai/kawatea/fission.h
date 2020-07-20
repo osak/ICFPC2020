@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdio>
+#include <set>
 #include "calc.h"
 #include "../../command.h"
 #include "../../game.h"
@@ -21,7 +22,7 @@ class FissionAI : public AI {
         int spec_point = response.game_info.ship_info.max_points;
         int reactor = 8;
         int armament = 0;
-        int core = 100;
+        int core = 70;
         int engine = spec_point - reactor * 12 - armament * 4 - core * 2;
         return StartParams(engine, armament, reactor, core);
     }
@@ -30,7 +31,23 @@ class FissionAI : public AI {
         bool is_defender = response.game_info.is_defender;
         int main_ship_id = is_defender ? 0 : 1;
         vector<ShipState> ships = is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
+        set<State> positions, next_positions;
         CommandParams params;
+        
+        for (const ShipState& ship : ships) {
+            if (ship.id == main_ship_id) continue;
+            
+            auto pos = ship.pos;
+            auto vel = ship.velocity;
+            int x = pos.first;
+            int y = pos.second;
+            int dx = vel.first;
+            int dy = vel.second;
+            State s = State(x, y, dx, dy);
+            
+            positions.insert(s);
+            next_positions.insert(next(s));
+        }
         
         for (const ShipState& ship : ships) {
             if (ship.id != main_ship_id) continue;
@@ -45,6 +62,7 @@ class FissionAI : public AI {
             int energy = ship.ship_parameter.energy;
             int turn = response.game_state.current_turn;
             bool prev_fissioned = fissioned;
+            State s = State(x, y, dx, dy);
             
             fissioned = false;
             
@@ -52,13 +70,14 @@ class FissionAI : public AI {
             
             if (!is_static(x, y, dx, dy) || prev_fissioned) {
                 int ndx = 0, ndy = 0, d = 1e9, e = 0;
-                State s = State(x, y, dx, dy);
+                bool keep = false;
                 
                 if (!prev_fissioned && is_alive(x, y, dx, dy)) {
                     ndx = get_ndx(x, y, dx, dy);
                     ndy = get_ndy(x, y, dx, dy);
                     d = get_dist(x, y, dx, dy);
                     e = 1;
+                    keep = next_positions.count(next(s, ndx, ndy));
                 }
                 
                 for (int i = -2; i <= 2; i++) {
@@ -66,14 +85,15 @@ class FissionAI : public AI {
                         if (i == 0 && j == 0) continue;
                         if (turn > 30 && (abs(i) == 2 || abs(j) == 2)) continue;
                         State ss = next(s, i, j);
-                        if (is_alive(ss.x, ss.y, ss.dx, ss.dy)) {
+                        if (!next_positions.count(ss) && is_alive(ss.x, ss.y, ss.dx, ss.dy)) {
                             int nd = get_dist(ss.x, ss.y, ss.dx, ss.dy);
                             int ne = max(abs(i), abs(j));
-                            if (nd < d || (nd == d && ne > e)) {
+                            if (keep || nd < d || (nd == d && ne > e)) {
                                 ndx = -i;
                                 ndy = -j;
                                 d = nd;
                                 e = ne;
+                                keep = false;
                             }
                         }
                     }
@@ -82,7 +102,7 @@ class FissionAI : public AI {
                 if (ndx != 0 || ndy != 0) {
                     params.commands.push_back(new Move(ship.id, Vector(ndx, ndy)));
                 }
-            } else if (life > 1) {
+            } else if (life > 1 && !positions.count(s)) {
                 params.commands.push_back(new Fission(ship.id, StartParams(0, 0, 0, 1)));
                 fissioned = true;
             }
