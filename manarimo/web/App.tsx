@@ -12,6 +12,7 @@ import {
 } from "reactstrap";
 import { HashRouter, Switch, Route, Link } from "react-router-dom";
 import { AlienSend } from "./pages/AlienSend";
+import { BattleDome } from "./pages/BattleDome";
 import { BattlePlayer } from "./pages/BattlePlayer/BattlePlayer";
 import { HistoryList } from "./pages/HistoryList";
 import { LocalGameList } from "./pages/LocalGameList";
@@ -83,7 +84,7 @@ export const App = () => {
       </div>
       <Container fluid className="my-5">
         <Switch>
-          <Route exact path="/" component={HistoryList} />
+          <Route exact path="/" component={BattleDome} />
           <Route exact path="/submit" component={AlienSend} />
           <Route exact path="/vis" component={Visualizer} />
           <Route exact path="/replay" component={ReplayList} />
