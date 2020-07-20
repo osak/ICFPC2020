@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
     Client *client = init_client(argv);
     AI* ai = new AlisaieAI();
 
-	GameResponse join_response = GameResponse(as_galaxy(client->join(JoinParams())));
+	GameResponse join_response = GameResponse(as_galaxy(client->join(ai->join_params())));
     StartParams start_params = ai->start_params(join_response);
 	GameResponse response(as_galaxy(client->start(start_params)));
     double accum_time = 0;
