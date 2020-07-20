@@ -310,9 +310,10 @@ public:
                 remaining_turn, state.ship_parameter.energy, state.ship_parameter.life);
     }
 
+    int initial_core = 50;
     void add_fission(const ShipState &state, CommandParams &params) {
         if (state.ship_parameter.life > 1) {
-            if (state.ship_parameter.life >= 100) {
+            if (state.ship_parameter.life >= initial_core) {
                 params.commands.push_back(new Fission(state.id, StartParams(state.ship_parameter.energy / 2, 0, 0, state.ship_parameter.life / 2)));
             }
 
@@ -321,8 +322,6 @@ public:
             }
         }
     }
-
-    int initial_core = 50;
 public:
     JoinParams join_params() {
         return JoinParams();
