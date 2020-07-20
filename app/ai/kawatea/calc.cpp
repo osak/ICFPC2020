@@ -7,34 +7,47 @@
 
 using namespace std;
 
+class printer {
+    public:
+    printer(const string& name);
+    ~printer();
+    inline void write_char(char c);
+    
+    private:
+    constexpr static int SIZE = 1 << 18;
+    FILE* fp;
+    char buf[SIZE];
+    char* now = buf;
+    const char* end = buf + SIZE;
+    inline void flush(int need);
+};
+
+printer::printer(const string& name) {
+    fp = fopen(name.c_str(), "wb");
+}
+
+printer::~printer() {
+    flush(SIZE);
+    fclose(fp);
+}
+
+inline void printer::write_char(char c) {
+    flush(1);
+    *now++ = c;
+}
+
+inline void printer::flush(int need) {
+    if (now + need <= end) return;
+    fwrite(buf, sizeof(char), now - buf, fp);
+    now = buf;
+}
+
 map<State, bool> checked;
 map<State, int> dist;
 map<State, vector<pair<State, pair<int, int>>>> candidate;
-vector<unsigned long long> best;
 
 bool valid(const State& s) {
     return abs(s.x) <= MAX_P && abs(s.y) <= MAX_P && abs(s.dx) <= MAX_D && abs(s.dy) <= MAX_D && (abs(s.x) > MAX_F || abs(s.y) > MAX_F);
-}
-
-State next(const State& s, int dx = 0, int dy = 0) {
-    int nx = s.x, ny = s.y, ndx = s.dx + dx, ndy = s.dy + dy;
-    if (abs(s.x) >= abs(s.y)) {
-        if (s.x > 0) {
-            ndx--;
-        } else {
-            ndx++;
-        }
-    }
-    if (abs(s.x) <= abs(s.y)) {
-        if (s.y > 0) {
-            ndy--;
-        } else {
-            ndy++;
-        }
-    }
-    nx += ndx;
-    ny += ndy;
-    return State(nx, ny, ndx, ndy);
 }
 
 bool check(const State& s) {
@@ -48,6 +61,8 @@ bool check(const State& s) {
 }
 
 int main() {
+    int num = 0;
+    printer pr("pre2.txt");
     queue<State> q;
     
     for (int x = -MAX_P; x <= MAX_P; x++) {
@@ -58,7 +73,14 @@ int main() {
                     if (check(s)) {
                         dist[s] = 0;
                         q.push(s);
-                        best.push_back(encode(s, 0, 0, 0));
+                        num++;
+                        pr.write_char(s.x);
+                        pr.write_char(s.y);
+                        pr.write_char(s.dx);
+                        pr.write_char(s.dy);
+                        pr.write_char(0);
+                        pr.write_char(0);
+                        pr.write_char(0);
                     } else {
                         for (int i = -1; i <= 1; i++) {
                             for (int j = -1; j <= 1; j++) {
@@ -85,13 +107,19 @@ int main() {
             if (!dist.count(ss)) {
                 dist[ss] = dist[s] + 1;
                 q.push(ss);
-                best.push_back(encode(ss, dx, dy, dist[ss]));
+                num++;
+                pr.write_char(ss.x);
+                pr.write_char(ss.y);
+                pr.write_char(ss.dx);
+                pr.write_char(ss.dy);
+                pr.write_char(dx);
+                pr.write_char(dy);
+                pr.write_char(dist[ss]);
             }
         }
     }
     
-    printf("%d\n", best.size());
-    for (int i = 0; i < best.size(); i++) printf("%llu\n", best[i]);
+    printf("%d\n", num);
     
     return 0;
 }
