@@ -12,8 +12,8 @@ int direction[MAX_P * 2 + 2][MAX_P * 2 + 2][MAX_D * 2 + 2][MAX_D * 2 + 2][2];
 int dist[MAX_P * 2 + 2][MAX_P * 2 + 2][MAX_D * 2 + 2][MAX_D * 2 + 2];
 
 //--- kamikaze info
-const int kamikaze_power_array_size = 4;
-int kamikaze_powers[] = {0, 128, 161, 181};
+const int kamikaze_power_array_size = 5;
+int kamikaze_powers[] = {0, 128, 161, 181, 195};
 
 int calc_ship_sum(const ShipState& ship) {
     return ship.ship_parameter.attack + ship.ship_parameter.energy + ship.ship_parameter.life + ship.ship_parameter.recharge_rate;
