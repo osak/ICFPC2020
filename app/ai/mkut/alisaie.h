@@ -201,9 +201,9 @@ class AlisaieAI : public AI {
 //            cerr << "cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
         } else {
             if (cnt < 250) {
-                cout << "dead at turn cnt: " << cnt << " cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
+                cout << "dead at turn cnt: " << cnt << " cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, 256, false) << endl;
             } else {
-                cout << "cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, planet, field_rad, 256, false) << endl;
+                cout << "cost" << cost << " loc:" << loc << " vel:" << vel << " " << test(loc, vel, 256, false) << endl;
             }
         }
     }

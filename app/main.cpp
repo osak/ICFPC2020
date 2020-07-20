@@ -6,8 +6,7 @@
 #include <regex>
 #include <string>
 
-#include "ai/mkut/alphinaud.h"
-#include "ai/poyo/goat.h"
+#include "ai/mkut/alisaie.h"
 
 using namespace std;
 
@@ -32,14 +31,9 @@ Client *init_client(char **argv) {
 
 int main(int argc, char **argv) {
     Client *client = init_client(argv);
-    AI* ai;
+    AI* ai = new AlisaieAI();
 
 	GameResponse join_response = GameResponse(as_galaxy(client->join(JoinParams())));
-    if (join_response.game_info.is_defender) {
-        ai = new GoatAI();
-    } else {
-        ai = new AlphinaudAI();
-    }
     StartParams start_params = ai->start_params(join_response);
 	GameResponse response(as_galaxy(client->start(start_params)));
     double accum_time = 0;
