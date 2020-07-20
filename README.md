@@ -14,10 +14,20 @@ ICFPC 2020 Team Atelier Manarimo
 
 # Space Battle AI
 Source: app/ai/***.h
+<<<<<<< HEAD
 * Kamikaze (submissions/amylase/kamikaze): Single-ship attacker AI that uses detonate command to kill the defender.
 * Bakudan Sanyushi ([ja.wikipedia.org](https://ja.wikipedia.org/wiki/%E7%88%86%E5%BC%BE%E4%B8%89%E5%8B%87%E5%A3%AB)) (submissions/fission_kamikaze): Multi-ship version of Kamikaze. This is used as our team's final submission.
 * Meteor Sanyushi (submissions/meteor_bomb): Yet another multi-ship Kamikaze. The difference from Bakudan Sanyushi is the algorithm to operate multi-ships.
 
+=======
+* mkut/alisaie: 分身して射撃するゴミAI。分身すると射撃の威力が下がること知らず？
+* mkut/alphinaud: ちょうど最大火力で打てる角度の時だけ打つAI。移動して打てそうな時も移動して打つ。移動しなくてもそこそこのダメージ出ること知らず？
+* mkut/titan: とりあえず生き続けるAIだけど操縦が下手なのでたまに激突して死ぬ。
+* kawatea/static: 安定軌道を前計算してそれに乗るAI。いろんなAIのベースになっている。
+* kawatea/fission: 安定軌道に乗ったら分裂するAI。
+* yuusti/meteor: 中央に突っ込んで即死するAI。
+* poyo/goat: 分裂するAI全ての始まり。
+>>>>>>> 1e3f5038ac2c228ed49d6144a926ec7719a0639b
 
 # Portal
 * Atelier Manarimo Portal: https://manarimo.herokuapp.com (we'll shut down it in a few days after contest ended)
