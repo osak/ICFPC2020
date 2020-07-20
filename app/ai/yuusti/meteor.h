@@ -6,6 +6,84 @@
 #include "../../ai.h"
 #include <cmath>
 
+
+//--- kamikaze info
+const int kamikaze_power_array_size = 5;
+int kamikaze_powers[] = {0, 128, 161, 181, 195};
+
+const int kamikaze_size = 3;
+
+int calc_ship_sum(const ShipState& ship) {
+    return ship.ship_parameter.attack + ship.ship_parameter.energy + ship.ship_parameter.life + ship.ship_parameter.recharge_rate;
+}
+
+int get_kamikaze_power(const ShipState& ship) {
+    const int sum = calc_ship_sum(ship);
+    if (sum < kamikaze_power_array_size) {
+        return kamikaze_powers[sum];
+    } else {
+        return kamikaze_powers[kamikaze_power_array_size - 1];
+    }
+}
+
+pair<Vector, Vector> simulate(Vector loc, Vector vel, Vector thruster) {
+    vel = vel + thruster;
+    if (abs(loc.x) >= abs(loc.y)) {
+        if (loc.x < 0) ++vel.x;
+        if (loc.x > 0) --vel.x;
+    }
+
+    if (abs(loc.x) <= abs(loc.y)) {
+        if (loc.y < 0) ++vel.y;
+        if (loc.y > 0) --vel.y;
+    }
+
+    loc.x += vel.x;
+    loc.y += vel.y;
+
+    return make_pair(loc, vel);
+};
+
+int next_distance(const ShipState &p, const ShipState &q) {
+    auto nps = simulate(Vector(p.pos.first, p.pos.second), Vector(p.velocity.first, p.velocity.second), Vector(0, 0)).first;
+    auto nqs = simulate(Vector(q.pos.first, q.pos.second), Vector(q.velocity.first, q.velocity.second), Vector(0, 0)).first;
+
+    return max(abs(nps.x - nqs.x), abs(nps.y - nqs.y));
+}
+
+bool check_kamikaze(const ShipState& my_ship, const vector<ShipState>& my_ships, const vector<ShipState>& enemy_ships, const int main_ship_id) {
+    const int kamikaze_power = get_kamikaze_power(my_ship);
+
+    int our_loss = calc_ship_sum(my_ship);
+    int our_total_sum = calc_ship_sum(my_ship);
+    for (const ShipState& our_ship : my_ships) {
+        if (my_ship.id == our_ship.id) {
+            continue;
+        }
+        const int distance = next_distance(my_ship, our_ship);
+        const int damage = max(0, kamikaze_power - 32 * distance);
+        const int sum = calc_ship_sum(our_ship);
+        our_total_sum += sum;
+        if (damage > 0 && our_ship.id == main_ship_id) {
+            return false;
+        }
+        const int value = min(damage, sum);
+        our_loss += value;
+    }
+
+    int enemy_loss = 0;
+    int enemy_total_sum = 0;
+    for (const ShipState& enemy_ship : enemy_ships) {
+        const int distance = next_distance(my_ship, enemy_ship);
+        const int damage = max(0, kamikaze_power - 32 * distance);
+        const int sum = calc_ship_sum(enemy_ship);
+        const int value = min(damage, sum);
+        enemy_loss += value;
+        enemy_total_sum += sum;
+    }
+    return our_loss * enemy_total_sum <= enemy_loss * our_total_sum;
+}
+
 class MeteorAI : public AI {
 
     bool dead(const Vector &loc, int center_rad, int field_rad) {
@@ -238,7 +316,9 @@ public:
                 params.commands.push_back(new Fission(state.id, StartParams(state.ship_parameter.energy / 2, 0, 0, state.ship_parameter.life / 2)));
             }
 
-            params.commands.push_back(new Fission(state.id, StartParams(0, 0, 0, 1)));
+            if (state.ship_parameter.energy >= kamikaze_size) {
+                params.commands.push_back(new Fission(state.id, StartParams(kamikaze_size, 0, 0, 1)));
+            }
         }
 
     }
@@ -257,6 +337,7 @@ public:
     }
     CommandParams command_params(const GameResponse& response) {
         auto states = response.game_info.is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
+        auto enemy_states = !response.game_info.is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
 
         Act next_act = main_move(states[0], response.game_info, response.game_state);
         auto next_move = next_act.move;
@@ -290,6 +371,15 @@ public:
 
             if (next_act2.fission) {
                 add_fission(states[1], params);
+            }
+
+        }
+
+
+        for (int i = 2; i < states.size(); ++i) {
+            const auto state = states[i];
+            if (check_kamikaze(state, states, enemy_states, -1)) {
+                params.commands.push_back(new Kamikaze(state.id));
             }
 
         }
