@@ -64,7 +64,7 @@ class FissionAI : public AI {
             const int damage = max(0, kamikaze_power - 32 * distance);
             const int sum = calc_ship_sum(enemy_ship);
             const int value = min(damage, sum);
-            our_loss += value;
+            enemy_loss += value;
             enemy_total_sum += sum;
         }
         return our_loss <= enemy_loss || enemy_loss == enemy_total_sum;
