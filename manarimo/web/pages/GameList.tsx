@@ -1,6 +1,5 @@
 import React from "react";
 import { connect, PromiseState } from "react-refetch";
-import { Container, Row } from "reactstrap";
 import { TournamentDto, GameType } from "../types";
 import { GameTable } from "./GameList/GameTable";
 
