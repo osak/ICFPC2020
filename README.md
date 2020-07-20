@@ -17,13 +17,13 @@ Source: app/ai/***.h
 * Kamikaze (submissions/amylase/kamikaze): Single-ship attacker AI that uses detonate command to kill the defender.
 * Bakudan Sanyushi ([ja.wikipedia.org](https://ja.wikipedia.org/wiki/%E7%88%86%E5%BC%BE%E4%B8%89%E5%8B%87%E5%A3%AB)) (submissions/fission_kamikaze): Multi-ship version of Kamikaze. This is used as our team's final submission.
 * Meteor Sanyushi (submissions/meteor_bomb): Yet another multi-ship Kamikaze. The difference from Bakudan Sanyushi is the algorithm to operate multi-ships.
-* mkut/alisaie: 分身して射撃するゴミAI。分身すると射撃の威力が下がること知らず？
-* mkut/alphinaud: ちょうど最大火力で打てる角度の時だけ打つAI。移動して打てそうな時も移動して打つ。移動しなくてもそこそこのダメージ出ること知らず？
-* mkut/titan: とりあえず生き続けるAIだけど操縦が下手なのでたまに激突して死ぬ。
-* kawatea/static: 安定軌道を前計算してそれに乗るAI。いろんなAIのベースになっている。
-* kawatea/fission: 安定軌道に乗ったら分裂するAI。
-* yuusti/meteor: 中央に突っ込んで即死するAI。
-* poyo/goat: 分裂するAI全ての始まり。
+* mkut/alisaie: Multi-ship laser attacker. It was not a great idea because the laser component should not be spread.
+* mkut/alphinaud: Shoot the laser only if the enemy is on the best angle (0, pi/4, pi/2, ...). Adjusts the position to make the angle better before shooting. This AI sticked to the best angles because we misunderstood the formula of laser damage.
+* mkut/titan: Simple AI just to survive in the space. Somethimes the ship falls due to the immature algorithm.
+* kawatea/static: Precalculate the stable orbits and use one of them at the runtime. This precalculated orbit is used in other AIs including the last submission (Bakudan Sanyushi).
+* kawatea/fission: Generates multiple ships after running on the precalculated orbit.
+* yuusti/meteor: Immediately falls on the planet :(
+* poyo/goat: The first AI to implement the multi-ship feature.
 
 # Portal
 * Atelier Manarimo Portal: https://manarimo.herokuapp.com (we'll shut down it in a few days after contest ended)
