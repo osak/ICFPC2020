@@ -14,7 +14,6 @@ import { HashRouter, Switch, Route, Link } from "react-router-dom";
 import { AlienSend } from "./pages/AlienSend";
 import { BattleDome } from "./pages/BattleDome";
 import { BattlePlayer } from "./pages/BattlePlayer/BattlePlayer";
-import { HistoryList } from "./pages/HistoryList";
 import { LocalGameList } from "./pages/LocalGameList";
 import { ReplayList } from "./pages/ReplayList";
 import { SavedBattleList } from "./pages/SavedBattleList/SavedBattleList";

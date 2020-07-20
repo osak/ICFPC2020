@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import { connect, PromiseState } from "react-refetch";
-import { Alert, Container, Spinner, Table } from "reactstrap";
+import {
+  Alert,
+  Button,
+  Container,
+  FormGroup,
+  Input,
+  Label,
+  Spinner,
+  Table,
+} from "reactstrap";
 import { GamesResponse } from "../types";
 
 declare var OFFICIAL_API_BASE: string;
@@ -82,6 +91,16 @@ const InnerBattleDome = (props: Props) => {
 
   return (
     <Container fluid>
+      <FormGroup check>
+        <Label check>
+          <Input
+            type="checkbox"
+            onChange={() => setDefenderMain(!defenderMain)}
+            checked={defenderMain}
+          />
+          Show Defender
+        </Label>
+      </FormGroup>
       <Table bordered>
         <thead>
           <tr>
