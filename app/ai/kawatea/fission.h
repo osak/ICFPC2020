@@ -44,16 +44,19 @@ class FissionAI : public AI {
         const int kamikaze_power = get_kamikaze_power(my_ship);
 
         int our_loss = calc_ship_sum(my_ship);
+        int our_total_sum = calc_ship_sum(my_ship);
         for (const ShipState& our_ship : enemy_ships) {
             if (my_ship.id == our_ship.id) {
                 continue;
             }
             const int distance = next_distance(my_ship, our_ship);
             const int damage = max(0, kamikaze_power - 32 * distance);
+            const int sum = calc_ship_sum(our_ship);
+            our_total_sum += sum;
             if (damage > 0 && our_ship.id == main_ship_id) {
                 return false;
             }
-            const int value = min(damage, calc_ship_sum(our_ship));
+            const int value = min(damage, sum);
             our_loss += value;
         }
 
@@ -67,7 +70,7 @@ class FissionAI : public AI {
             enemy_loss += value;
             enemy_total_sum += sum;
         }
-        return our_loss <= enemy_loss || enemy_loss == enemy_total_sum;
+        return our_loss * enemy_total_sum <= enemy_loss * our_total_sum;
     }
 
     public:
