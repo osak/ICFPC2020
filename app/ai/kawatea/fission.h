@@ -30,8 +30,6 @@ class FissionAI : public AI {
         bool is_defender = response.game_info.is_defender;
         int main_ship_id = is_defender ? 0 : 1;
         vector<ShipState> ships = is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
-        vector<ShipState> enemies = !is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
-        ShipState main_ship = ships[0];
         CommandParams params;
         
         for (const ShipState& ship : ships) {
@@ -54,6 +52,7 @@ class FissionAI : public AI {
             
             if (!is_static(x, y, dx, dy) || prev_fissioned) {
                 int ndx = 0, ndy = 0, d = 1e9, e = 0;
+                State s = State(x, y, dx, dy);
                 
                 if (!prev_fissioned && is_alive(x, y, dx, dy)) {
                     ndx = get_ndx(x, y, dx, dy);
@@ -66,8 +65,9 @@ class FissionAI : public AI {
                     for (int j = -2; j <= 2; j++) {
                         if (i == 0 && j == 0) continue;
                         if (turn > 30 && (abs(i) == 2 || abs(j) == 2)) continue;
-                        if (is_alive(x, y, dx + i, dy + j)) {
-                            int nd = get_dist(x, y, dx + i, dy + j);
+                        State ss = next(s, i, j);
+                        if (is_alive(ss.x, ss.y, ss.dx, ss.dy)) {
+                            int nd = get_dist(ss.x, ss.y, ss.dx, ss.dy);
                             int ne = max(abs(i), abs(j));
                             if (nd < d || (nd == d && ne > e)) {
                                 ndx = -i;
@@ -117,6 +117,27 @@ class FissionAI : public AI {
         fprintf(stderr, "loaded %d records\n", num);
         fflush(stderr);
         fclose(fp);
+    }
+    
+    State next(const State& s, int dx = 0, int dy = 0) {
+        int nx = s.x, ny = s.y, ndx = s.dx + dx, ndy = s.dy + dy;
+        if (abs(s.x) >= abs(s.y)) {
+            if (s.x > 0) {
+                ndx--;
+            } else {
+                ndx++;
+            }
+        }
+        if (abs(s.x) <= abs(s.y)) {
+            if (s.y > 0) {
+                ndy--;
+            } else {
+                ndy++;
+            }
+        }
+        nx += ndx;
+        ny += ndy;
+        return State(nx, ny, ndx, ndy);
     }
     
     bool is_alive(int x, int y, int dx, int dy) {
