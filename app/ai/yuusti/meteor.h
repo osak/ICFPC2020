@@ -278,15 +278,11 @@ public:
         if (abs(loc.x) >= abs(loc.y)) {
             if (loc.x < 0) vel.x = 2;
             if (loc.x > 0) vel.x = -2;
-        } else {
-            vel.x = 2;
         }
 
         if (abs(loc.x) <= abs(loc.y)) {
             if (loc.y < 0) vel.y = 2;
             if (loc.y > 0) vel.y = -2;
-        } else {
-            vel.y = -2;
         }
 
         return vel;
