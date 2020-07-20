@@ -118,6 +118,17 @@ def get_local_runs():
 
     return jsonify({"items": results})
 
+@app.route("/api/games", methods=["GET"])
+def get_games():
+    with get_connection() as conn:
+        with conn.cursor(cursor_factory=psycopg2.extras.DictCursor) as cursor:
+            cursor.execute("SELECT * FROM games ORDER BY played_at DESC")
+            results = []
+            for row in cursor.fetchall():
+                dict_row = dict(row)
+                dict_row["played_at"] = dict_row["played_at"].isoformat()
+                results.append(dict_row)
+    return jsonify({"items": results})
 
 @app.route("/")
 def hello():
