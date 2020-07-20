@@ -11,7 +11,61 @@ bool possible[MAX_P * 2 + 2][MAX_P * 2 + 2][MAX_D * 2 + 2][MAX_D * 2 + 2];
 int direction[MAX_P * 2 + 2][MAX_P * 2 + 2][MAX_D * 2 + 2][MAX_D * 2 + 2][2];
 int dist[MAX_P * 2 + 2][MAX_P * 2 + 2][MAX_D * 2 + 2][MAX_D * 2 + 2];
 
+//--- kamikaze info
+const int kamikaze_power_array_size = 4;
+int kamikaze_powers[] = {0, 128, 161, 181};
+
+int calc_ship_sum(const ShipState& ship) {
+    return ship.ship_parameter.attack + ship.ship_parameter.energy + ship.ship_parameter.life + ship.ship_parameter.recharge_rate;
+}
+
+int get_kamikaze_power(const ShipState& ship) {
+    const int sum = calc_ship_sum(ship);
+    if (sum < kamikaze_power_array_size) {
+        return kamikaze_powers[sum];
+    } else {
+        return kamikaze_powers[kamikaze_power_array_size - 1];
+    }
+}
+
+int calc_distance(const ShipState& p, const ShipState& q) {
+    return max(abs(p.pos.first - q.pos.first), abs(p.pos.second - q.pos.second));
+}
+
+
 class FissionAI : public AI {
+    const int sub_energy = 3;
+
+    bool check_kamikaze(const ShipState& my_ship, const vector<ShipState>& my_ships, const vector<ShipState>& enemy_ships, const int main_ship_id) {
+        const int kamikaze_power = get_kamikaze_power(my_ship);
+
+        int our_loss = calc_ship_sum(my_ship);
+        for (const ShipState& our_ship : enemy_ships) {
+            if (my_ship.id == our_ship.id) {
+                continue;
+            }
+            const int distance = calc_distance(my_ship, our_ship);
+            const int damage = max(0, kamikaze_power - 32 * distance);
+            if (damage > 0 && our_ship.id == main_ship_id) {
+                return false;
+            }
+            const int value = min(damage, calc_ship_sum(our_ship));
+            our_loss += value;
+        }
+
+        int enemy_loss = 0;
+        int enemy_total_sum = 0;
+        for (const ShipState& enemy_ship : enemy_ships) {
+            const int distance = calc_distance(my_ship, enemy_ship);
+            const int damage = max(0, kamikaze_power - 32 * distance);
+            const int sum = calc_ship_sum(enemy_ship);
+            const int value = min(damage, sum);
+            our_loss += value;
+            enemy_total_sum += sum;
+        }
+        return our_loss >= enemy_loss || enemy_loss == enemy_total_sum;
+    }
+
     public:
     JoinParams join_params() {
         load();
@@ -31,6 +85,7 @@ class FissionAI : public AI {
         bool is_defender = response.game_info.is_defender;
         int main_ship_id = is_defender ? 0 : 1;
         vector<ShipState> ships = is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
+        vector<ShipState> enemy_ships = is_defender ? response.game_state.attacker_states : response.game_state.defender_states;
         set<State> positions, next_positions;
         CommandParams params;
         
@@ -44,9 +99,13 @@ class FissionAI : public AI {
             int dx = vel.first;
             int dy = vel.second;
             State s = State(x, y, dx, dy);
-            
-            positions.insert(s);
-            next_positions.insert(next(s));
+
+            if (check_kamikaze(ship, ships, enemy_ships, main_ship_id)) {
+                params.commands.push_back(new Kamikaze(ship.id));
+            } else {
+                positions.insert(s);
+                next_positions.insert(next(s));
+            }
         }
         
         for (const ShipState& ship : ships) {
@@ -102,8 +161,8 @@ class FissionAI : public AI {
                 if (ndx != 0 || ndy != 0) {
                     params.commands.push_back(new Move(ship.id, Vector(ndx, ndy)));
                 }
-            } else if (life > 1) {
-                params.commands.push_back(new Fission(ship.id, StartParams(0, 0, 0, 1)));
+            } else if (life > 1 && energy >= sub_energy) {
+                params.commands.push_back(new Fission(ship.id, StartParams(sub_energy, 0, 0, 1)));
                 fissioned = true;
             }
         }
