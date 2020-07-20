@@ -1,8 +1,11 @@
 #pragma once
 
+#include <cstdio>
+#include <algorithm>
+
 const int MAX_P = 127;
 const int MAX_F = 16;
-const int MAX_D = 5;
+const int MAX_D = 7;
 
 struct State {
     int x;
@@ -20,6 +23,27 @@ struct State {
         return dy < s.dy;
     }
 };
+
+State next(const State& s, int dx = 0, int dy = 0) {
+    int nx = s.x, ny = s.y, ndx = s.dx + dx, ndy = s.dy + dy;
+    if (abs(s.x) >= abs(s.y)) {
+        if (s.x > 0) {
+            ndx--;
+        } else {
+            ndx++;
+        }
+    }
+    if (abs(s.x) <= abs(s.y)) {
+        if (s.y > 0) {
+            ndy--;
+        } else {
+            ndy++;
+        }
+    }
+    nx += ndx;
+    ny += ndy;
+    return State(nx, ny, ndx, ndy);
+}
 
 unsigned long long encode(const State& s, int dx, int dy, long long dist) {
     return (unsigned long long)(dist << 32) | ((unsigned long long)(s.x + MAX_P) << 24) | ((unsigned long long)(s.y + MAX_P) << 16) | ((unsigned long long)(s.dx + MAX_D) << 10) | ((unsigned long long)(s.dy + MAX_D) << 4) | ((unsigned long long)(dx + 1) << 2) | (unsigned long long)(dy + 1);
