@@ -28,13 +28,17 @@ int get_kamikaze_power(const ShipState& ship) {
     }
 }
 
-int calc_distance(const ShipState& p, const ShipState& q) {
-    return max(abs(p.pos.first - q.pos.first), abs(p.pos.second - q.pos.second));
-}
-
-
 class FissionAI : public AI {
     const int sub_energy = 3;
+
+    int next_distance(const ShipState &p, const ShipState &q) {
+        State ps(p.pos.first, p.pos.second, p.velocity.first, p.velocity.second);
+        State nps = next(ps);
+        State qs(q.pos.first, q.pos.second, q.velocity.first, q.velocity.second);
+        State nqs = next(qs);
+
+        return max(abs(nps.x - nqs.x), abs(nps.y - nqs.y));
+    }
 
     bool check_kamikaze(const ShipState& my_ship, const vector<ShipState>& my_ships, const vector<ShipState>& enemy_ships, const int main_ship_id) {
         const int kamikaze_power = get_kamikaze_power(my_ship);
@@ -44,7 +48,7 @@ class FissionAI : public AI {
             if (my_ship.id == our_ship.id) {
                 continue;
             }
-            const int distance = calc_distance(my_ship, our_ship);
+            const int distance = next_distance(my_ship, our_ship);
             const int damage = max(0, kamikaze_power - 32 * distance);
             if (damage > 0 && our_ship.id == main_ship_id) {
                 return false;
@@ -56,7 +60,7 @@ class FissionAI : public AI {
         int enemy_loss = 0;
         int enemy_total_sum = 0;
         for (const ShipState& enemy_ship : enemy_ships) {
-            const int distance = calc_distance(my_ship, enemy_ship);
+            const int distance = next_distance(my_ship, enemy_ship);
             const int damage = max(0, kamikaze_power - 32 * distance);
             const int sum = calc_ship_sum(enemy_ship);
             const int value = min(damage, sum);
