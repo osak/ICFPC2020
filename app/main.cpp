@@ -6,7 +6,7 @@
 #include <regex>
 #include <string>
 
-#include "ai/kawatea/static.h"
+#include "ai/kawatea/fission.h"
 
 using namespace std;
 
@@ -31,7 +31,7 @@ Client *init_client(char **argv) {
 
 int main(int argc, char **argv) {
     Client *client = init_client(argv);
-    AI* ai = new StaticAI();
+    AI* ai = new FissionAI();
 
     JoinParams join_params = ai->join_params();
 	GameResponse join_response = GameResponse(as_galaxy(client->join(join_params)));

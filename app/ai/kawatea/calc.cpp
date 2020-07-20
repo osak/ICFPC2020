@@ -10,7 +10,7 @@ using namespace std;
 map<State, bool> checked;
 map<State, int> dist;
 map<State, vector<pair<State, pair<int, int>>>> candidate;
-vector<unsigned> best;
+vector<unsigned long long> best;
 
 bool valid(const State& s) {
     return abs(s.x) <= MAX_P && abs(s.y) <= MAX_P && abs(s.dx) <= MAX_D && abs(s.dy) <= MAX_D && (abs(s.x) > MAX_F || abs(s.y) > MAX_F);
@@ -58,7 +58,7 @@ int main() {
                     if (check(s)) {
                         dist[s] = 0;
                         q.push(s);
-                        best.push_back(encode(s, 0, 0));
+                        best.push_back(encode(s, 0, 0, 0));
                     } else {
                         for (int i = -1; i <= 1; i++) {
                             for (int j = -1; j <= 1; j++) {
@@ -85,13 +85,13 @@ int main() {
             if (!dist.count(ss)) {
                 dist[ss] = dist[s] + 1;
                 q.push(ss);
-                best.push_back(encode(ss, dx, dy));
+                best.push_back(encode(ss, dx, dy, dist[ss]));
             }
         }
     }
     
     printf("%d\n", best.size());
-    for (int i = 0; i < best.size(); i++) printf("%u\n", best[i]);
+    for (int i = 0; i < best.size(); i++) printf("%llu\n", best[i]);
     
     return 0;
 }
