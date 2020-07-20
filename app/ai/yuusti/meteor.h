@@ -195,6 +195,25 @@ public:
         }
     }
 
+    Vector first_two_move(Vector loc) {
+        Vector vel = Vector(0, 0);
+        if (abs(loc.x) >= abs(loc.y)) {
+            if (loc.x < 0) vel.x = 2;
+            if (loc.x > 0) vel.x = -2;
+        } else {
+            vel.x = rand()%3 - 1;
+        }
+
+        if (abs(loc.x) <= abs(loc.y)) {
+            if (loc.y < 0) vel.y = 2;
+            if (loc.y > 0) vel.y = -2;
+        } else {
+            vel.y = rand()%3 - 1;
+        }
+
+        return Vector(-vel.x, -vel.y);
+    }
+
 public:
     JoinParams join_params() {
         return JoinParams();
@@ -203,7 +222,7 @@ public:
         int spec_point = response.game_info.ship_info.max_points;
         int reactor = 8;
         int armament = 0;
-        int core = 50;
+        int core = 100;
         int engine = spec_point - reactor * 12 - core*2;
         return StartParams(engine, armament, reactor, core);
     }
@@ -227,6 +246,14 @@ public:
                 my_velocity,
                 response.game_info.max_turns - response.game_state.current_turn, states[0].ship_parameter.energy, states[0].ship_parameter.life);
         auto next_move = next_act.move;
+
+        // For attacker?
+        if (response.game_state.current_turn < 3
+            && abs(my_location.x) - 20 < response.game_info.field_info.field_radius
+            && abs(my_location.y) - 20 < response.game_info.field_info.field_radius) {
+            next_move = first_two_move(my_location);
+        }
+
         cout << "Next move: " << next_move << endl;
         CommandParams params;
         if (next_move.x != 0 || next_move.y != 0) {
