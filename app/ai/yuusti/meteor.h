@@ -315,9 +315,7 @@ public:
         if (state.ship_parameter.life > 1) {
             if (state.ship_parameter.life >= initial_core) {
                 params.commands.push_back(new Fission(state.id, StartParams(state.ship_parameter.energy / 2, 0, 0, state.ship_parameter.life / 2)));
-            }
-
-            if (state.ship_parameter.energy >= kamikaze_size) {
+            } else if (state.ship_parameter.energy >= kamikaze_size) {
                 params.commands.push_back(new Fission(state.id, StartParams(kamikaze_size, 0, 0, 1)));
             }
         }
