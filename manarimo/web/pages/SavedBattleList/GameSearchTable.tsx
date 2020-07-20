@@ -1,10 +1,19 @@
 import React, { useState } from "react";
-import { Container, FormGroup, Input, Label, Row, Table } from "reactstrap";
+import {
+  Badge,
+  Button,
+  Container,
+  FormGroup,
+  Input,
+  Label,
+  Row,
+  Table,
+} from "reactstrap";
 import { SavedGame, SavedGameList } from "../../types";
 import { Link } from "react-router-dom";
 
 const topPlayers = ["Pigimarl", "Unagi", "RGBTeam", "Manarimo"];
-const participants = ["All", "with Manarimo", "Top Players Only"] as const;
+const participants = ["All", "Top Players Only"] as const;
 type Participant = typeof participants[number];
 
 const winners = ["All", "Manarimo wins", "Manarimo loses"] as const;
@@ -37,13 +46,6 @@ const isSelected = (
   participant: Participant,
   winner: Winner
 ) => {
-  if (
-    participant === "with Manarimo" &&
-    !game.attacker_team_name.includes("Manarimo") &&
-    !game.defender_team_name.includes("Manarimo")
-  ) {
-    return false;
-  }
   if (participant === "Top Players Only") {
     const topAttacker = topPlayers.some((name) =>
       game.attacker_team_name.includes(name)
@@ -72,17 +74,16 @@ const isSelected = (
   if (winner === "Manarimo wins" && !winTeam.includes("Manarimo")) {
     return false;
   }
-  if (winner === "Manarimo loses" && !loseTeam.includes("Manarimo")) {
-    return false;
-  }
-  return true;
+  return !(winner === "Manarimo loses" && !loseTeam.includes("Manarimo"));
 };
 
 export const GameSearchTable = (props: Props) => {
   const list = props.list.items;
-  list.sort((a, b) => b.id - a.id);
+  list.sort((a, b) => b.played_at.localeCompare(a.played_at));
   const [selection, setSelection] = useState<Participant>("All");
   const [winner, setWinner] = useState<Winner>("All");
+  const [searchText, setSearchText] = useState("");
+  const [showCount, setShowCount] = useState(200);
   return (
     <Container fluid>
       <Row>
@@ -90,7 +91,13 @@ export const GameSearchTable = (props: Props) => {
           <Label>Participants</Label>
           <Input
             type="select"
-            onSelect={(e) => console.log(e.currentTarget.value)}
+            value={selection}
+            onChange={(e) => {
+              const option = participants.find((a) => a === e.target.value);
+              if (option) {
+                setSelection(option);
+              }
+            }}
           >
             {participants.map((p) => (
               <option key={p}>{p}</option>
@@ -101,12 +108,26 @@ export const GameSearchTable = (props: Props) => {
           <Label>Win/Lose</Label>
           <Input
             type="select"
-            onSelect={(e) => console.log(e.currentTarget.value)}
+            value={winner}
+            onChange={(e) => {
+              const option = winners.find((a) => a === e.target.value);
+              if (option) {
+                setWinner(option);
+              }
+            }}
           >
             {winners.map((p) => (
               <option key={p}>{p}</option>
             ))}
           </Input>
+        </FormGroup>
+        <FormGroup>
+          <Label>Search</Label>
+          <Input
+            type="text"
+            onChange={(e) => setSearchText(e.target.value)}
+            value={searchText}
+          />
         </FormGroup>
       </Row>
       <Row>
@@ -124,40 +145,56 @@ export const GameSearchTable = (props: Props) => {
             </tr>
           </thead>
           <tbody>
-            {list.map((game) => {
-              if (!isSelected(game, selection, winner)) {
-                return null;
-              }
-              return (
-                <tr key={game.id}>
-                  <th>{game.id}</th>
-                  <td>
-                    <OfficialVizLink id={game.game_id} />|
-                    <Link to={`/relay/${game.attacker_player_key}`}>
-                      Manarimo
-                    </Link>
-                  </td>
-                  <td>{game.tournament_id}</td>
-                  <td>{game.ticks}</td>
-                  <td>{game.winner}</td>
-                  <td>
-                    {game.attacker_team_name} #{game.attacker_submission_id}
-                    {game.attacker_debug_log && (
-                      <OfficialLogLink id={game.attacker_debug_log} />
-                    )}
-                  </td>
-                  <td>
-                    {game.defender_team_name} #{game.defender_submission_id}{" "}
-                    {game.defender_debug_log && (
-                      <OfficialLogLink id={game.defender_debug_log} />
-                    )}
-                  </td>
-                  <td>{new Date(game.played_at).toLocaleString()}</td>
-                </tr>
-              );
-            })}
+            {list
+              .filter((game) => isSelected(game, selection, winner))
+              .slice(0, showCount)
+              .map((game) => {
+                if (
+                  searchText.length > 0 &&
+                  !JSON.stringify(game).includes(searchText)
+                ) {
+                  return null;
+                }
+
+                return (
+                  <tr key={game.id}>
+                    <th>{game.id}</th>
+                    <td>
+                      <OfficialVizLink id={game.game_id} /> |{" "}
+                      <Link to={`/replay/${game.attacker_player_key}`}>
+                        Manarimo
+                      </Link>
+                    </td>
+                    <td>{game.tournament_id}</td>
+                    <td>{game.ticks}</td>
+                    <td>{game.winner}</td>
+                    <td>
+                      {game.winner === "Attacker" && (
+                        <Badge color="success">Win</Badge>
+                      )}{" "}
+                      {game.attacker_team_name} #{game.attacker_submission_id}{" "}
+                      {game.attacker_debug_log && (
+                        <OfficialLogLink id={game.attacker_debug_log} />
+                      )}
+                    </td>
+                    <td>
+                      {game.winner === "Defender" && (
+                        <Badge color="success">Win</Badge>
+                      )}{" "}
+                      {game.defender_team_name} #{game.defender_submission_id}{" "}
+                      {game.defender_debug_log && (
+                        <OfficialLogLink id={game.defender_debug_log} />
+                      )}
+                    </td>
+                    <td>{new Date(game.played_at).toLocaleString()}</td>
+                  </tr>
+                );
+              })}
           </tbody>
         </Table>
+      </Row>
+      <Row>
+        <Button onClick={() => setShowCount(showCount + 200)}>More</Button>
       </Row>
     </Container>
   );

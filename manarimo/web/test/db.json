@@ -26507,5 +26507,85 @@
         "timestamp": "2020-07-19T15:46:46.543939+00:00"
       }
     ]
+  },
+  "games": {
+    "items": [
+      {
+        "attacker_debug_log": null,
+        "attacker_player_key": "1876263850803035981",
+        "attacker_submission_id": 8634,
+        "attacker_team_id": "2470c512-64c2-4c96-a7c6-d97275d09da7",
+        "attacker_team_name": "301",
+        "defender_debug_log": "xZD1fQS9YPFuKDG0gcmgR5YZ35Sy/HLjg1wJcxKR8AU=",
+        "defender_player_key": "3366348401411410413",
+        "defender_submission_id": 7469,
+        "defender_team_id": "865bccab-f33c-4c20-9f7b-ac02c08ebc8f",
+        "defender_team_name": "Atelier Manarimo",
+        "game_id": "791c7a33-bd0c-4c51-9961-8650c1e7e6bc",
+        "id": 33680,
+        "played_at": "2020-07-20T07:19:26.141581+00:00",
+        "ticks": 255,
+        "tournament_id": 6,
+        "winner": "Defender",
+        "winner_team_name": "Atelier Manarimo"
+      },
+      {
+        "attacker_debug_log": "3zhNHA17NM5tSfsfsugHbW97jly1KzzI8FU3OTZxqRg=",
+        "attacker_player_key": "310367428512743645",
+        "attacker_submission_id": 7469,
+        "attacker_team_id": "865bccab-f33c-4c20-9f7b-ac02c08ebc8f",
+        "attacker_team_name": "Atelier Manarimo",
+        "defender_debug_log": null,
+        "defender_player_key": "3356135215039509746",
+        "defender_submission_id": 8634,
+        "defender_team_id": "2470c512-64c2-4c96-a7c6-d97275d09da7",
+        "defender_team_name": "301",
+        "game_id": "f632dea4-054d-47b8-a20a-1b3d8cb7c45e",
+        "id": 33679,
+        "played_at": "2020-07-20T07:19:26.141581+00:00",
+        "ticks": 255,
+        "tournament_id": 6,
+        "winner": "Defender",
+        "winner_team_name": "301"
+      },
+      {
+        "attacker_debug_log": null,
+        "attacker_player_key": "7846792865152853690",
+        "attacker_submission_id": 8383,
+        "attacker_team_id": "6661350e-f5c0-46fa-ae22-f41e2fc3a1c6",
+        "attacker_team_name": "All your galaxy combinator are belong to us",
+        "defender_debug_log": "Vgtij3EBD3Xr0rwR+a6pi986CfKr7kJggo2LIPg2XD8=",
+        "defender_player_key": "92962514894263038",
+        "defender_submission_id": 8659,
+        "defender_team_id": "865bccab-f33c-4c20-9f7b-ac02c08ebc8f",
+        "defender_team_name": "Atelier Manarimo",
+        "game_id": "d50cc032-52d7-4fcf-91ff-89f5088cb0c7",
+        "id": 33203,
+        "played_at": "2020-07-20T07:18:13.511265+00:00",
+        "ticks": 247,
+        "tournament_id": 0,
+        "winner": "Attacker",
+        "winner_team_name": "All your galaxy combinator are belong to us"
+      },
+      {
+        "attacker_debug_log": null,
+        "attacker_player_key": "7843734303131243826",
+        "attacker_submission_id": 8129,
+        "attacker_team_id": "c17d8390-d2b2-466f-9b60-196649567a60",
+        "attacker_team_name": "Pigimarl",
+        "defender_debug_log": "KP5+sP7sB5K5q8afazaNMsVVdshzN8ODbG2vv8i+RPU=",
+        "defender_player_key": "2971555218298049871",
+        "defender_submission_id": 7469,
+        "defender_team_id": "865bccab-f33c-4c20-9f7b-ac02c08ebc8f",
+        "defender_team_name": "Atelier Manarimo",
+        "game_id": "44777449-6b3c-4b30-9128-9d0afd109b3a",
+        "id": 31517,
+        "played_at": "2020-07-20T07:05:36.086454+00:00",
+        "ticks": 255,
+        "tournament_id": 6,
+        "winner": "Defender",
+        "winner_team_name": "Atelier Manarimo"
+      }
+    ]
   }
 }

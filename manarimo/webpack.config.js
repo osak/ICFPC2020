@@ -12,7 +12,7 @@ if (process.env.NODE_ENV == "production") {
   };
 } else {
   constants = {
-    API_BASE: JSON.stringify("http://localhost:8080/api"),
+    API_BASE: JSON.stringify("http://localhost:8000/api"),
     OFFICIAL_API_BASE: JSON.stringify("https://icfpc2020-api.testkontur.ru"),
     OFFICIAL_API_KEY: JSON.stringify("decffdda9f2d431792a37fbfb770f825"),
   };
