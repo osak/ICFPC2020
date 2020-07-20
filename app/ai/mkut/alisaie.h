@@ -224,7 +224,7 @@ class AlisaieAI : public AI {
                 ret.push_back(new Move(my_ship_state.id, next_move));
             }
             auto next_loc_vel = simulate(my_ship_state.pos, my_ship_state.velocity);
-            if (stable(next_loc_vel.first, next_loc_vel.second, max_turn)) {
+            if (stable(next_loc_vel.first, next_loc_vel.second, max_turn - 1)) {
                 if (my_ship_state.ship_parameter.life > 1) {
                     // fission
                     StartParams clone_params(my_ship_state.ship_parameter.energy / 2, my_ship_state.ship_parameter.attack / 2, my_ship_state.ship_parameter.recharge_rate / 2, my_ship_state.ship_parameter.life / 2);
