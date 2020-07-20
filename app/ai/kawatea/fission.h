@@ -63,7 +63,7 @@ class FissionAI : public AI {
             our_loss += value;
             enemy_total_sum += sum;
         }
-        return our_loss >= enemy_loss || enemy_loss == enemy_total_sum;
+        return our_loss <= enemy_loss || enemy_loss == enemy_total_sum;
     }
 
     public:
