@@ -68,7 +68,8 @@ inline char scanner::read_char() {
 }
 
 class FissionAI : public AI {
-    const int sub_energy = 3;
+    const int sub_energy = 2;
+    const int initial_core = 70;
 
     int next_distance(const ShipState &p, const ShipState &q) {
         State ps(p.pos.first, p.pos.second, p.velocity.first, p.velocity.second);
@@ -122,7 +123,7 @@ class FissionAI : public AI {
         int spec_point = response.game_info.ship_info.max_points;
         int reactor = 8;
         int armament = 0;
-        int core = 70;
+        int core = initial_core;
         int engine = spec_point - reactor * 12 - armament * 4 - core * 2;
         return StartParams(engine, armament, reactor, core);
     }
@@ -134,7 +135,7 @@ class FissionAI : public AI {
         vector<ShipState> enemy_ships = is_defender ? response.game_state.attacker_states : response.game_state.defender_states;
         set<State> positions, next_positions;
         CommandParams params;
-        
+
         for (const ShipState& ship : ships) {
             if (ship.id == main_ship_id) continue;
             
@@ -176,11 +177,13 @@ class FissionAI : public AI {
             if (!is_static(x, y, dx, dy) || prev_fissioned || positions.count(s)) {
                 int ndx = 0, ndy = 0, d = 1e9, e = 0;
                 bool keep = false;
+
+                const int dist_constant = 10000;
                 
                 if (!prev_fissioned && is_alive(x, y, dx, dy)) {
                     ndx = get_ndx(x, y, dx, dy);
                     ndy = get_ndy(x, y, dx, dy);
-                    d = get_dist(x, y, dx, dy);
+                    d = get_dist(x, y, dx, dy) * dist_constant;
                     e = 1;
                     keep = next_positions.count(next(s, ndx, ndy));
                 }
@@ -191,7 +194,8 @@ class FissionAI : public AI {
                         if (turn > 30 && (abs(i) == 2 || abs(j) == 2)) continue;
                         State ss = next(s, i, j);
                         if (!next_positions.count(ss) && is_alive(ss.x, ss.y, ss.dx, ss.dy)) {
-                            int nd = get_dist(ss.x, ss.y, ss.dx, ss.dy);
+                            const int energy = ss.dx * ss.dx + ss.dy * ss.dy + 2 * max(abs(ss.x), abs(ss.y));
+                            int nd = get_dist(ss.x, ss.y, ss.dx, ss.dy) * dist_constant + dist_constant / 2 + energy * (life - (initial_core / 2)) / initial_core;
                             int ne = max(abs(i), abs(j));
                             if (keep || nd < d || (nd == d && ne > e)) {
                                 ndx = -i;
@@ -217,7 +221,7 @@ class FissionAI : public AI {
     
     private:
     bool fissioned = false;
-    
+
     void load() {
         scanner sc("ai/kawatea/pre2.txt");
         int num = 0;
