@@ -44,7 +44,7 @@ class FissionAI : public AI {
         const int kamikaze_power = get_kamikaze_power(my_ship);
 
         int our_loss = calc_ship_sum(my_ship);
-        for (const ShipState& our_ship : enemy_ships) {
+        for (const ShipState& our_ship : my_ships) {
             if (my_ship.id == our_ship.id) {
                 continue;
             }
