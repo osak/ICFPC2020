@@ -45,3 +45,5 @@ suspect there would more to come from organizer, lack of explanation in what cou
 
 # Footnote
 Recommended: [Atelier Ryza](https://store.steampowered.com/app/1121560/Atelier_Ryza_Ever_Darkness__the_Secret_Hideout/)
+
+Atelier Ryza 2 is coming out this winter!!!!
