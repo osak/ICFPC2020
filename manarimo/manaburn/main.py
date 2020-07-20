@@ -68,12 +68,16 @@ def save(games):
             ) VALUES %s ON CONFLICT DO NOTHING""", rows)
         conn.commit()
 
-def paginated_games(tournament_id: int):
+def paginated_games(api_path: str):
+    sep = '&' if '?' in api_path else '?'
+    url_base = '{}{}{}take=100&apiKey={}'.format(API_BASE, api_path, sep, API_KEY)
+
     before = None
     while True:
-        url = "{}/games?tournamentId={}&take=100&apiKey={}".format(API_BASE, tournament_id, API_KEY)
-        if before != None:
-            url += '&before=' + quote(before)
+        if before == None:
+            url = url_base
+        else:
+            url = '{}&before={}'.format(url_base, quote(before))
 
         print(url)
         resp = requests.get(url)
@@ -83,8 +87,16 @@ def paginated_games(tournament_id: int):
         if not json['hasMore']:
             break
 
+def paginated_rated_games(tournament_id: int):
+    for page in paginated_games('/games?tournamentId={}'.format(tournament_id)):
+        yield page
+
+def paginated_unrated_games():
+    for page in paginated_games('/games/non-rating'.format(tournament_id)):
+        yield page
+
 def save_tournament(tournament_id: int):
-    for games in paginated_games(tournament_id):
+    for games in paginated_rated_games(tournament_id):
         print("saving {} to {}".format(games[0]['tournamentRoundId'], games[len(games) - 1]['tournamentRoundId']))
         save(games)
         time.sleep(0.5)
