@@ -273,7 +273,7 @@ public:
         }
     }
 
-    Vector first_two_move(Vector loc) {
+    Vector initial_move(Vector loc) {
         Vector vel = Vector(0, 0);
         if (abs(loc.x) >= abs(loc.y)) {
             if (loc.x < 0) vel.x = 2;
@@ -286,7 +286,7 @@ public:
             if (loc.y < 0) vel.y = 2;
             if (loc.y > 0) vel.y = -2;
         } else {
-            vel.y = 2;
+            vel.y = -2;
         }
 
         return Vector(-vel.x, -vel.y);
@@ -320,9 +320,9 @@ public:
                 params.commands.push_back(new Fission(state.id, StartParams(kamikaze_size, 0, 0, 1)));
             }
         }
-
     }
 
+    int initial_core = 50;
 public:
     JoinParams join_params() {
         return JoinParams();
@@ -331,9 +331,9 @@ public:
         int spec_point = response.game_info.ship_info.max_points;
         int reactor = 8;
         int armament = 0;
-        int core = 100;
-        int engine = spec_point - reactor * 12 - core*2;
-        return StartParams(engine, armament, reactor, core);
+        int initial_core = 50;
+        int engine = spec_point - reactor * 12 - initial_core*2;
+        return StartParams(engine, armament, reactor, initial_core);
     }
     CommandParams command_params(const GameResponse& response) {
         auto states = response.game_info.is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
@@ -343,6 +343,12 @@ public:
         auto next_move = next_act.move;
 
         cout << "Next move: " << next_move << endl;
+        if (states[1].ship_parameter.life != initial_core && response.game_state.current_turn < 5
+            && abs(states[1].pos.first) - 30 < response.game_info.field_info.field_radius
+            && abs(states[1].pos.second) - 30 < response.game_info.field_info.field_radius) {
+            next_move = initial_move(Vector(states[1].pos.first, states[1].pos.second));
+        }
+
         CommandParams params;
         if (next_move.x != 0 || next_move.y != 0) {
             params.commands.push_back(new Move(states[0].id, next_move));
@@ -358,21 +364,13 @@ public:
             Act next_act2 = main_move(state, response.game_info, response.game_state);
             auto next_move2 = next_act.move;
 
-            if (response.game_state.current_turn < 4
-                && abs(state.pos.first) - 20 < response.game_info.field_info.field_radius
-                && abs(state.pos.second) - 20 < response.game_info.field_info.field_radius) {
-                next_move2 = first_two_move(Vector(state.pos.first, state.pos.second));
-            }
-
             if (next_move2.x != 0 || next_move2.y != 0) {
                 params.commands.push_back(new Move(state.id, next_move2));
             }
 
-
             if (next_act2.fission) {
                 add_fission(states[1], params);
             }
-
         }
 
 
