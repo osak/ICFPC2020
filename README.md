@@ -41,7 +41,7 @@ points are especially noteworthy:
 We are thankful to organizers for all the efforts to make the contest amazing, however, we belive that the lightning round could have been improved. Since we had only
 limited information about what is Galaxy function for, it was not quite straightforward to come up with an idea to build a clickable interface for playing around.
 It was not necessarily bad as a puzzle, but in our opinion, there were too many misdirections - the incremental uncovering of information in the first hours led us
-suspect there would more to come from organizer, and prior requests to contribute to Docker system drove us to try sending messages using the submission system.
+suspect there would more to come from organizer, lack of explanation in what counts as score made us believe we had to hack the state of Galaxy engine, and prior requests to contribute to Docker system drove us to try sending messages using the submission system.
 
 # Footnote
 Recommended: [Atelier Ryza](https://store.steampowered.com/app/1121560/Atelier_Ryza_Ever_Darkness__the_Secret_Hideout/)
