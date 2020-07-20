@@ -26,6 +26,10 @@ struct Vector {
    Vector operator+(const Vector& other) const {
       return Vector(x + other.x, y + other.y);
    }
+
+   bool operator==(const Vector& other) const {
+      return x == other.x && y == other.y;
+   }
 };
 
 ostream& operator << (ostream &os, const Vector &v) {
@@ -150,8 +154,14 @@ struct Fission : Command {
 };
 
 struct JoinParams {
+   long long secret1 = 192496425430LL;
+   long long secret2 = 103652820LL;
    string modulate() const {
       Modulator mod;
+      mod.put_cell();
+      mod.put_number(secret1);
+      mod.put_cell();
+      mod.put_number(secret2);
 		mod.put_nil();
       return mod.to_string();
    }
