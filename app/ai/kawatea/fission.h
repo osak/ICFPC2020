@@ -88,7 +88,7 @@ class FissionAI : public AI {
                         if (!next_positions.count(ss) && is_alive(ss.x, ss.y, ss.dx, ss.dy)) {
                             int nd = get_dist(ss.x, ss.y, ss.dx, ss.dy);
                             int ne = max(abs(i), abs(j));
-                            if (keep || nd < d || ne > e) {
+                            if (keep || nd < d || (nd == d && ne > e)) {
                                 ndx = -i;
                                 ndy = -j;
                                 d = nd;
