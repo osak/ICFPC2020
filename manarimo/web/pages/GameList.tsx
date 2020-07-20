@@ -1,6 +1,5 @@
 import React from "react";
 import { connect, PromiseState } from "react-refetch";
-import { Container, Row } from "reactstrap";
 import { TournamentDto, GameType } from "../types";
 import { GameTable } from "./GameList/GameTable";
 
@@ -36,14 +35,7 @@ const InnerGameList = (props: InnerProps) => {
     };
   }
 
-  return (
-    <Container>
-      <Row>{"Games from " + props.gameType}</Row>
-      <Row>
-        <GameTable gamesFetchBase={gamesFetchBase} />
-      </Row>
-    </Container>
-  );
+  return <GameTable gamesFetchBase={gamesFetchBase} />;
 };
 
 export const GameList = connect<Props, InnerProps>(() => ({

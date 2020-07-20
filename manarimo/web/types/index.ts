@@ -119,3 +119,15 @@ export interface SavedGame {
 export interface SavedGameList {
   items: SavedGame[];
 }
+
+export interface Submission {
+  alias: string | null;
+  branch_name: string;
+  commit_message: string;
+  create_at: string | null;
+  submission_id: number;
+}
+
+export interface SubmissionResponse {
+  items: Submission[];
+}
