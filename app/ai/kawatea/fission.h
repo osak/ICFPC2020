@@ -76,7 +76,7 @@ class FissionAI : public AI {
         State qs(q.pos.first, q.pos.second, q.velocity.first, q.velocity.second);
         State nqs = next(qs);
 
-        return max(abs(nps.x - nqs.x), abs(nps.y - nqs.y));
+        return abs(nps.x - nqs.x) + abs(nps.y - nqs.y);
     }
 
     bool check_kamikaze(const ShipState& my_ship, const vector<ShipState>& my_ships, const vector<ShipState>& enemy_ships, const int main_ship_id) {
