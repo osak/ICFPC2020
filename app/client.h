@@ -13,7 +13,10 @@ using namespace std;
 class Client {
   public:
     Client(const string &server_name, const int port, const long long player_key)
-        : client_(server_name, port), player_key_(player_key) {}
+        : client_(server_name, port), player_key_(player_key) {
+            client_.set_connection_timeout(60);
+            client_.set_read_timeout(10);
+        }
 
     Value* join(const JoinParams& params) {
 		string modulated = params.modulate();
