@@ -14,6 +14,9 @@ ICFPC 2020 Team Atelier Manarimo
 
 # Space Battle AI
 Source: app/ai/***.h
+* Kamikaze (submissions/amylase/kamikaze): Single-ship attacker AI that uses detonate command to kill the defender.
+* Bakudan Sanyushi ([ja.wikipedia.org](https://ja.wikipedia.org/wiki/%E7%88%86%E5%BC%BE%E4%B8%89%E5%8B%87%E5%A3%AB)) (submissions/fission_kamikaze): Multi-ship version of Kamikaze. This is used as our team's final submission.
+* Meteor Sanyushi (submissions/meteor_bomb): Yet another multi-ship Kamikaze. The difference from Bakudan Sanyushi is the algorithm to operate multi-ships.
 
 
 # Portal
