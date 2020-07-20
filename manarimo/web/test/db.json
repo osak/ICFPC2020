@@ -26587,5 +26587,37 @@
         "winner_team_name": "Atelier Manarimo"
       }
     ]
+  },
+  "submissions": {
+    "items": [
+      {
+        "alias": null,
+        "branch_name": "project classified",
+        "commit_message": "5712 project classified",
+        "created_at": null,
+        "submission_id": 5712
+      },
+      {
+        "alias": null,
+        "branch_name": "Atelier Manarimo",
+        "commit_message": "5839 Atelier Manarimo",
+        "created_at": null,
+        "submission_id": 5839
+      },
+      {
+        "alias": null,
+        "branch_name": "Atelier Manarimo",
+        "commit_message": "6803 Atelier Manarimo",
+        "created_at": null,
+        "submission_id": 6803
+      },
+      {
+        "alias": null,
+        "branch_name": "fixstars",
+        "commit_message": "6676 fixstars",
+        "created_at": null,
+        "submission_id": 6676
+      }
+    ]
   }
 }

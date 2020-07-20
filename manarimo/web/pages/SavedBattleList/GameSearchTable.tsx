@@ -9,7 +9,12 @@ import {
   Row,
   Table,
 } from "reactstrap";
-import { SavedGame, SavedGameList } from "../../types";
+import {
+  SavedGame,
+  SavedGameList,
+  Submission,
+  SubmissionResponse,
+} from "../../types";
 import { Link } from "react-router-dom";
 
 const topPlayers = ["Pigimarl", "Unagi", "RGBTeam", "Manarimo"];
@@ -39,6 +44,7 @@ const OfficialLogLink = (props: { id: string }) => (
 
 interface Props {
   list: SavedGameList;
+  submissions: SubmissionResponse;
 }
 
 const isSelected = (
@@ -78,6 +84,11 @@ const isSelected = (
 };
 
 export const GameSearchTable = (props: Props) => {
+  const submissionById = new Map<number, Submission>();
+  props.submissions.items.forEach((submission) => {
+    submissionById.set(submission.submission_id, submission);
+  });
+
   const list = props.list.items;
   list.sort((a, b) => b.played_at.localeCompare(a.played_at));
   const [selection, setSelection] = useState<Participant>("All");
@@ -138,7 +149,6 @@ export const GameSearchTable = (props: Props) => {
               <th>Viz</th>
               <th>Tournament</th>
               <th>Ticks</th>
-              <th>Winner</th>
               <th>Attacker</th>
               <th>Defender</th>
               <th>Played at</th>
@@ -155,6 +165,19 @@ export const GameSearchTable = (props: Props) => {
                 ) {
                   return null;
                 }
+                const attackerSubmission = submissionById.get(
+                  game.attacker_submission_id
+                );
+                const defenderSubmission = submissionById.get(
+                  game.defender_submission_id
+                );
+
+                const attackerLabel = attackerSubmission
+                  ? `[${attackerSubmission.branch_name}] ${attackerSubmission.commit_message}`
+                  : `${game.attacker_team_name} #${game.attacker_submission_id}`;
+                const defenderLabel = defenderSubmission
+                  ? `[${defenderSubmission.branch_name}] ${defenderSubmission.commit_message}`
+                  : `${game.defender_team_name} #${game.defender_submission_id}`;
 
                 return (
                   <tr key={game.id}>
@@ -167,12 +190,11 @@ export const GameSearchTable = (props: Props) => {
                     </td>
                     <td>{game.tournament_id}</td>
                     <td>{game.ticks}</td>
-                    <td>{game.winner}</td>
                     <td>
                       {game.winner === "Attacker" && (
                         <Badge color="success">Win</Badge>
                       )}{" "}
-                      {game.attacker_team_name} #{game.attacker_submission_id}{" "}
+                      {attackerLabel}{" "}
                       {game.attacker_debug_log && (
                         <OfficialLogLink id={game.attacker_debug_log} />
                       )}
@@ -181,7 +203,7 @@ export const GameSearchTable = (props: Props) => {
                       {game.winner === "Defender" && (
                         <Badge color="success">Win</Badge>
                       )}{" "}
-                      {game.defender_team_name} #{game.defender_submission_id}{" "}
+                      {defenderLabel}{" "}
                       {game.defender_debug_log && (
                         <OfficialLogLink id={game.defender_debug_log} />
                       )}
