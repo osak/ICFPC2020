@@ -16,6 +16,7 @@ import { BattlePlayer } from "./pages/BattlePlayer/BattlePlayer";
 import { HistoryList } from "./pages/HistoryList";
 import { LocalGameList } from "./pages/LocalGameList";
 import { ReplayList } from "./pages/ReplayList";
+import { SavedBattleList } from "./pages/SavedBattleList/SavedBattleList";
 import { Visualizer } from "./pages/Visualizer/Visualizer";
 import { GameList } from "./pages/GameList";
 
@@ -81,6 +82,7 @@ export const App = () => {
           <Route exact path="/submit" component={AlienSend} />
           <Route exact path="/vis" component={Visualizer} />
           <Route exact path="/replay" component={ReplayList} />
+          <Route exact path="/games" component={SavedBattleList} />
           <Route
             exact
             path="/replay/:replayId"

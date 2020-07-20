@@ -89,6 +89,33 @@ export interface LocalRunEntry {
   defender_name: string;
   timestamp: string;
 }
+
 export interface LocalRunResponse {
   items: LocalRunEntry[];
+}
+
+export interface SavedGame {
+  id: number;
+  game_id: string;
+  tournament_id: string;
+  played_at: string;
+  ticks: number;
+  winner: "Attacker" | "Defender" | "Nobody";
+  winner_team_name: string;
+
+  attacker_submission_id: number;
+  attacker_team_id: string;
+  attacker_team_name: string;
+  attacker_player_key: string;
+  attacker_debug_log: string | null;
+
+  defender_submission_id: number;
+  defender_team_id: string;
+  defender_team_name: string;
+  defender_player_key: string;
+  defender_debug_log: string | null;
+}
+
+export interface SavedGameList {
+  items: SavedGame[];
 }
