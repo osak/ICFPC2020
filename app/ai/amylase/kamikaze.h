@@ -43,7 +43,7 @@ private:
 
     int test(Vector loc, Vector vel, Vector eloc, Vector evel, int center_rad, long long field_rad, int max_turn, int offset, bool show_trail = false) {
         int cnt = offset;
-        const int trace_turn = 10;
+        const int trace_turn = 20;
 
         while (cnt < max_turn) {
             auto p = simulate(loc, vel);
@@ -78,7 +78,7 @@ private:
     }
 
     pair<int, Vector> dfs(int depth, const Vector &loc, const Vector &vel, const Vector &eloc, const Vector &evel, const vector<Vector> &vec, int center_rad, long long field_rad, int max_turn, bool danger) {
-        if (depth == 4) return make_pair(-1, Vector(0, 0));
+        if (depth == 6) return make_pair(-1, Vector(0, 0));
 
         int best = -1;
         Vector best_move = Vector(0, 0);
@@ -214,10 +214,10 @@ public:
     }
     StartParams start_params(const GameResponse& response) {
         int spec_point = response.game_info.ship_info.max_points;
-        int reactor = max(spec_point - 160, 0) / 12;
-        int armament = 0;
-        int engine = spec_point - 2 - reactor * 12;
         int core = 1;
+        int armament = 0;
+        int reactor = 10;
+        int engine = spec_point - 2 - reactor * 12;
         return StartParams(engine, armament, reactor, core);
     }
     CommandParams command_params(const GameResponse& response) {
