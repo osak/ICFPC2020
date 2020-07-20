@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect, PromiseState } from "react-refetch";
-import { Container, Button, Row, Table, Spinner, Alert } from "reactstrap";
+import { Container, Button, Row, Table } from "reactstrap";
 import { GameDto, GamesResponse, PlayerDto } from "../../types";
 import { Link } from "react-router-dom";
 
@@ -24,7 +24,7 @@ interface Props {
 
 interface InnerProps extends Props {
   updateGames: (currentState: GamesState) => any;
-  games: PromiseState<GamesState>;
+  games: PromiseState<GamesResponse>;
 }
 
 function serializeTeamName(player: PlayerDto) {
@@ -62,17 +62,11 @@ function renderLogLink(player: PlayerDto) {
 }
 
 const InnerGameTable = (props: InnerProps) => {
-  if (props.games.pending) {
-    return <Spinner />;
-  }
-
-  if (props.games.rejected) {
-    return <Alert color="danger">Failed to load</Alert>;
-  }
+  const [showCount, setShowCount] = useState(300);
   const games = props.games.value;
 
   return (
-    <Container>
+    <Container fluid>
       <Row>
         <Table>
           <thead>
@@ -86,33 +80,53 @@ const InnerGameTable = (props: InnerProps) => {
             </tr>
           </thead>
           <tbody>
-            {props.games.value.games.map((game: GameDto) => {
-              return (
-                <tr key={game.gameId}>
-                  <td>{game.winner === "Attacker" && "🏆"}</td>
-                  <td>
-                    <span>{serializeTeamName(game.attacker)} </span>
-                    {renderLogLink(game.attacker)}
-                  </td>
-                  <td>{game.winner === "Defender" && "🏆"}</td>
-                  <td>
-                    <span>{serializeTeamName(game.defender)} </span>
-                    {renderLogLink(game.defender)}
-                  </td>
-                  <td>{game.finishedAt}</td>
-                  <td>
-                    <Link to={`/replay/${game.attacker.playerKey}`}>Go</Link>
-                  </td>
-                </tr>
-              );
-            })}
+            {games &&
+              games.games.slice(0, showCount).map((game: GameDto) => {
+                return (
+                  <tr key={game.gameId}>
+                    <td>{game.winner === "Attacker" && "🏆"}</td>
+                    <td>
+                      <span>{serializeTeamName(game.attacker)} </span>
+                      {renderLogLink(game.attacker)}
+                    </td>
+                    <td>{game.winner === "Defender" && "🏆"}</td>
+                    <td>
+                      <span>{serializeTeamName(game.defender)} </span>
+                      {renderLogLink(game.defender)}
+                    </td>
+                    <td>
+                      {game.finishedAt &&
+                        new Date(game.finishedAt).toLocaleString()}
+                    </td>
+                    <td>
+                      {game.finishedAt && (
+                        <>
+                          <a
+                            href={`https://icfpcontest2020.github.io/#/visualize?game=${game.gameId}`}
+                          >
+                            Official
+                          </a>
+                          {" | "}
+                          <Link to={`/replay/${game.attacker.playerKey}`}>
+                            Manarimo
+                          </Link>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </Table>
       </Row>
       <Row>
         <Button
-          disabled={!props.games.value.hasNext}
-          onClick={() => props.updateGames(games)}
+          disabled={!games || games.games.length <= showCount}
+          onClick={() => {
+            if (games) {
+              setShowCount(showCount + 300);
+            }
+          }}
         >
           Load more...
         </Button>
@@ -123,36 +137,11 @@ const InnerGameTable = (props: InnerProps) => {
 
 // @ts-ignore
 export const GameTable = connect<Props, InnerProps>((props: Props) => {
-  let url = `${props.gamesFetchBase.apiUrl}?apiKey=${OFFICIAL_API_KEY}`;
+  let url = `${props.gamesFetchBase.apiUrl}?take=300&apiKey=${OFFICIAL_API_KEY}`;
   if (props.gamesFetchBase.tournamentId !== undefined) {
     url += `&tournamentId=${props.gamesFetchBase.tournamentId}`;
   }
   return {
-    games: {
-      url,
-      then: (gamesResponse: GamesResponse) => ({
-        value: {
-          games: gamesResponse.games,
-          lastBefore: gamesResponse.next,
-          hasNext: gamesResponse.hasMore,
-        },
-      }),
-    },
-    updateGames: (currentState: GamesState) => {
-      const fullUrl =
-        url + `&before=${encodeURIComponent(currentState.lastBefore)}`;
-      return {
-        games: {
-          url: fullUrl,
-          then: (gamesResponse: GamesResponse) => ({
-            value: {
-              games: currentState.games.concat(gamesResponse.games),
-              lastBefore: gamesResponse.next,
-              hasNext: gamesResponse.hasMore,
-            },
-          }),
-        },
-      };
-    },
+    games: url,
   };
 })(InnerGameTable);

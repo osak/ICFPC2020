@@ -36,14 +36,7 @@ const InnerGameList = (props: InnerProps) => {
     };
   }
 
-  return (
-    <Container>
-      <Row>{"Games from " + props.gameType}</Row>
-      <Row>
-        <GameTable gamesFetchBase={gamesFetchBase} />
-      </Row>
-    </Container>
-  );
+  return <GameTable gamesFetchBase={gamesFetchBase} />;
 };
 
 export const GameList = connect<Props, InnerProps>(() => ({
