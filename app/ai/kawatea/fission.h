@@ -153,7 +153,7 @@ class FissionAI : public AI {
     bool fissioned = false;
     
     void load() {
-        scanner sc("ai/kawatea/pre2.txt", "r");
+        scanner sc("ai/kawatea/pre2.txt");
         int num = 0;
         fprintf(stderr, "loading records\n");
         fflush(stderr);
