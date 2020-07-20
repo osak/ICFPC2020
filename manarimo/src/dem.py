@@ -1,40 +1,41 @@
-def dem_tup(s):
-    first, rem = dem_top(s)
-    second, rem = dem_top(rem)
-    return (first, second), rem
+def dem_tup(s, offset):
+    first, offset = dem_top(s, offset)
+    second, offset = dem_top(s, offset)
+    return (first, second), offset
 
 
-def dem_num(s):
-    i = 0
+def dem_num(s, s_offset):
+    i = s_offset
     while s[i] == "1":
         i += 1
     offset = i + 1
-    if i == 0:
-        return 0, s[1:]
-    rem_start = offset + 4 * i
+    if i == s_offset:
+        return 0, s_offset + 1
+    rem_start = offset + 4 * (i - s_offset)
     bin_number = s[offset: rem_start]
-    return int(bin_number, 2), s[rem_start:]
+    return int(bin_number, 2), rem_start
 
 
-def dem_top(s):
-    if len(s) == 0:
+def dem_top(s, offset):
+    length = len(s) - offset
+    if length == 0:
         return ""
-    if len(s) < 2:
+    if length < 2:
         raise ValueError()
-    typ = s[:2]
+    typ = s[offset:offset + 2]
     if typ == "00":
-        return None, s[2:]
+        return None, offset + 2
     elif typ == "01" or typ == "10":
-        num, rem = dem_num(s[2:])
+        num, offset = dem_num(s, offset + 2)
         if typ == "10":
             num *= -1
-        return num, rem
+        return num, offset
     else:
-        return dem_tup(s[2:])
+        return dem_tup(s, offset + 2)
 
 
 def demodulate(s):
-    return dem_top(s)[0]
+    return dem_top(s, 0)[0]
 
 
 def to_list(x):
@@ -52,17 +53,36 @@ def to_list(x):
         return x
 
 
-def serialize(x):
+def _serialize(x, buf):
     if type(x) == tuple:
         fst, snd = x
-        return "({}, {})".format(serialize(fst), serialize(snd))
+        buf.append("(")
+        _serialize(fst, buf)
+        buf.append(", ")
+        _serialize(snd, buf)
+        buf.append(")")
+        return
     elif type(x) == list:
-        ser_items = [serialize(item) for item in x]
-        return "[" + ", ".join(ser_items) + "]"
+        buf.append("[")
+        for item in x:
+            _serialize(item, buf)
+            buf.append(", ")
+        if len(x) > 0:
+            buf.pop()
+        buf.append("]")
+        return
     elif x is None:
-        return "nil"
+        buf.append("nil")
+        return
     else:
-        return str(x)
+        buf.append(str(x))
+        return
+
+
+def serialize(x):
+    buf = []
+    _serialize(x, buf)
+    return ''.join(buf)
 
 
 def run(s):
