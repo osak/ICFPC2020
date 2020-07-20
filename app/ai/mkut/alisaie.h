@@ -11,6 +11,45 @@ bool possible[MAX_P * 2 + 2][MAX_P * 2 + 2][MAX_D * 2 + 2][MAX_D * 2 + 2];
 int direction[MAX_P * 2 + 2][MAX_P * 2 + 2][MAX_D * 2 + 2][MAX_D * 2 + 2][2];
 int dist[MAX_P * 2 + 2][MAX_P * 2 + 2][MAX_D * 2 + 2][MAX_D * 2 + 2];
 
+class scanner {
+    public:
+    scanner(const string& name);
+    ~scanner();
+    inline bool load();
+    inline char read_char();
+    
+    private:
+    constexpr static int SIZE = 1 << 18;
+    FILE* fp;
+    char buf[SIZE + 1];
+    int now = 0;
+    int end = 0;
+};
+
+scanner::scanner(const string& name) {
+    fp = fopen(name.c_str(), "rb");
+}
+
+scanner::~scanner() {
+    fclose(fp);
+}
+
+inline bool scanner::load() {
+    if (now != end) return true;
+    now = 0;
+    end = fread(buf, sizeof(char), SIZE, fp);
+    if (end == 0) return false;
+    return true;
+}
+
+inline char scanner::read_char() {
+    if (!load()) {
+        fprintf(stderr, "failed to read\n");
+        exit(0);
+    }
+    return buf[now++];
+}
+
 //--- kamikaze info
 const int kamikaze_power_array_size = 5;
 int kamikaze_powers[] = {0, 128, 161, 181, 195};
@@ -148,11 +187,14 @@ class AlisaieAI : public AI {
         int energy = ship.ship_parameter.energy;
         int attack = ship.ship_parameter.attack;
         int recharge_rate = ship.ship_parameter.recharge_rate;
+        int max_heat = ship.max_heat;
         int heat = ship.heat;
         int turn = game_state.current_turn;
         int rem_turn = game_info.max_turns - turn;
         State s = State(x, y, dx, dy);
         State ns = next(s);
+
+        cerr << "A" << endl;
         
         // move
         if (!is_static(x, y, dx, dy) || next_positions[ns] > 1 || kamikaze_area[Vector(ns.x, ns.y)] > 0) {
@@ -166,7 +208,7 @@ class AlisaieAI : public AI {
                 dmg = kamikaze_area[Vector(ns.x, ns.y)];
                 keep = next_positions[next(s, ndx, ndy)] > 1;
             }
-            
+            cerr << 1 << endl;
             for (int i = -2; i <= 2; i++) {
                 for (int j = -2; j <= 2; j++) {
                     if (i == 0 && j == 0) continue;
@@ -196,6 +238,8 @@ class AlisaieAI : public AI {
             cerr << "move" << endl;
             return;
         }
+
+        cerr << "B" << endl;
         
         // critical shot
         State next_s = next(s);
@@ -210,60 +254,87 @@ class AlisaieAI : public AI {
                         State next_enemy_state = next(enemy_state);
                         if (critical_point(next_s, next_enemy_state)) {
                             int power = get_full_power(ship, move);
-                            params.commands.push_back(new Attack(ship.id, Vector(next_enemy_state.x, next_enemy_state.y), power));
+                            if (power > 0) {
+                                params.commands.push_back(new Attack(ship.id, Vector(next_enemy_state.x, next_enemy_state.y), power));
                             
-                            cerr << "critical shot" << endl;
-                            return;
+                                cerr << "critical shot" << endl;
+                                return;
+                            }
                         }
                     }
                 }
             }
         }
 
+        cerr << "C" << endl;
+
         // fission
         if (life > 1) {
             StartParams clone_params(energy / 2, attack / 2, recharge_rate / 2, life / 2);
             params.commands.push_back(new Fission(ship.id, clone_params));
             cerr << "fission" << endl;
+            return;
         }
 
+        cerr << "D" << endl;
+
         // random move
-        if (energy > rem_turn / 3) {
+        if (energy > rem_turn / 3 && max_heat - heat + recharge_rate >= 8) {
             for (int dx = -1; dx <= 1; dx++) {
                 for (int dy = -1; dy <= 1; dy++) {
                     if (max(abs(dx), abs(dy)) == 0) continue;
                     if (!is_alive(ship, dx, dy)) continue;
                     
                     params.commands.push_back(new Move(ship.id, Vector(dx, dy)));
+                    return;
                 }
+            }
+        }
+
+        cerr << "E" << endl;
+        
+        // free shot
+        {
+            int power = get_free_power(ship, 0);
+            if (power > 0) {
+                int d = 1000;
+                auto target = enemy_ships[0];
+                for (auto enemy : enemy_ships) {
+                    int cd = next_distance(ship, enemy);
+                    if (d > cd) {
+                        d = cd;
+                        target = enemy;
+                    }
+                }
+                State t = next(State(target.pos.first, target.pos.second, target.velocity.first, target.velocity.second));
+                params.commands.push_back(new Attack(ship.id, Vector(t.x, t.y), power));
+                return;
             }
         }
     }
 
     void load() {
-        FILE* fp = fopen("ai/kawatea/pre.txt", "r");
-        if (fp == NULL) {
-            fprintf(stderr, "failed to open pre.txt\n");
-            fflush(stderr);
-            return;
-        }
-        int num;
-        fscanf(fp, "%d", &num);
-        fprintf(stderr, "loading %d records\n", num);
+        scanner sc("ai/kawatea/pre2.txt");
+        int num = 0;
+        fprintf(stderr, "loading records\n");
         fflush(stderr);
-        for (int i = 0; i < num; i++) {
-            unsigned long long value;
+        while (sc.load()) {
             int x, y, dx, dy, ndx, ndy, d;
-            fscanf(fp, "%llu", &value);
-            decode(value, d, x, y, dx, dy, ndx, ndy);
+            x = sc.read_char();
+            y = sc.read_char();
+            dx = sc.read_char();
+            dy = sc.read_char();
+            ndx = sc.read_char();
+            ndy = sc.read_char();
+            d = sc.read_char();
             possible[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D] = true;
             direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][0] = ndx;
             direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][1] = ndy;
             dist[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D] = d;
+            num++;
         }
         fprintf(stderr, "loaded %d records\n", num);
         fflush(stderr);
-        fclose(fp);
     }
     
     State next(const State& s, int dx = 0, int dy = 0) {
@@ -325,5 +396,9 @@ class AlisaieAI : public AI {
     int get_full_power(const ShipState& my_ship_state, int move) {
         int remaining_heat = max(0, my_ship_state.max_heat - my_ship_state.heat + my_ship_state.ship_parameter.recharge_rate - move * 8);
         return min(remaining_heat, my_ship_state.ship_parameter.attack);
+    }
+
+    int get_free_power(const ShipState& my_ship_state, int move) {
+        return max(0, my_ship_state.ship_parameter.recharge_rate - my_ship_state.heat - move * 8);
     }
 };
