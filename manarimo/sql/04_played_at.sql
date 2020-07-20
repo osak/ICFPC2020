@@ -1,0 +1,1 @@
+CREATE INDEX ON games (played_at);
