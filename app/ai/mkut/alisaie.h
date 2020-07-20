@@ -103,6 +103,8 @@ class AlisaieAI : public AI {
             if (simulated.first.x == loc.x && simulated.first.y == loc.y
                 && simulated.second.x == vel.x && simulated.second.y == vel.y) continue;
 
+            cerr << best << " " << result.second << endl;
+
             if (best < result.first) {
                 best = result.first;
                 best_move = result.second;
@@ -283,7 +285,8 @@ public:
         return StartParams(engine, armament, reactor, core);
     }
     CommandParams command_params(const GameResponse& response) {
-        int unit_id = response.game_info.is_defender ? 0 : 1;
+        center_rad = response.game_info.field_info.planet_radius;
+        field_rad = response.game_info.field_info.field_radius;
         auto my_ship_states = response.game_info.is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
         auto enemy_ship_states = !response.game_info.is_defender ? response.game_state.defender_states : response.game_state.attacker_states;
 
