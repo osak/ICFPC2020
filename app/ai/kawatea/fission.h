@@ -10,7 +10,7 @@ bool possible[MAX_P * 2 + 2][MAX_P * 2 + 2][MAX_D * 2 + 2][MAX_D * 2 + 2];
 int direction[MAX_P * 2 + 2][MAX_P * 2 + 2][MAX_D * 2 + 2][MAX_D * 2 + 2][2];
 int dist[MAX_P * 2 + 2][MAX_P * 2 + 2][MAX_D * 2 + 2][MAX_D * 2 + 2];
 
-class StaticAI : public AI {
+class FissionAI : public AI {
     public:
     JoinParams join_params() {
         load();
@@ -83,23 +83,9 @@ class StaticAI : public AI {
                     params.commands.push_back(new Move(ship.id, Vector(ndx, ndy)));
                 }
             } else if (life > 1) {
-                params.command.push_back(new Fission(ship.id, StartParams(0, 0, 0, 1)));
+                params.commands.push_back(new Fission(ship.id, StartParams(0, 0, 0, 1)));
                 fissioned = true;
             }
-        }
-        
-        int ndx = 0, ndy = 0;
-        if (possible[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D]) {
-            ndx = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][0];
-            ndy = -direction[x + MAX_P][y + MAX_P][dx + MAX_D][dy + MAX_D][1];
-        } else {
-            fprintf(stderr, "impossible\n");
-        }
-        fprintf(stderr, "ndx: %d, ndy: %d\n", ndx, ndy);
-        fflush(stderr);
-        CommandParams params;
-        if (ndx != 0 || ndy != 0) {
-            params.commands.push_back(new Move(unit_id, Vector(ndx, ndy)));
         }
         return params;
     }
