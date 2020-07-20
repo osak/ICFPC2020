@@ -64,6 +64,11 @@ export const App = () => {
                   Local
                 </NavLink>
               </NavItem>
+              <NavItem>
+                <NavLink tag={Link} to="/saved_games">
+                  Game DB
+                </NavLink>
+              </NavItem>
             </Nav>
             <Nav className="ml-auto" navbar>
               <NavLink
@@ -82,7 +87,7 @@ export const App = () => {
           <Route exact path="/submit" component={AlienSend} />
           <Route exact path="/vis" component={Visualizer} />
           <Route exact path="/replay" component={ReplayList} />
-          <Route exact path="/games" component={SavedBattleList} />
+          <Route exact path="/saved_games" component={SavedBattleList} />
           <Route
             exact
             path="/replay/:replayId"
