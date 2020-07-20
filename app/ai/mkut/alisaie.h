@@ -151,6 +151,7 @@ class AlisaieAI : public AI {
             State s = State(x, y, dx, dy);
 
             // kamikaze
+            /*
             if (check_kamikaze(ship, ships, enemy_ships, -1)) {
                 params.commands.push_back(new Kamikaze(ship.id));
                 const int kamikaze_power = get_kamikaze_power(ship);
@@ -164,7 +165,7 @@ class AlisaieAI : public AI {
                 }
             } else {
                 next_positions[next(s)]++;
-            }
+            }*/
         }
         
         for (const ShipState& ship : ships) {
