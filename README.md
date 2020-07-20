@@ -17,16 +17,16 @@ Source: app/ai/***.h
 
 
 # Portal
-Atelier Manarimo Portal: https://manarimo.herokuapp.com (we'll shut down it in a few days after contest ended)
-Source: manarimo/
+* Atelier Manarimo Portal: https://manarimo.herokuapp.com (we'll shut down it in a few days after contest ended)
+* Source: [manarimo/](manarimo/)
 
 Portal website provides web-based communication UI with aliens, scoreboards, replay viewer, and our own Galaxy Pad.
 
 # Galaxy Pad
-Galaxy engine core: mkut/galaxy/kawatea2.cpp
-Interactive UI: manarimo/web/pages/Visualizer/Visualizer.tsx
+* Galaxy engine core: [mkut/galaxy/kawatea2.cpp](mkut/galaxy/kawatea2.cpp)
+* Interactive UI: [manarimo/web/pages/Visualizer](manarimo/web/pages/Visualizer)
 
-We built a browser-based interactive UI on top of our Galaxy engine written in C++.
+We built a browser-based interactive UI on top of our Galaxy engine written in C++. You can try it in our portal size.
 
 # Contest Feedback
 We've really enjoyed the contest! The first hours for figuring out the runes of alien program, exploring the galaxy to find additional puzzles and hidden powers,
