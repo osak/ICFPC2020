@@ -169,7 +169,7 @@ class TournamentSaver(Thread):
 
     def run(self):
         while True:
-            save_tournament(5)
+            save_tournament(6)
             time.sleep(60)
 
 class UnratedSaver(Thread):
