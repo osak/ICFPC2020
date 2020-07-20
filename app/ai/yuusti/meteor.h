@@ -166,7 +166,7 @@ public:
         int cnt = 0;
         while(cnt < 256) {
             // simulate
-            auto act = main_move(planet, field_rad, loc, vel, 256, 512);
+            auto act = main_move(planet, field_rad, loc, vel, 256, 512, 10000);
             auto vec = act.move;
 
             cost += max(abs(vec.x), vec.y);
